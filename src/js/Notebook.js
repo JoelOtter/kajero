@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Title from './components/Title';
 import Metadata from './components/Metadata';
 import TextBlock from './components/TextBlock';
+import CodeBlock from './components/CodeBlock';
 import { notebookSelector } from './selectors';
 import { loadMarkdown } from './actions';
 
@@ -23,6 +24,8 @@ class Notebook extends Component {
             const block = content[i];
             if (block.type === 'text') {
                 blocks.push(<TextBlock content={block.content} key={String(i)} />);
+            } else if (block.type === 'code') {
+                blocks.push(<CodeBlock codeBlock={block} key={String(i)} />);
             }
         }
         return (
