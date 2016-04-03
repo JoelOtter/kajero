@@ -1,0 +1,52 @@
+@import 'base';
+
+body {
+    background: $background-col;
+    color: $text-black;
+    font-family: "Andada", serif;
+    font-size: 1.2em;
+}
+
+.metadata {
+    font-size: 1em;
+    font-family: "Amaranth", serif;
+}
+
+code {
+    font-family: "Source Code Pro", monospace;
+}
+
+.offset-col {
+    display: none;
+    @include respond-to($size-md) {
+        display: inherit;
+    }
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+.top-sep {
+    border-top: 2px dashed $text-black;
+    margin: 1.5em 0;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+a {
+    text-decoration: none;
+    border-bottom: 1px dashed #999;
+    font-weight: bold;
+}
+
+a:visited {
+    color: inherit;
+}

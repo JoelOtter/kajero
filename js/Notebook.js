@@ -29,10 +29,16 @@ class Notebook extends Component {
             }
         }
         return (
-            <div>
-                <Title title={title} />
-                <Metadata author={author} created={created} />
-                {blocks}
+            <div className="pure-g">
+                <div className="offset-col pure-u-1 pure-u-md-1-6">
+                    &nbsp;
+                </div>
+                <div className="pure-u-1 pure-u-md-2-3">
+                    <Title title={title} />
+                    <Metadata author={author} created={created} />
+                    <hr className="top-sep"></hr>
+                    {blocks}
+                </div>
             </div>
         );
     }
