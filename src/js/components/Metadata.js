@@ -6,7 +6,7 @@ class Metadata extends Component {
         const { author, created } = this.props;
         const date = new Date(created).toUTCString();
         return (
-            <p>{author} | {date}</p>
+            <span className="metadata"><i className="fa fa-user"></i> {author} // <i className="fa fa-clock-o"></i> {date}</span>
         );
     }
 
