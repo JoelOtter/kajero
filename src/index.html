@@ -20,7 +20,13 @@
             ```
 
             ```javascript
-            console.log("This is a JS block. We'll have lots of fun here.");
+            var thing = 123;
+            var t = 0;
+            var ms = 3000;
+            console.log(window);
+            var unixtime_ms = new Date().getTime();
+            while(new Date().getTime() < unixtime_ms + ms) {}
+            ms;
             ```
 
             ## Second heading

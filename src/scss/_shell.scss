@@ -4,7 +4,9 @@ body {
     background: $background-col;
     color: $text-black;
     font-family: "Andada", serif;
-    font-size: 1.2em;
+    @include respond-to($size-md) {
+        font-size: 1.2em;
+    }
 }
 
 .metadata {
@@ -14,6 +16,7 @@ body {
 
 code {
     font-family: "Source Code Pro", monospace;
+    font-size: .8em;
 }
 
 .offset-col {
@@ -43,10 +46,40 @@ h1 {
 
 a {
     text-decoration: none;
-    border-bottom: 1px dashed #999;
+    border-bottom: 1px dashed $text-light;
     font-weight: bold;
+    color: $text-black;
 }
 
 a:visited {
     color: inherit;
+}
+
+img {
+    max-width: 100%;
+}
+
+pre, .codeBlock, .resultBlock {
+    overflow: scroll;
+    padding: .5em;
+    border: 1px dashed $text-light;
+}
+
+.codeBlock pre, .resultBlock pre {
+    padding: 0;
+    border: none;
+    overflow: auto;
+    margin: 0;
+    width: 95%;
+    float: left;
+}
+
+.codeBlock .fa {
+    float: right;
+    display: inline;
+}
+
+.resultBlock {
+    border-top: none;
+    background-color: $background-grey;
 }
