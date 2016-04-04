@@ -65,21 +65,26 @@ pre, .codeBlock, .resultBlock {
     border: 1px dashed $text-light;
 }
 
-.codeBlock pre, .resultBlock pre {
-    padding: 0;
-    border: none;
-    overflow: auto;
-    margin: 0;
-    width: 95%;
-    float: left;
-}
 
-.codeBlock .fa {
-    float: right;
-    display: inline;
-}
+.codeContainer {
+    margin: 1em 0;
+    pre {
+        padding: 0;
+        border: none;
+        overflow: auto;
+        margin: 0;
+        width: 95%;
+        float: left;
+    }
 
-.resultBlock {
-    border-top: none;
-    background-color: $background-grey;
+    .codeBlock .fa {
+        float: right;
+        display: inline;
+    }
+
+    .resultBlock {
+        border-top: none;
+        background-color: $background-grey;
+    }
+
 }

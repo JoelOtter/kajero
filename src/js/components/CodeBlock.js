@@ -23,7 +23,7 @@ class CodeBlock extends Component {
         const icon = hasBeenRun ? "fa-repeat" : "fa-play-circle-o";
         const result = codeBlock.get('result');
         return (
-            <div>
+            <div className="codeContainer">
                 <div className="codeBlock">
                     <div dangerouslySetInnerHTML={this.rawMarkup(codeBlock)}></div>
                     <i className={"fa " + icon} onClick={this.clickPlay.bind(this, dispatch, codeBlock)}></i>

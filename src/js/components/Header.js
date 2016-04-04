@@ -8,9 +8,11 @@ class Header extends Component {
     render() {
         const { metadata } = this.props;
         const date = new Date(metadata.get('created')).toUTCString();
+        const title = metadata.get('title');
+        document.title = title;
         return (
             <div>
-                <Title title={metadata.get('title')} />
+                <Title title={title} />
                 <span className="metadata"><i className="fa fa-user"></i> {metadata.get('author')} // <i className="fa fa-clock-o"></i> {date}</span>
             </div>
         );
