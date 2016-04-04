@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { codeToText } from '../util';
 import MarkdownIt from 'markdown-it';
+import { codeToText, highlight } from '../util';
+import { executeCodeBlock } from '../actions';
 
-const md = new MarkdownIt();
+const md = new MarkdownIt({highlight});
 
 class CodeBlock extends Component {
 
@@ -12,10 +13,25 @@ class CodeBlock extends Component {
         };
     }
 
+    clickPlay(dispatch, codeBlock) {
+        dispatch(executeCodeBlock(codeBlock));
+    }
+
     render() {
-        const { codeBlock } = this.props;
+        const { dispatch, codeBlock } = this.props;
+        const hasBeenRun = codeBlock.get('hasBeenRun');
+        const icon = hasBeenRun ? "fa-repeat" : "fa-play-circle-o";
+        const result = codeBlock.get('result');
         return (
-            <div dangerouslySetInnerHTML={this.rawMarkup(codeBlock)}></div>
+            <div>
+                <div className="codeBlock">
+                    <div dangerouslySetInnerHTML={this.rawMarkup(codeBlock)}></div>
+                    <i className={"fa " + icon} onClick={this.clickPlay.bind(this, dispatch, codeBlock)}></i>
+                </div>
+                <div hidden={!hasBeenRun} className="resultBlock">
+                    <pre><code>{String(result)}</code></pre>
+                </div>
+            </div>
         );
     }
 

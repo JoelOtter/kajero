@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import MarkdownIt from 'markdown-it';
+import { highlight } from '../util';
 
-const md = new MarkdownIt();
+const md = new MarkdownIt({highlight});
 
 class TextBlock extends Component {
 

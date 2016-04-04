@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 import NotebookReducer from './reducers';
 import Notebook from './Notebook';
 
-let store = createStore(NotebookReducer);
+const store = createStore(NotebookReducer);
 
 render(
     <Provider store={store}>

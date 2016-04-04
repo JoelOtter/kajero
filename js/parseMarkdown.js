@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import fm from 'front-matter';
+import Immutable from 'immutable';
 
 import { codeToText } from './util';
 
@@ -17,19 +18,22 @@ function parse(md) {
             const info = block.info.split(';').map(s => s.trim());
             const language = info[0];
             const attrs = info.splice(1);
-            codeBlocks.push({
+            codeBlocks.push(Immutable.fromJS({
                 type: 'code',
                 content: block.content.trim(),
                 language,
-                attrs
-            });
+                attrs,
+                hasBeenRun: false
+            }));
         }
     }
 
     // Rebuild into array of text and code blocks.
     let body = [];
+    let blocks = {};
     let currentString = "";
     let codeCounter = 0;
+    let blockCounter = 0;
     let linkStack = [];
     for (let node of parsedMarkdown) {
         for (let item of node.children) {
@@ -38,13 +42,18 @@ function parse(md) {
                     const codeBlock = codeBlocks[codeCounter];
                     // If a code block isn't JavaScript, we'll just render it in
                     // the text box, as it won't be interactive.
-                    if (codeBlock.language === 'javascript') {
-                        body.push({
+                    if (codeBlock.get('language') === 'javascript') {
+                        body.push(blockCounter);
+                        blocks[blockCounter] = {
                             type: 'text',
+                            id: String(blockCounter),
                             content: currentString
-                        });
+                        };
+                        blockCounter += 1;
                         currentString = "";
-                        body.push(codeBlock);
+                        blocks[blockCounter] = codeBlock.set('id', String(blockCounter));
+                        body.push(blockCounter);
+                        blockCounter += 1;
                     } else {
                         currentString += codeToText(codeBlock);
                     }
@@ -72,19 +81,24 @@ function parse(md) {
             }
         }
         if (currentString.length > 0) {
-            body.push({
+            body.push(blockCounter);
+            blocks[blockCounter] = {
                 type: 'text',
+                id: String(blockCounter),
                 content: currentString
-            });
+            };
         }
     }
 
-    return {
-        title: content.attributes.title,
-        created: Date.parse(content.attributes.created),
-        author: content.attributes.author,
-        content: body
-    };
+    return Immutable.fromJS({
+        metadata: {
+            title: content.attributes.title,
+            created: Date.parse(content.attributes.created),
+            author: content.attributes.author
+        },
+        content: body,
+        blocks: blocks
+    });
 }
 
 export default parse;
