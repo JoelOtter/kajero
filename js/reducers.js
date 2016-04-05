@@ -6,13 +6,14 @@ import {
     EXECUTE
 } from './actions';
 
-const defaultNotebook = Immutable.fromJS({
-    metadata: {
+const defaultNotebook = Immutable.Map({
+    metadata: Immutable.Map({
         title: 'New notebook',
         author: 'Kajero'
-    },
-    content: [],
-    blocks: {}
+    }),
+    content: Immutable.List(),
+    blocks: Immutable.Map(),
+    executionContext: {}
 });
 
 function notebook(state = defaultNotebook, action) {
@@ -23,7 +24,12 @@ function notebook(state = defaultNotebook, action) {
             const { id, code } = action;
             const newState = state.setIn(['blocks', id, 'hasBeenRun'], true);
             try {
-                return newState.setIn(['blocks', id, 'result'], eval(code));
+                let context = state.get('executionContext');
+                return newState.setIn(
+                    ['blocks', id, 'result'], Function(code).call(context)
+                ).set(
+                    'executionContext', context
+                );
             } catch (err) {
                 return newState.setIn(['blocks', id, 'result'], err);
             }

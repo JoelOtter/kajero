@@ -20,9 +20,8 @@
             ```
 
             ```javascript
-            var sum = 0;
-            window.number = 1000;
-            "Sum is " + sum + ", number is " + window.number;
+            this.number = 1000;
+            return "Number is " + number;
             ```
 
             ```javascript
@@ -30,12 +29,12 @@
             for (var i = 0; i <= number; i++) {
                 sum += i * i;
             }
-            "The sum of all squared up to " + window.number + " is: " + sum;
+            return "The sum of all squared up to " + number + " is: " + sum;
             ```
 
             ```javascript
-            window.number += 50;
-            "Set number to " + window.number;
+            number += 50;
+            return "Set number to " + number;
             ```
 
             ## Second heading
