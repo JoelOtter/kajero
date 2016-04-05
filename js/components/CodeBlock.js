@@ -28,6 +28,8 @@ class CodeBlock extends Component {
                     <div dangerouslySetInnerHTML={this.rawMarkup(codeBlock)}></div>
                     <i className={"fa " + icon} onClick={this.clickPlay.bind(this, dispatch, codeBlock)}></i>
                 </div>
+                <div hidden={!hasBeenRun} className="graphBlock" id={"kajero-graph-" + codeBlock.get('id')}>
+                </div>
                 <div hidden={!hasBeenRun} className="resultBlock">
                     <pre><code>{String(result)}</code></pre>
                 </div>
