@@ -21,11 +21,12 @@ function notebook(state = defaultNotebook, action) {
             return parse(action.markdown);
         case EXECUTE:
             const { id, code } = action;
-            return state.setIn(
-                ['blocks', id, 'hasBeenRun'], true
-            ).setIn(
-                ['blocks', id, 'result'], eval(code)
-            );
+            const newState = state.setIn(['blocks', id, 'hasBeenRun'], true);
+            try {
+                return newState.setIn(['blocks', id, 'result'], eval(code));
+            } catch (err) {
+                return newState.setIn(['blocks', id, 'result'], err);
+            }
         default:
             return state;
     }

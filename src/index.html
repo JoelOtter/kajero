@@ -21,8 +21,8 @@
 
             ```javascript
             var sum = 0;
-            var number = 1000;
-            "Sum is " + sum + ", number is " + number;
+            window.number = 1000;
+            "Sum is " + sum + ", number is " + window.number;
             ```
 
             ```javascript
@@ -30,12 +30,12 @@
             for (var i = 0; i <= number; i++) {
                 sum += i * i;
             }
-            "The sum of all squared up to " + number + " is: " + sum;
+            "The sum of all squared up to " + window.number + " is: " + sum;
             ```
 
             ```javascript
-            number += 50;
-            "Set number to " + 500;
+            window.number += 50;
+            "Set number to " + window.number;
             ```
 
             ## Second heading
