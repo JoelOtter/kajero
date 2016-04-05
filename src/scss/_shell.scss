@@ -59,7 +59,7 @@ img {
     max-width: 100%;
 }
 
-pre, .codeBlock, .resultBlock {
+pre, .codeBlock, .resultBlock, .graphBlock {
     overflow: scroll;
     padding: .5em;
     border: 1px dashed $text-light;
@@ -82,8 +82,20 @@ pre, .codeBlock, .resultBlock {
         display: inline;
     }
 
-    .resultBlock {
+    .graphBlock, .resultBlock {
         border-top: none;
+    }
+
+    .graphBlock > * {
+        margin: 0 auto;
+    }
+
+    .graphBlock:empty {
+        padding: 0;
+        border: none;
+    }
+
+    .resultBlock {
         background-color: $background-grey;
     }
 
