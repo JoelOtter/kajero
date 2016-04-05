@@ -4,13 +4,12 @@ import { connect } from 'react-redux';
 import Header from './components/Header';
 import Content from './components/Content';
 import { loadMarkdown } from './actions';
+import { extractMarkdownFromHTML } from './util';
 
 class Notebook extends Component {
 
     componentWillMount() {
-        this.props.dispatch(loadMarkdown(
-            document.getElementById('kajeromd').text.replace(/^\s+/gm, "")
-        ));
+        this.props.dispatch(loadMarkdown(extractMarkdownFromHTML()));
     }
 
     render() {
