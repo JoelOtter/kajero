@@ -94,7 +94,8 @@ function parse(md) {
         metadata: {
             title: content.attributes.title,
             created: Date.parse(content.attributes.created),
-            author: content.attributes.author
+            author: content.attributes.author,
+            datasources: content.attributes.datasources
         },
         content: body,
         blocks: blocks
