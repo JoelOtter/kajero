@@ -11,7 +11,7 @@ body {
 
 .metadata {
     font-size: 1em;
-    font-family: "Amaranth", serif;
+    font-family: "Amaranth", sans-serif;
 }
 
 code {
@@ -92,6 +92,10 @@ pre, .codeBlock, .resultBlock, .graphBlock {
 
     .graphBlock:empty {
         display: none;
+    }
+
+    .graphBlock text {
+        fill: $text-black;
     }
 
     .resultBlock {
