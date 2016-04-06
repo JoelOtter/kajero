@@ -3,13 +3,17 @@ import { connect } from 'react-redux';
 
 import Header from './components/Header';
 import Content from './components/Content';
-import { loadMarkdown } from './actions';
+import { loadMarkdown, fetchData } from './actions';
 import { extractMarkdownFromHTML } from './util';
 
 class Notebook extends Component {
 
     componentWillMount() {
         this.props.dispatch(loadMarkdown(extractMarkdownFromHTML()));
+    }
+
+    componentDidMount() {
+        this.props.dispatch(fetchData());
     }
 
     render() {

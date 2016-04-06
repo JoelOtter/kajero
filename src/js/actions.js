@@ -3,6 +3,7 @@
  */
 export const LOAD_MARKDOWN = 'LOAD_MARKDOWN';
 export const EXECUTE = 'EXECUTE';
+export const RECEIVED_DATA = 'RECEIVED_DATA';
 
 export function loadMarkdown(markdown) {
     return {
@@ -16,5 +17,27 @@ export function executeCodeBlock(codeBlock) {
         type: EXECUTE,
         id: codeBlock.get('id'),
         code: codeBlock.get('content')
+    };
+}
+
+function receivedData(name, data) {
+    return {
+        type: RECEIVED_DATA,
+        name,
+        data
+    };
+}
+
+export function fetchData() {
+    return (dispatch, getState) => {
+        getState().notebook.getIn(['metadata', 'datasources']).forEach(
+            (url, name) => {
+                fetch(url, {
+                    method: 'get'
+                })
+                .then(response => response.json())
+                .then(j => dispatch(receivedData(name, j)));
+            }
+        );
     };
 }

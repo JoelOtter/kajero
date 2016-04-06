@@ -10,6 +10,8 @@
             title: Sample Kajero notebook
             author: Joel Auterson
             created: Sat Apr 02 2016 15:41:30 GMT+0100 (BST)
+            datasources:
+                github: https://api.github.com/users/joelotter/repos
             ---
 
             This is an example of a notebook written in [Kajero](https://github.com/JoelOtter/kajero).
@@ -19,7 +21,6 @@
             ```python
             print "This is a Python block. It's not runnable, here."
             ```
-
 
             ```javascript
             this.number = 1000;
@@ -38,6 +39,8 @@
             this.number += 50;
             return "Set number to " + this.number;
             ```
+
+            ## Graphics are fun
 
             We now have support for [d3](http://d3js.org)!
 
@@ -112,6 +115,40 @@
                 return data;
             }
             return "Try clicking the rerun button!";
+            ```
+
+            ## Data sources
+
+            Kajero can easily work with data sources. In this notebook, I've sourced my repository data from GitHub's API. The code below will return a list of all my public repos.
+
+            ```javascript
+            var repos = [];
+            for (var repo = 0; repo < data.github.length; repo++) {
+                repos.push(data.github[repo].name);
+            }
+            return repos.join("\n");
+            ```
+
+            Cool, but not super interesting. Instead, why don't we make a pie chart of stargazers?
+
+            ```javascript
+            d3.select(graphElement).selectAll('*').remove();
+            d3.select(graphElement).append('svg').attr("width", 1000).attr("height", 800);
+
+            nv.addGraph(function() {
+              var chart = nv.models.pieChart()
+                  .x(function(d) { return d.name })
+                  .y(function(d) { return d.stargazers_count })
+                  .showLabels(true);
+
+                d3.select(graphElement).selectAll("svg")
+                    .datum(data.github)
+                    .transition().duration(350)
+                    .call(chart);
+
+              return chart;
+            });
+            return "Try mousing over the different parts!";
             ```
 
             ## HTML code

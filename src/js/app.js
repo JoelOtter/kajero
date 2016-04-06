@@ -1,12 +1,15 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 
 import NotebookReducer from './reducers';
 import Notebook from './Notebook';
 
-const store = createStore(NotebookReducer);
+const store = compose(
+    applyMiddleware(thunk)
+)(createStore)(NotebookReducer);
 
 render(
     <Provider store={store}>
