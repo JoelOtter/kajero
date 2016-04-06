@@ -26,7 +26,7 @@ function executeCode(code, context, id) {
 function notebook(state = defaultNotebook, action) {
     switch (action.type) {
         case LOAD_MARKDOWN:
-            return parse(action.markdown);
+            return parse(action.markdown).mergeDeep(state);
         case EXECUTE:
             const { id, code } = action;
             const newState = state.setIn(['blocks', id, 'hasBeenRun'], true);

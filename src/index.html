@@ -23,20 +23,20 @@
 
             ```javascript
             this.number = 1000;
-            return "Number is " + number;
+            return "Number is " + this.number;
             ```
 
             ```javascript
             var sum = 0;
-            for (var i = 0; i <= number; i++) {
+            for (var i = 0; i <= this.number; i++) {
                 sum += i * i;
             }
-            return "The sum of all squared up to " + number + " is: " + sum;
+            return "The sum of all squared up to " + this.number + " is: " + sum;
             ```
 
             ```javascript
-            number += 50;
-            return "Set number to " + number;
+            this.number += 50;
+            return "Set number to " + this.number;
             ```
 
             We now have support for [d3](http://d3js.org)!
