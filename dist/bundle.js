@@ -56263,7 +56263,7 @@ function wrapActionCreators(actionCreators) {
     return (0, _redux.bindActionCreators)(actionCreators, dispatch);
   };
 }
-},{"redux":430}],263:[function(require,module,exports){
+},{"redux":431}],263:[function(require,module,exports){
 /**
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
@@ -75506,6 +75506,25 @@ module.exports = require('./lib/React');
 },{"./lib/React":292}],425:[function(require,module,exports){
 'use strict';
 
+exports.__esModule = true;
+exports['default'] = thunkMiddleware;
+function thunkMiddleware(_ref) {
+  var dispatch = _ref.dispatch;
+  var getState = _ref.getState;
+
+  return function (next) {
+    return function (action) {
+      if (typeof action === 'function') {
+        return action(dispatch, getState);
+      }
+
+      return next(action);
+    };
+  };
+}
+},{}],426:[function(require,module,exports){
+'use strict';
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 exports.__esModule = true;
@@ -75561,7 +75580,7 @@ function applyMiddleware() {
     };
   };
 }
-},{"./compose":428}],426:[function(require,module,exports){
+},{"./compose":429}],427:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -75613,7 +75632,7 @@ function bindActionCreators(actionCreators, dispatch) {
   }
   return boundActionCreators;
 }
-},{}],427:[function(require,module,exports){
+},{}],428:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -75744,7 +75763,7 @@ function combineReducers(reducers) {
 }
 }).call(this,require('_process'))
 
-},{"./createStore":429,"./utils/warning":431,"_process":2,"lodash/isPlainObject":435}],428:[function(require,module,exports){
+},{"./createStore":430,"./utils/warning":432,"_process":2,"lodash/isPlainObject":436}],429:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -75774,7 +75793,7 @@ function compose() {
     }, last.apply(undefined, arguments));
   };
 }
-},{}],429:[function(require,module,exports){
+},{}],430:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -75991,7 +76010,7 @@ function createStore(reducer, initialState, enhancer) {
     replaceReducer: replaceReducer
   };
 }
-},{"lodash/isPlainObject":435}],430:[function(require,module,exports){
+},{"lodash/isPlainObject":436}],431:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -76041,7 +76060,7 @@ exports.applyMiddleware = _applyMiddleware2["default"];
 exports.compose = _compose2["default"];
 }).call(this,require('_process'))
 
-},{"./applyMiddleware":425,"./bindActionCreators":426,"./combineReducers":427,"./compose":428,"./createStore":429,"./utils/warning":431,"_process":2}],431:[function(require,module,exports){
+},{"./applyMiddleware":426,"./bindActionCreators":427,"./combineReducers":428,"./compose":429,"./createStore":430,"./utils/warning":432,"_process":2}],432:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -76066,15 +76085,15 @@ function warning(message) {
   } catch (e) {}
   /* eslint-enable no-empty */
 }
-},{}],432:[function(require,module,exports){
+},{}],433:[function(require,module,exports){
 arguments[4][265][0].apply(exports,arguments)
-},{"dup":265}],433:[function(require,module,exports){
+},{"dup":265}],434:[function(require,module,exports){
 arguments[4][266][0].apply(exports,arguments)
-},{"dup":266}],434:[function(require,module,exports){
+},{"dup":266}],435:[function(require,module,exports){
 arguments[4][267][0].apply(exports,arguments)
-},{"dup":267}],435:[function(require,module,exports){
+},{"dup":267}],436:[function(require,module,exports){
 arguments[4][268][0].apply(exports,arguments)
-},{"./_getPrototype":432,"./_isHostObject":433,"./isObjectLike":434,"dup":268}],436:[function(require,module,exports){
+},{"./_getPrototype":433,"./_isHostObject":434,"./isObjectLike":435,"dup":268}],437:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76124,6 +76143,11 @@ var Notebook = function (_Component) {
             this.props.dispatch((0, _actions.loadMarkdown)((0, _util.extractMarkdownFromHTML)()));
         }
     }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.props.dispatch((0, _actions.fetchData)());
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
@@ -76150,7 +76174,7 @@ var Notebook = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)()(Notebook);
 
-},{"./actions":437,"./components/Content":440,"./components/Header":441,"./util":447,"react":424,"react-redux":259}],437:[function(require,module,exports){
+},{"./actions":438,"./components/Content":441,"./components/Header":442,"./util":448,"react":424,"react-redux":259}],438:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76158,11 +76182,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.loadMarkdown = loadMarkdown;
 exports.executeCodeBlock = executeCodeBlock;
+exports.fetchData = fetchData;
 /*
  * Action types
  */
 var LOAD_MARKDOWN = exports.LOAD_MARKDOWN = 'LOAD_MARKDOWN';
 var EXECUTE = exports.EXECUTE = 'EXECUTE';
+var RECEIVED_DATA = exports.RECEIVED_DATA = 'RECEIVED_DATA';
 
 function loadMarkdown(markdown) {
     return {
@@ -76179,7 +76205,29 @@ function executeCodeBlock(codeBlock) {
     };
 }
 
-},{}],438:[function(require,module,exports){
+function receivedData(name, data) {
+    return {
+        type: RECEIVED_DATA,
+        name: name,
+        data: data
+    };
+}
+
+function fetchData() {
+    return function (dispatch, getState) {
+        getState().notebook.getIn(['metadata', 'datasources']).forEach(function (url, name) {
+            fetch(url, {
+                method: 'get'
+            }).then(function (response) {
+                return response.json();
+            }).then(function (j) {
+                return dispatch(receivedData(name, j));
+            });
+        });
+    };
+}
+
+},{}],439:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76192,6 +76240,10 @@ var _reactRedux = require('react-redux');
 
 var _redux = require('redux');
 
+var _reduxThunk = require('redux-thunk');
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
 var _reducers = require('./reducers');
 
 var _reducers2 = _interopRequireDefault(_reducers);
@@ -76202,7 +76254,7 @@ var _Notebook2 = _interopRequireDefault(_Notebook);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var store = (0, _redux.createStore)(_reducers2.default);
+var store = (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default))(_redux.createStore)(_reducers2.default);
 
 (0, _reactDom.render)(_react2.default.createElement(
     _reactRedux.Provider,
@@ -76214,7 +76266,7 @@ var store = (0, _redux.createStore)(_reducers2.default);
     )
 ), document.getElementById('kajero'));
 
-},{"./Notebook":436,"./reducers":445,"react":424,"react-dom":256,"react-redux":259,"redux":430}],439:[function(require,module,exports){
+},{"./Notebook":437,"./reducers":446,"react":424,"react-dom":256,"react-redux":259,"redux":431,"redux-thunk":425}],440:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76308,7 +76360,7 @@ var CodeBlock = function (_Component) {
 
 exports.default = CodeBlock;
 
-},{"../actions":437,"../util":447,"markdown-it":188,"react":424}],440:[function(require,module,exports){
+},{"../actions":438,"../util":448,"markdown-it":188,"react":424}],441:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76382,7 +76434,7 @@ var Content = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.contentSelector)(Content);
 
-},{"../selectors":446,"./CodeBlock":439,"./TextBlock":442,"react":424,"react-redux":259}],441:[function(require,module,exports){
+},{"../selectors":447,"./CodeBlock":440,"./TextBlock":443,"react":424,"react-redux":259}],442:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76452,7 +76504,7 @@ var Header = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.metadataSelector)(Header);
 
-},{"../selectors":446,"./Title":443,"react":424,"react-redux":259}],442:[function(require,module,exports){
+},{"../selectors":447,"./Title":444,"react":424,"react-redux":259}],443:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76509,7 +76561,7 @@ var TextBlock = function (_Component) {
 
 exports.default = TextBlock;
 
-},{"../util":447,"markdown-it":188,"react":424}],443:[function(require,module,exports){
+},{"../util":448,"markdown-it":188,"react":424}],444:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76557,7 +76609,7 @@ var Title = function (_Component) {
 
 exports.default = Title;
 
-},{"react":424}],444:[function(require,module,exports){
+},{"react":424}],445:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76736,7 +76788,8 @@ function parse(md) {
         metadata: {
             title: content.attributes.title,
             created: Date.parse(content.attributes.created),
-            author: content.attributes.author
+            author: content.attributes.author,
+            datasources: content.attributes.datasources
         },
         content: body,
         blocks: blocks
@@ -76745,7 +76798,7 @@ function parse(md) {
 
 exports.default = parse;
 
-},{"./util":447,"front-matter":4,"immutable":187,"markdown-it":188}],445:[function(require,module,exports){
+},{"./util":448,"front-matter":4,"immutable":187,"markdown-it":188}],446:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76771,23 +76824,24 @@ var _actions = require('./actions');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var defaultNotebook = _immutable2.default.Map({
-    metadata: _immutable2.default.Map({
-        title: 'New notebook',
-        author: 'Kajero'
+    metadata: _immutable2.default.fromJS({
+        datasources: {}
     }),
     content: _immutable2.default.List(),
     blocks: _immutable2.default.Map(),
+    data: {},
     executionContext: {}
 });
 
-function executeCode(code, context, id) {
-    return new Function(['d3', 'nv', 'graphElement'], code).call(context, d3, _nvd2.default, document.getElementById("kajero-graph-" + id));
+function executeCode(code, context, data, id) {
+    return new Function(['d3', 'nv', 'data', 'graphElement'], code).call(context, d3, _nvd2.default, data, document.getElementById("kajero-graph-" + id));
 }
 
 function notebook() {
     var state = arguments.length <= 0 || arguments[0] === undefined ? defaultNotebook : arguments[0];
     var action = arguments[1];
 
+    // TODO split this out into functions...serious
     switch (action.type) {
         case _actions.LOAD_MARKDOWN:
             return (0, _parseMarkdown2.default)(action.markdown).mergeDeep(state);
@@ -76798,10 +76852,18 @@ function notebook() {
             var newState = state.setIn(['blocks', id, 'hasBeenRun'], true);
             try {
                 var context = state.get('executionContext');
-                return newState.setIn(['blocks', id, 'result'], executeCode(code, context, id)).set('executionContext', context);
+                var _data = state.get('data');
+                return newState.setIn(['blocks', id, 'result'], executeCode(code, context, _data, id)).set('executionContext', context);
             } catch (err) {
                 return newState.setIn(['blocks', id, 'result'], err);
             }
+        case _actions.RECEIVED_DATA:
+            var name = action.name;
+            var data = action.data;
+
+            var stateData = state.get('data');
+            stateData[name] = data;
+            return state.set('data', stateData);
         default:
             return state;
     }
@@ -76813,7 +76875,7 @@ var reducer = (0, _redux.combineReducers)({
 
 exports.default = reducer;
 
-},{"./actions":437,"./parseMarkdown":444,"immutable":187,"nvd3":254,"redux":430}],446:[function(require,module,exports){
+},{"./actions":438,"./parseMarkdown":445,"immutable":187,"nvd3":254,"redux":431}],447:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76831,7 +76893,7 @@ var contentSelector = exports.contentSelector = function contentSelector(state) 
     };
 };
 
-},{}],447:[function(require,module,exports){
+},{}],448:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76887,5 +76949,5 @@ function extractMarkdownFromHTML() {
     return text.replace(re, "");
 }
 
-},{"highlight.js":36}]},{},[438])
+},{"highlight.js":36}]},{},[439])
 //# sourceMappingURL=bundle.js.map
