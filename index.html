@@ -16,7 +16,9 @@
 
             This is an example of a notebook written in [Kajero](https://github.com/JoelOtter/kajero).
 
-            It's got a line break and everything.
+            The most important function, probably, is displaying code samples. Here are a few.
+
+            ## Code samples
 
             ```python
             print "This is a Python block. It's not runnable, here."
@@ -39,6 +41,8 @@
             this.number += 50;
             return "Set number to " + this.number;
             ```
+
+            Try repeatedly running different code samples to see what happens. You'll notice that the first sample resets the number, the third increases it, and the second finds the sum of all squares up to that number.
 
             ## Graphics are fun
 
@@ -82,11 +86,11 @@
             return "Try clicking the circle!";
             ```
 
-            And support for NVD3, giving us some nice pre-built graphs. Click run and replay to generate random scatter graphs.
+            And support for [NVD3](http://nvd3.org/), giving us some nice pre-built graphs. Click run and replay to generate random scatter graphs.
 
             ```javascript
             d3.select(graphElement).selectAll('*').remove();
-            d3.select(graphElement).append('svg').attr("width", 500);
+            d3.select(graphElement).append('svg').attr("width", "100%");
 
             nv.addGraph(function() {
                 var chart = nv.models.scatter()
@@ -133,7 +137,7 @@
 
             ```javascript
             d3.select(graphElement).selectAll('*').remove();
-            d3.select(graphElement).append('svg').attr("width", 1000).attr("height", 800);
+            d3.select(graphElement).append('svg').attr("width", "100%").attr("height", 800);
 
             nv.addGraph(function() {
               var chart = nv.models.pieChart()
