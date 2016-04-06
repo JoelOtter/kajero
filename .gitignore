@@ -32,6 +32,5 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
-# JS/CSS build folders
-src/css
-src/js/dist
+# Build folders
+src/dist

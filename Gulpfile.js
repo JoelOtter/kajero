@@ -30,9 +30,9 @@ function bundle() {
             browserSync.notify("Browserify error!");
             this.emit("end");
         })
-        .pipe(exorcist('src/js/dist/bundle.js.map'))
+        .pipe(exorcist('src/dist/bundle.js.map'))
         .pipe(source('bundle.js'))
-        .pipe(gulp.dest('./src/js/dist'))
+        .pipe(gulp.dest('./src/dist'))
         .pipe(browserSync.stream({once: true}));
 }
 
@@ -51,7 +51,7 @@ gulp.task('sass', function() {
         .on('error', function(err) {
             //
         })
-        .pipe(gulp.dest('./src/css'))
+        .pipe(gulp.dest('./src/dist'))
         .pipe(browserSync.stream({once: true}));
 });
 
