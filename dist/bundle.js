@@ -76790,7 +76790,7 @@ function notebook() {
 
     switch (action.type) {
         case _actions.LOAD_MARKDOWN:
-            return (0, _parseMarkdown2.default)(action.markdown);
+            return (0, _parseMarkdown2.default)(action.markdown).mergeDeep(state);
         case _actions.EXECUTE:
             var id = action.id;
             var code = action.code;
