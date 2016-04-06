@@ -91,8 +91,7 @@ pre, .codeBlock, .resultBlock, .graphBlock {
     }
 
     .graphBlock:empty {
-        padding: 0;
-        border: none;
+        display: none;
     }
 
     .resultBlock {
