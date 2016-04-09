@@ -94,8 +94,12 @@ pre, .codeBlock, .resultBlock, .graphBlock {
         display: none;
     }
 
-    .graphBlock text {
-        fill: $text-black;
+    .graphBlock svg {
+        width: 100%;
+        height: inherit;
+        text {
+            fill: $text-black;
+        }
     }
 
     .resultBlock {

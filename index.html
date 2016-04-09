@@ -137,22 +137,63 @@
 
             ```javascript
             d3.select(graphElement).selectAll('*').remove();
-            d3.select(graphElement).append('svg').attr("width", "100%").attr("height", 800);
+            d3.select(graphElement).append('svg').attr('width', '100%').attr('height', 800);
 
             nv.addGraph(function() {
-              var chart = nv.models.pieChart()
-                  .x(function(d) { return d.name })
-                  .y(function(d) { return d.stargazers_count })
-                  .showLabels(true);
+                var chart = nv.models.pieChart()
+                    .x(function(d) { return d.name })
+                    .y(function(d) { return d.stargazers_count })
+                    .showLabels(true);
 
                 d3.select(graphElement).selectAll("svg")
                     .datum(data.github)
-                    .transition().duration(350)
                     .call(chart);
 
-              return chart;
+                return chart;
             });
             return "Try mousing over the different parts, or clicking the keys.";
+            ```
+
+            We should hopefully be able to use Kajero's super-simple graph library, Jutsu.
+
+            ```javascript
+            var fruit = [
+                {label: 'apples', data: 1},
+                {label: 'bananas', data: 4}
+            ];
+            graphs.pieChart(fruit);
+            return "Super easy!";
+            ```
+
+            What about our GitHub data? Some users may not have the coding ability to reshape the data - so Kajero can do it automatically.
+
+            ```javascript
+            graphs.pieChart(data.github);
+            return "Looks good...but this isn't the stargazers...";
+            ```
+
+            Kajero has reshaped the data, but it's just used the first valid data points it found, which in this case were the IDs of the repositories! It knew we wanted a number, but doesn't understand which numbers are the ones we want.
+
+            We can give Kajero a 'hint' to tell it what value to use. This is really simple - it's just the name of the property.
+
+            ```javascript
+            graphs.pieChart(data.github, 'stargazers_count');
+            return "Much better!";
+            ```
+
+            What if we don't want the name of the repo, but something else? That's fine - we can use multiple hints. Let's use the URL instead...
+
+            ```javascript
+            graphs.pieChart(data.github, ['git_url', 'stargazers_count']);
+            return "This is completely unreadable, but it IS what we wanted.";
+            ```
+
+            How about a bar chart?
+
+            ```javascript
+            var data = graphs.barChart(data.github, ['name', 'size']);
+            console.log(data);
+            return "Showing repo sizes.";
             ```
 
             ## HTML code

@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 import Immutable from 'immutable';
 import parse from './parseMarkdown';
-import nv from 'nvd3';
+import Smolder from 'smolder';
+import Jutsu from 'jutsu'; // Import d3 and nv as globals
 import {
     LOAD_MARKDOWN,
     RECEIVED_DATA,
@@ -19,8 +20,10 @@ const defaultNotebook = Immutable.Map({
 });
 
 function executeCode(code, context, data, id) {
-    return new Function(['d3', 'nv', 'data', 'graphElement'], code).call(
-        context, d3, nv, data, document.getElementById("kajero-graph-" + id)
+    var graphElement = document.getElementById("kajero-graph-" + id);
+    var jutsu = Smolder(Jutsu(graphElement));
+    return new Function(['d3', 'nv', 'graphs', 'data', 'graphElement'], code).call(
+        context, d3, nv, jutsu, data, graphElement
     );
 }
 
@@ -41,6 +44,7 @@ function notebook(state = defaultNotebook, action) {
                     'executionContext', context
                 );
             } catch (err) {
+                console.error(err);
                 return newState.setIn(['blocks', id, 'result'], err);
             }
         case RECEIVED_DATA:
