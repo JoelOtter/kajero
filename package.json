@@ -39,6 +39,7 @@
     "redux-thunk": "^2.0.1",
     "smolder": "git://github.com/JoelOtter/smolder.git#master",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "whatwg-fetch": "^0.11.0"
   }
 }
