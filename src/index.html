@@ -12,6 +12,7 @@
             created: Sat Apr 02 2016 15:41:30 GMT+0100 (BST)
             datasources:
                 github: https://api.github.com/users/joelotter/repos
+                popular: https://api.github.com/search/repositories?q=created:>2016-01-01&sort=stars&order=desc
             ---
 
             This is an example of a notebook written in [Kajero](https://github.com/JoelOtter/kajero).
@@ -154,6 +155,8 @@
             return "Try mousing over the different parts, or clicking the keys.";
             ```
 
+            ### Jutsu
+
             We should hopefully be able to use Kajero's super-simple graph library, Jutsu.
 
             ```javascript
@@ -165,7 +168,7 @@
             return "Super easy!";
             ```
 
-            What about our GitHub data? Some users may not have the coding ability to reshape the data - so Kajero can do it automatically.
+            What about our GitHub data? Some users may not have the coding ability to reshape the data - so Jutsu can do it automatically.
 
             ```javascript
             graphs.pieChart(data.github);
@@ -188,13 +191,30 @@
             return "This is completely unreadable, but it IS what we wanted.";
             ```
 
-            How about a bar chart?
+            How about a bar chart? My repos are a little dull, though. Instead, let's look at the most popular GitHub repos of 2016.
 
             ```javascript
-            var data = graphs.barChart(data.github, ['name', 'size']);
-            console.log(data);
-            return "Showing repo sizes.";
+            var data = graphs.barChart(data.popular, 'Repo', 'Stargazers', ['name', 'stargazers_count']);
+            return "Showing stargazers of top repos.";
             ```
+
+            A question we can investigate - is there any correlation between a repo's stargazers and the number of open issues? Let's have a look at a line graph...
+
+            ```javascript
+            graphs.lineChart(data.popular.items, 'Open Issues', 'Stargazers',
+                ['open_issues', 'stargazers_count', 'name']);
+            return "Plotting stargazers against the number of open issues."
+            ```
+
+            This doesn't tell us that much - a line graph probably isn't the best way to investigate correlation! Let's try a scatter plot instead.
+
+            ```javascript
+            graphs.scatterPlot(data.popular.items, 'Open Issues', 'Stargazers',
+                ['open_issues', 'stargazers_count', 'name']);
+            return "Showing correlation between the number of open issues and the number of stargazers.";
+            ```
+
+            It looks like there might be a _slight_ correlation, but it's not anything particularly useful.
 
             ## HTML code
             It even escapes HTML correctly! And how.
