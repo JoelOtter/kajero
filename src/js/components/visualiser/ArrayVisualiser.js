@@ -3,11 +3,20 @@ import { selectComponent, getSpacing } from './Visualiser';
 
 export default class ArrayVisualiser extends Component {
 
+    constructor(props) {
+        super(props);
+        this.collapse = this.collapse.bind(this);
+        this.state = {open: false};
+    }
+
+    collapse() {
+        this.setState({open: !this.state.open});
+    }
+
     render() {
         const { data, indent, useHljs, name } = this.props;
-
         let items = [];
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; this.state.open && i < data.length; i++) {
             var item = data[i];
             var VisualiserComponent = selectComponent(item);
             items.push(
@@ -23,8 +32,8 @@ export default class ArrayVisualiser extends Component {
 
         let arrow;
         let spaces = getSpacing(indent);
-        if (items.length > 0) {
-            arrow = '\u25bc\u00a0';
+        if (data.length > 0) {
+            arrow = this.state.open ? '\u25bc' : '\u25b6';
             if (spaces.length >= 2) {
                 // Space for arrow
                 spaces = spaces.slice(2);
@@ -35,10 +44,10 @@ export default class ArrayVisualiser extends Component {
         return (
             <div className="array-visualiser">
                 <span className="visualiser-spacing">{spaces}</span>
-                <span>{arrow}</span>
+                <span className="visualiser-arrow" onClick={this.collapse}>{arrow}</span>
                 <span>{key}</span>
-                <span className={useHljs ? "hljs-keyword" : ""}>Array</span>
-                <span>{'[' + items.length + ']'}</span>
+                <span className={useHljs ? "hljs-keyword" : ""}>{'\u00a0Array'}</span>
+                <span>{'[' + data.length + ']'}</span>
                 {items}
             </div>
         );
