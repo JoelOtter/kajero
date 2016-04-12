@@ -114,4 +114,8 @@ pre, .codeBlock, .resultBlock, .graphBlock {
     font-family: 'Source Code Pro';
     font-size: .8em;
     white-space: pre;
+
+    .visualiser-arrow {
+        cursor: default;
+    }
 }
