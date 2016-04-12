@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MarkdownIt from 'markdown-it';
+import Visualiser from './visualiser/Visualiser';
 import { codeToText, highlight } from '../util';
 import { executeCodeBlock } from '../actions';
 
@@ -31,7 +32,10 @@ class CodeBlock extends Component {
                 <div hidden={!hasBeenRun} className="graphBlock" id={"kajero-graph-" + codeBlock.get('id')}>
                 </div>
                 <div hidden={!hasBeenRun} className="resultBlock">
-                    <pre><code>{String(result)}</code></pre>
+                    <Visualiser
+                        data={result}
+                        useHljs='true'
+                    />
                 </div>
             </div>
         );
