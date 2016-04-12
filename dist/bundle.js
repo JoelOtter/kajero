@@ -77209,13 +77209,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ArrayVisualiser = function (_Component) {
     _inherits(ArrayVisualiser, _Component);
 
-    function ArrayVisualiser() {
+    function ArrayVisualiser(props) {
         _classCallCheck(this, ArrayVisualiser);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArrayVisualiser).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ArrayVisualiser).call(this, props));
+
+        _this.collapse = _this.collapse.bind(_this);
+        _this.state = { open: false };
+        return _this;
     }
 
     _createClass(ArrayVisualiser, [{
+        key: 'collapse',
+        value: function collapse() {
+            this.setState({ open: !this.state.open });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _props = this.props;
@@ -77224,9 +77233,8 @@ var ArrayVisualiser = function (_Component) {
             var useHljs = _props.useHljs;
             var name = _props.name;
 
-
             var items = [];
-            for (var i = 0; i < data.length; i++) {
+            for (var i = 0; this.state.open && i < data.length; i++) {
                 var item = data[i];
                 var VisualiserComponent = (0, _Visualiser.selectComponent)(item);
                 items.push(_react2.default.createElement(VisualiserComponent, {
@@ -77240,8 +77248,8 @@ var ArrayVisualiser = function (_Component) {
 
             var arrow = void 0;
             var spaces = (0, _Visualiser.getSpacing)(indent);
-            if (items.length > 0) {
-                arrow = '▼ ';
+            if (data.length > 0) {
+                arrow = this.state.open ? '▼' : '▶';
                 if (spaces.length >= 2) {
                     // Space for arrow
                     spaces = spaces.slice(2);
@@ -77259,7 +77267,7 @@ var ArrayVisualiser = function (_Component) {
                 ),
                 _react2.default.createElement(
                     'span',
-                    null,
+                    { className: 'visualiser-arrow', onClick: this.collapse },
                     arrow
                 ),
                 _react2.default.createElement(
@@ -77270,12 +77278,12 @@ var ArrayVisualiser = function (_Component) {
                 _react2.default.createElement(
                     'span',
                     { className: useHljs ? "hljs-keyword" : "" },
-                    'Array'
+                    ' Array'
                 ),
                 _react2.default.createElement(
                     'span',
                     null,
-                    '[' + items.length + ']'
+                    '[' + data.length + ']'
                 ),
                 items
             );
@@ -77409,13 +77417,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ObjectVisualiser = function (_Component) {
     _inherits(ObjectVisualiser, _Component);
 
-    function ObjectVisualiser() {
+    function ObjectVisualiser(props) {
         _classCallCheck(this, ObjectVisualiser);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ObjectVisualiser).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ObjectVisualiser).call(this, props));
+
+        _this.collapse = _this.collapse.bind(_this);
+        _this.state = { open: false };
+        return _this;
     }
 
     _createClass(ObjectVisualiser, [{
+        key: 'collapse',
+        value: function collapse() {
+            this.setState({ open: !this.state.open });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _props = this.props;
@@ -77426,7 +77443,7 @@ var ObjectVisualiser = function (_Component) {
 
             var keys = Object.getOwnPropertyNames(data);
             var items = [];
-            for (var i = 0; i < keys.length; i++) {
+            for (var i = 0; this.state.open && i < keys.length; i++) {
                 var item = data[keys[i]];
                 var VisualiserComponent = (0, _Visualiser.selectComponent)(item);
                 items.push(_react2.default.createElement(VisualiserComponent, {
@@ -77439,14 +77456,14 @@ var ObjectVisualiser = function (_Component) {
             }
             var arrow = void 0;
             var spaces = (0, _Visualiser.getSpacing)(indent);
-            if (items.length > 0) {
-                arrow = '▼ ';
+            if (keys.length > 0) {
+                arrow = this.state.open ? '▼' : '▶';
                 if (spaces.length >= 2) {
                     // Space for arrow
                     spaces = spaces.slice(2);
                 }
             }
-            var key = name ? name + ': ' : '';
+            var key = ' ' + (name ? name + ': ' : '');
 
             return _react2.default.createElement(
                 'div',
@@ -77458,7 +77475,7 @@ var ObjectVisualiser = function (_Component) {
                 ),
                 _react2.default.createElement(
                     'span',
-                    null,
+                    { className: 'visualiser-arrow', onClick: this.collapse },
                     arrow
                 ),
                 _react2.default.createElement(
