@@ -126,12 +126,14 @@
 
             Kajero can easily work with data sources. In this notebook, I've sourced my repository data from GitHub's API. The code below will return a list of all my public repos.
 
+            Note that you don't just have to return primitive types - Kajero should be able to visualise whatever you throw at it.
+
             ```javascript
             var repos = [];
             for (var repo = 0; repo < data.github.length; repo++) {
                 repos.push(data.github[repo].name);
             }
-            return repos.join("\n");
+            return repos;
             ```
 
             Cool, but not super interesting. Instead, why don't we make a pie chart of stargazers?
