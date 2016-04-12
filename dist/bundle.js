@@ -76747,7 +76747,7 @@ var Notebook = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)()(Notebook);
 
-},{"./actions":440,"./components/Content":443,"./components/Header":444,"./util":450,"react":425,"react-redux":260}],440:[function(require,module,exports){
+},{"./actions":440,"./components/Content":443,"./components/Header":444,"./util":454,"react":425,"react-redux":260}],440:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76841,7 +76841,7 @@ var store = (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default
     )
 ), document.getElementById('kajero'));
 
-},{"./Notebook":439,"./reducers":448,"react":425,"react-dom":257,"react-redux":260,"redux":432,"redux-thunk":426,"whatwg-fetch":438}],442:[function(require,module,exports){
+},{"./Notebook":439,"./reducers":452,"react":425,"react-dom":257,"react-redux":260,"redux":432,"redux-thunk":426,"whatwg-fetch":438}],442:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76857,6 +76857,10 @@ var _react2 = _interopRequireDefault(_react);
 var _markdownIt = require('markdown-it');
 
 var _markdownIt2 = _interopRequireDefault(_markdownIt);
+
+var _Visualiser = require('./visualiser/Visualiser');
+
+var _Visualiser2 = _interopRequireDefault(_Visualiser);
 
 var _util = require('../util');
 
@@ -76916,15 +76920,10 @@ var CodeBlock = function (_Component) {
                 _react2.default.createElement(
                     'div',
                     { hidden: !hasBeenRun, className: 'resultBlock' },
-                    _react2.default.createElement(
-                        'pre',
-                        null,
-                        _react2.default.createElement(
-                            'code',
-                            null,
-                            String(result)
-                        )
-                    )
+                    _react2.default.createElement(_Visualiser2.default, {
+                        data: result,
+                        useHljs: 'true'
+                    })
                 )
             );
         }
@@ -76935,7 +76934,7 @@ var CodeBlock = function (_Component) {
 
 exports.default = CodeBlock;
 
-},{"../actions":440,"../util":450,"markdown-it":191,"react":425}],443:[function(require,module,exports){
+},{"../actions":440,"../util":454,"./visualiser/Visualiser":450,"markdown-it":191,"react":425}],443:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77009,7 +77008,7 @@ var Content = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.contentSelector)(Content);
 
-},{"../selectors":449,"./CodeBlock":442,"./TextBlock":445,"react":425,"react-redux":260}],444:[function(require,module,exports){
+},{"../selectors":453,"./CodeBlock":442,"./TextBlock":445,"react":425,"react-redux":260}],444:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77079,7 +77078,7 @@ var Header = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.metadataSelector)(Header);
 
-},{"../selectors":449,"./Title":446,"react":425,"react-redux":260}],445:[function(require,module,exports){
+},{"../selectors":453,"./Title":446,"react":425,"react-redux":260}],445:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77136,7 +77135,7 @@ var TextBlock = function (_Component) {
 
 exports.default = TextBlock;
 
-},{"../util":450,"markdown-it":191,"react":425}],446:[function(require,module,exports){
+},{"../util":454,"markdown-it":191,"react":425}],446:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77185,6 +77184,414 @@ var Title = function (_Component) {
 exports.default = Title;
 
 },{"react":425}],447:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Visualiser = require('./Visualiser');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ArrayVisualiser = function (_Component) {
+    _inherits(ArrayVisualiser, _Component);
+
+    function ArrayVisualiser() {
+        _classCallCheck(this, ArrayVisualiser);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArrayVisualiser).apply(this, arguments));
+    }
+
+    _createClass(ArrayVisualiser, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props;
+            var data = _props.data;
+            var indent = _props.indent;
+            var useHljs = _props.useHljs;
+            var name = _props.name;
+
+
+            var items = [];
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+                var VisualiserComponent = (0, _Visualiser.selectComponent)(item);
+                items.push(_react2.default.createElement(VisualiserComponent, {
+                    key: String(i),
+                    data: item,
+                    name: String(i),
+                    indent: indent == 0 ? indent + 2 : indent + 1,
+                    useHljs: useHljs
+                }));
+            }
+
+            var arrow = void 0;
+            var spaces = (0, _Visualiser.getSpacing)(indent);
+            if (items.length > 0) {
+                arrow = '▼ ';
+                if (spaces.length >= 2) {
+                    // Space for arrow
+                    spaces = spaces.slice(2);
+                }
+            }
+            var key = name ? name + ': ' : '';
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'array-visualiser' },
+                _react2.default.createElement(
+                    'span',
+                    { className: 'visualiser-spacing' },
+                    spaces
+                ),
+                _react2.default.createElement(
+                    'span',
+                    null,
+                    arrow
+                ),
+                _react2.default.createElement(
+                    'span',
+                    null,
+                    key
+                ),
+                _react2.default.createElement(
+                    'span',
+                    { className: useHljs ? "hljs-keyword" : "" },
+                    'Array'
+                ),
+                _react2.default.createElement(
+                    'span',
+                    null,
+                    '[' + items.length + ']'
+                ),
+                items
+            );
+        }
+    }]);
+
+    return ArrayVisualiser;
+}(_react.Component);
+
+exports.default = ArrayVisualiser;
+
+},{"./Visualiser":450,"react":425}],448:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Visualiser = require('./Visualiser');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function buildCssClass(type, useHljs) {
+    var cssSuffix = void 0;
+    switch (type) {
+        case 'String':
+            cssSuffix = 'string';break;
+        case 'Number':
+            cssSuffix = 'number';break;
+        case 'Boolean':
+            cssSuffix = 'literal';break;
+        case 'Function':
+            cssSuffix = 'keyword';break;
+        default:
+            cssSuffix = 'text';break;
+    }
+    var cssClass = "visualiser-" + cssSuffix;
+    if (useHljs) {
+        cssClass += " hljs-" + cssSuffix;
+    }
+    return cssClass;
+}
+
+var DefaultVisualiser = function (_Component) {
+    _inherits(DefaultVisualiser, _Component);
+
+    function DefaultVisualiser() {
+        _classCallCheck(this, DefaultVisualiser);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(DefaultVisualiser).apply(this, arguments));
+    }
+
+    _createClass(DefaultVisualiser, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props;
+            var data = _props.data;
+            var indent = _props.indent;
+            var name = _props.name;
+            var leftClick = _props.leftClick;
+            var rightClick = _props.rightClick;
+            var useHljs = _props.useHljs;
+
+            var type = (0, _Visualiser.typeString)(data);
+            var repr = type === 'String' ? "'" + String(data) + "'" : type === 'Function' ? 'function()' : String(data);
+            var cssClass = buildCssClass(type, useHljs);
+            var key = name ? name + ': ' : '';
+            var spaces = (0, _Visualiser.getSpacing)(indent);
+            return _react2.default.createElement(
+                'div',
+                { className: 'default-visualiser' },
+                _react2.default.createElement(
+                    'span',
+                    { className: 'visualiser-spacing' },
+                    spaces
+                ),
+                _react2.default.createElement(
+                    'span',
+                    null,
+                    key
+                ),
+                _react2.default.createElement(
+                    'span',
+                    { className: cssClass },
+                    repr
+                )
+            );
+        }
+    }]);
+
+    return DefaultVisualiser;
+}(_react.Component);
+
+exports.default = DefaultVisualiser;
+
+},{"./Visualiser":450,"react":425}],449:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Visualiser = require('./Visualiser');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ObjectVisualiser = function (_Component) {
+    _inherits(ObjectVisualiser, _Component);
+
+    function ObjectVisualiser() {
+        _classCallCheck(this, ObjectVisualiser);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(ObjectVisualiser).apply(this, arguments));
+    }
+
+    _createClass(ObjectVisualiser, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props;
+            var data = _props.data;
+            var name = _props.name;
+            var indent = _props.indent;
+            var useHljs = _props.useHljs;
+
+            var keys = Object.getOwnPropertyNames(data);
+            var items = [];
+            for (var i = 0; i < keys.length; i++) {
+                var item = data[keys[i]];
+                var VisualiserComponent = (0, _Visualiser.selectComponent)(item);
+                items.push(_react2.default.createElement(VisualiserComponent, {
+                    key: String(i),
+                    data: item,
+                    name: keys[i],
+                    indent: indent == 0 ? indent + 2 : indent + 1,
+                    useHljs: useHljs
+                }));
+            }
+            var arrow = void 0;
+            var spaces = (0, _Visualiser.getSpacing)(indent);
+            if (items.length > 0) {
+                arrow = '▼ ';
+                if (spaces.length >= 2) {
+                    // Space for arrow
+                    spaces = spaces.slice(2);
+                }
+            }
+            var key = name ? name + ': ' : '';
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'object-visualiser' },
+                _react2.default.createElement(
+                    'span',
+                    { className: 'visualiser-spacing' },
+                    spaces
+                ),
+                _react2.default.createElement(
+                    'span',
+                    null,
+                    arrow
+                ),
+                _react2.default.createElement(
+                    'span',
+                    null,
+                    key
+                ),
+                _react2.default.createElement(
+                    'span',
+                    { className: useHljs ? "hljs-keyword" : "" },
+                    'Object'
+                ),
+                _react2.default.createElement(
+                    'span',
+                    null,
+                    '{}'
+                ),
+                items
+            );
+        }
+    }]);
+
+    return ObjectVisualiser;
+}(_react.Component);
+
+exports.default = ObjectVisualiser;
+
+},{"./Visualiser":450,"react":425}],450:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+exports.typeString = typeString;
+exports.selectComponent = selectComponent;
+exports.getSpacing = getSpacing;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _DefaultVisualiser = require('./DefaultVisualiser');
+
+var _DefaultVisualiser2 = _interopRequireDefault(_DefaultVisualiser);
+
+var _ObjectVisualiser = require('./ObjectVisualiser');
+
+var _ObjectVisualiser2 = _interopRequireDefault(_ObjectVisualiser);
+
+var _ArrayVisualiser = require('./ArrayVisualiser');
+
+var _ArrayVisualiser2 = _interopRequireDefault(_ArrayVisualiser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Root class with utility functions
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var SPACING = 2;
+
+function typeString(item) {
+    var typeString = Object.prototype.toString.call(item);
+    return typeString.split(' ')[1].split(']')[0];
+}
+
+function selectComponent(data) {
+    switch (typeString(data)) {
+        case 'Object':
+            return _ObjectVisualiser2.default;
+        case 'Array':
+            return _ArrayVisualiser2.default;
+        default:
+            return _DefaultVisualiser2.default;
+    }
+}
+
+function getSpacing(indent) {
+    if (indent < 1) return '';
+    var spaces = indent * SPACING;
+    var result = '';
+    for (var i = 0; i < spaces; i++) {
+        result += ' ';
+    }
+    return result;
+}
+
+var Visualiser = function (_Component) {
+    _inherits(Visualiser, _Component);
+
+    function Visualiser() {
+        _classCallCheck(this, Visualiser);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Visualiser).apply(this, arguments));
+    }
+
+    _createClass(Visualiser, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props;
+            var data = _props.data;
+            var leftClick = _props.leftClick;
+            var rightClick = _props.rightClick;
+            var useHljs = _props.useHljs;
+
+            var VisualiserComponent = selectComponent(data);
+            return _react2.default.createElement(
+                'div',
+                { className: 'visualiser' },
+                _react2.default.createElement(VisualiserComponent, {
+                    data: data,
+                    leftClick: leftClick,
+                    rightClick: rightClick,
+                    indent: 0,
+                    useHljs: useHljs
+                })
+            );
+        }
+    }]);
+
+    return Visualiser;
+}(_react.Component);
+
+exports.default = Visualiser;
+
+},{"./ArrayVisualiser":447,"./DefaultVisualiser":448,"./ObjectVisualiser":449,"react":425}],451:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77373,7 +77780,7 @@ function parse(md) {
 
 exports.default = parse;
 
-},{"./util":450,"front-matter":7,"immutable":190,"markdown-it":191}],448:[function(require,module,exports){
+},{"./util":454,"front-matter":7,"immutable":190,"markdown-it":191}],452:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77458,7 +77865,7 @@ var reducer = (0, _redux.combineReducers)({
 
 exports.default = reducer;
 
-},{"./actions":440,"./parseMarkdown":447,"immutable":190,"jutsu":1,"redux":432,"smolder":453}],449:[function(require,module,exports){
+},{"./actions":440,"./parseMarkdown":451,"immutable":190,"jutsu":1,"redux":432,"smolder":457}],453:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77476,7 +77883,7 @@ var contentSelector = exports.contentSelector = function contentSelector(state) 
     };
 };
 
-},{}],450:[function(require,module,exports){
+},{}],454:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77532,7 +77939,7 @@ function extractMarkdownFromHTML() {
     return text.replace(re, "");
 }
 
-},{"highlight.js":39}],451:[function(require,module,exports){
+},{"highlight.js":39}],455:[function(require,module,exports){
 var util = require('./util');
 
 var dataStack; // TODO currently, this never pops
@@ -77678,7 +78085,7 @@ function findShape (data, schema, hint) {
 
 exports.findShape = findShape;
 
-},{"./util":452}],452:[function(require,module,exports){
+},{"./util":456}],456:[function(require,module,exports){
 function typeString (item, preserveStrings) {
     var typeString = Object.prototype.toString.call(item);
     typeString = typeString.split(' ')[1].split(']')[0];
@@ -77703,7 +78110,7 @@ exports.typeString = typeString;
 exports.typesMatch = typesMatch;
 exports.removeFromArray = removeFromArray;
 
-},{}],453:[function(require,module,exports){
+},{}],457:[function(require,module,exports){
 var getParamNames = require('get-parameter-names');
 var reshaper = require('reshaper');
 
@@ -77767,7 +78174,7 @@ function Smolder(toWrap, providedSchema) {
 
 module.exports = Smolder;
 
-},{"get-parameter-names":454,"reshaper":451}],454:[function(require,module,exports){
+},{"get-parameter-names":458,"reshaper":455}],458:[function(require,module,exports){
 var COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 var DEFAULT_PARAMS = /=[^,]+/mg;
 var FAT_ARROWS = /=>.*$/mg;
