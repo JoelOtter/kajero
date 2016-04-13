@@ -9,3 +9,10 @@ export const contentSelector = state => {
         )
     };
 };
+
+export const executionSelector = state => {
+    return {
+        results: state.execution.get('results'),
+        blocksExecuted: state.execution.get('blocksExecuted')
+    };
+};

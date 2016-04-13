@@ -22,8 +22,7 @@ function parse(md) {
                 type: 'code',
                 content: block.content.trim(),
                 language,
-                attrs,
-                hasBeenRun: false
+                attrs
             }));
         }
     }
