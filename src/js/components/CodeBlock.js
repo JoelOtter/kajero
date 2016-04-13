@@ -26,11 +26,8 @@ class CodeBlock extends Component {
     }
 
     render() {
-        const { dispatch, codeBlock, blocksExecuted, results } = this.props;
-        const id = codeBlock.get('id');
-        const hasBeenRun = blocksExecuted.includes(id);
+        const { id, codeBlock, hasBeenRun, result } = this.props;
         const icon = hasBeenRun ? "fa-repeat" : "fa-play-circle-o";
-        const result = results.get(id);
         return (
             <div className="codeContainer">
                 <div className="codeBlock">
@@ -51,4 +48,4 @@ class CodeBlock extends Component {
 
 }
 
-export default connect(executionSelector)(CodeBlock);
+export default CodeBlock;
