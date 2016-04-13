@@ -7,7 +7,7 @@ import CodeBlock from './CodeBlock';
 class Content extends Component {
 
     render() {
-        const { content, dispatch } = this.props;
+        const { content } = this.props;
         let blocks = [];
         for (let i = 0; i < content.size; i++) {
             const block = content.get(i);
@@ -16,7 +16,7 @@ class Content extends Component {
                     blocks.push(<TextBlock content={block.get('content')} key={String(i)} />);
                     break;
                 case 'code':
-                    blocks.push(<CodeBlock dispatch={dispatch} codeBlock={block} key={String(i)} />);
+                    blocks.push(<CodeBlock codeBlock={block} key={String(i)} />);
                     break;
             }
         }
