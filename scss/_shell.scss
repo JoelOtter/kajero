@@ -115,7 +115,16 @@ pre, .codeBlock, .resultBlock, .graphBlock {
     font-size: .8em;
     white-space: pre;
 
-    .visualiser-arrow {
+    .visualiser-arrow, .visualiser-spacing {
         cursor: default;
+    }
+
+    .visualiser-row {
+        width: 100%;
+        display: inline-block;
+
+        &:hover {
+            background-color: $background-dark-grey;
+        }
     }
 }

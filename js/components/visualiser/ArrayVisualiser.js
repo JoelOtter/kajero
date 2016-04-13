@@ -43,11 +43,13 @@ export default class ArrayVisualiser extends Component {
 
         return (
             <div className="array-visualiser">
-                <span className="visualiser-spacing">{spaces}</span>
-                <span className="visualiser-arrow" onClick={this.collapse}>{arrow}</span>
-                <span>{key}</span>
-                <span className={useHljs ? "hljs-keyword" : ""}>{'\u00a0Array'}</span>
-                <span>{'[' + data.length + ']'}</span>
+                <span className="visualiser-row">
+                    <span className="visualiser-spacing">{spaces}</span>
+                    <span className="visualiser-arrow" onClick={this.collapse}>{arrow}</span>
+                    <span>{key}</span>
+                    <span className={useHljs ? "hljs-keyword" : ""}>{'\u00a0Array'}</span>
+                    <span>{'[' + data.length + ']'}</span>
+                </span>
                 {items}
             </div>
         );

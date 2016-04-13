@@ -43,11 +43,13 @@ export default class ObjectVisualiser extends Component {
 
         return (
             <div className="object-visualiser">
-                <span className="visualiser-spacing">{spaces}</span>
-                <span className="visualiser-arrow" onClick={this.collapse}>{arrow}</span>
-                <span>{key}</span>
-                <span className={useHljs ? "hljs-keyword" : ""}>Object</span>
-                <span>{'{}'}</span>
+                <span className="visualiser-row">
+                    <span className="visualiser-spacing">{spaces}</span>
+                    <span className="visualiser-arrow" onClick={this.collapse}>{arrow}</span>
+                    <span>{key}</span>
+                    <span className={useHljs ? "hljs-keyword" : ""}>Object</span>
+                    <span>{'{}'}</span>
+                </span>
                 {items}
             </div>
         );
