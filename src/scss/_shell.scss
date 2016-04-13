@@ -122,9 +122,5 @@ pre, .codeBlock, .resultBlock, .graphBlock {
     .visualiser-row {
         width: 100%;
         display: inline-block;
-
-        &:hover {
-            background-color: $background-dark-grey;
-        }
     }
 }
