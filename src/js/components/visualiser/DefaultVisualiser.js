@@ -34,9 +34,11 @@ export default class DefaultVisualiser extends Component {
         const spaces = getSpacing(indent);
         return (
             <div className="default-visualiser">
-                <span className="visualiser-spacing">{spaces}</span>
-                <span>{key}</span>
-                <span className={cssClass}>{repr}</span>
+                <span className="visualiser-row">
+                    <span className="visualiser-spacing">{spaces}</span>
+                    <span>{key}</span>
+                    <span className={cssClass}>{repr}</span>
+                </span>
             </div>
         );
     }
