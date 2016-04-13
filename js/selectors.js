@@ -6,12 +6,7 @@ export const contentSelector = state => {
     return {
         content: state.notebook.get('content').map(
             num => state.notebook.getIn(['blocks', String(num)])
-        )
-    };
-};
-
-export const executionSelector = state => {
-    return {
+        ),
         results: state.execution.get('results'),
         blocksExecuted: state.execution.get('blocksExecuted')
     };
