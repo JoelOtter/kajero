@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { updateBlock } from '../actions';
 
 export default class Block extends Component {
 
@@ -6,7 +7,9 @@ export default class Block extends Component {
         super(props);
         this.state = {editing: false};
         this.enterEdit = this.enterEdit.bind(this);
-        this.exitEdit = this.exitEdit.bind(this);
+        this.exitEdit = this.exitEdit.bind(
+            this, this.props.dispatch, this.props.block.get('id')
+        );
     }
 
     enterEdit() {
@@ -15,8 +18,9 @@ export default class Block extends Component {
         }
     }
 
-    exitEdit() {
+    exitEdit(dispatch, id) {
         this.setState({editing: false});
+        dispatch(updateBlock(id, this.refs.editarea.value));
     }
 
     componentDidUpdate() {

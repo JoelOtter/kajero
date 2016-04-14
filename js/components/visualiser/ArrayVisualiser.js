@@ -39,7 +39,7 @@ export default class ArrayVisualiser extends Component {
                 spaces = spaces.slice(2);
             }
         }
-        const key = name ? name + ':\u00a0' : '';
+        const key = '\u00a0' + (name ?  name + ':\u00a0' : '');
 
         return (
             <div className="array-visualiser">

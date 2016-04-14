@@ -7,7 +7,8 @@ import {
     LOAD_MARKDOWN,
     RECEIVED_DATA,
     EXECUTE,
-    TOGGLE_EDIT
+    TOGGLE_EDIT,
+    UPDATE_BLOCK
 } from './actions';
 
 
@@ -25,9 +26,9 @@ const defaultExecutionState = Immutable.Map({
 });
 
 function execution(state = defaultExecutionState, action) {
+    const { id, code, text, name, data } = action;
     switch (action.type) {
         case EXECUTE:
-            const { id, code } = action;
             try {
                 let context = state.get('executionContext');
                 const data = state.get('data');
@@ -43,10 +44,13 @@ function execution(state = defaultExecutionState, action) {
                     .setIn(['results', id], err);
             }
         case RECEIVED_DATA:
-            const { name, data } = action;
             const stateData = state.get('data');
             stateData[name] = data;
             return state.set(data, stateData);
+        case UPDATE_BLOCK:
+            return state
+                .set('blocksExecuted', state.get('blocksExecuted').remove(id))
+                .removeIn(['results', id]);
         default:
             return state;
     }
@@ -77,6 +81,9 @@ function notebook(state = defaultNotebook, action) {
     switch (action.type) {
         case LOAD_MARKDOWN:
             return parse(action.markdown).mergeDeep(state);
+        case UPDATE_BLOCK:
+            const { id, text } = action;
+            return state.setIn(['blocks', id, 'content'], text);
         default:
             return state;
     }

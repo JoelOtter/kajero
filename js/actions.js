@@ -5,6 +5,7 @@ export const LOAD_MARKDOWN = 'LOAD_MARKDOWN';
 export const EXECUTE = 'EXECUTE';
 export const RECEIVED_DATA = 'RECEIVED_DATA';
 export const TOGGLE_EDIT = 'TOGGLE_EDIT';
+export const UPDATE_BLOCK = 'UPDATE_BLOCK';
 
 export function loadMarkdown(markdown) {
     return {
@@ -48,3 +49,11 @@ export function toggleEdit() {
         type: TOGGLE_EDIT
     };
 }
+
+export function updateBlock(id, text) {
+    return {
+        type: UPDATE_BLOCK,
+        id,
+        text
+    };
+};
