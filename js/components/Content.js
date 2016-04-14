@@ -14,8 +14,8 @@ class Content extends Component {
             switch(block.get('type')) {
                 case 'text':
                     blocks.push(
-                        <TextBlock editable={editable} id={block.get('id')}
-                            content={block.get('content')} key={String(i)} />
+                        <TextBlock editable={editable}
+                            block={block} key={String(i)} />
                     );
                     break;
                 case 'code':
@@ -24,7 +24,7 @@ class Content extends Component {
                     const result = results.get(id);
                     blocks.push(
                         <CodeBlock
-                            codeBlock={block} id={id} result={result} editable={editable}
+                            block={block} result={result} editable={editable}
                             key={String(i)} hasBeenRun={hasBeenRun} dispatch={dispatch}
                         />
                     );
