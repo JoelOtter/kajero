@@ -11,3 +11,7 @@ export const contentSelector = state => {
         blocksExecuted: state.execution.get('blocksExecuted')
     };
 };
+
+export const editorSelector = state => {
+    return {editable: state.editor.get('editable')};
+};

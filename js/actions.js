@@ -4,6 +4,7 @@
 export const LOAD_MARKDOWN = 'LOAD_MARKDOWN';
 export const EXECUTE = 'EXECUTE';
 export const RECEIVED_DATA = 'RECEIVED_DATA';
+export const TOGGLE_EDIT = 'TOGGLE_EDIT';
 
 export function loadMarkdown(markdown) {
     return {
@@ -39,5 +40,11 @@ export function fetchData() {
                 .then(j => dispatch(receivedData(name, j)));
             }
         );
+    };
+}
+
+export function toggleEdit() {
+    return {
+        type: TOGGLE_EDIT
     };
 }
