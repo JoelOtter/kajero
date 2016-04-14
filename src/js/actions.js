@@ -6,15 +6,16 @@ export const EXECUTE = 'EXECUTE';
 export const RECEIVED_DATA = 'RECEIVED_DATA';
 export const TOGGLE_EDIT = 'TOGGLE_EDIT';
 export const UPDATE_BLOCK = 'UPDATE_BLOCK';
+export const UPDATE_META = 'UPDATE_META';
 
-export function loadMarkdown(markdown) {
+export function loadMarkdown (markdown) {
     return {
         type: LOAD_MARKDOWN,
         markdown: markdown
     };
 }
 
-export function executeCodeBlock(codeBlock) {
+export function executeCodeBlock (codeBlock) {
     return {
         type: EXECUTE,
         id: codeBlock.get('id'),
@@ -22,7 +23,7 @@ export function executeCodeBlock(codeBlock) {
     };
 }
 
-function receivedData(name, data) {
+function receivedData (name, data) {
     return {
         type: RECEIVED_DATA,
         name,
@@ -50,10 +51,26 @@ export function toggleEdit() {
     };
 }
 
-export function updateBlock(id, text) {
+export function updateBlock (id, text) {
     return {
         type: UPDATE_BLOCK,
         id,
+        text
+    };
+};
+
+export function updateTitle (text) {
+    return {
+        type: UPDATE_META,
+        field: 'title',
+        text
+    };
+};
+
+export function updateAuthor (text) {
+    return {
+        type: UPDATE_META,
+        field: 'author',
         text
     };
 };

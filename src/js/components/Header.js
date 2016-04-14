@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Title from './Title';
+import Metadata from './Metadata';
 import { metadataSelector } from '../selectors';
 import { toggleEdit } from '../actions';
 
@@ -16,18 +17,19 @@ class Header extends Component {
     }
 
     render() {
-        const { metadata, editable } = this.props;
-        const date = new Date(metadata.get('created')).toUTCString();
+        const { metadata, editable, dispatch } = this.props;
         const title = metadata.get('title');
         const icon = editable ? "fa-newspaper-o" : "fa-pencil";
         document.title = title;
         return (
             <div>
-                <Title title={title} editable={editable} />
-                <span className="metadata"><i className="fa fa-user"></i> {metadata.get('author')} // <i className="fa fa-clock-o"></i> {date}</span>
+                <Title title={title} editable={editable} dispatch={dispatch} />
                 <span className="edit-button" onClick={this.toggleEditClicked}>
                     <i className={'fa ' + icon}></i>
                 </span>
+                <Metadata editable={editable} created={metadata.get('created')}
+                    author={metadata.get('author')} dispatch={dispatch}
+                />
             </div>
         );
     }

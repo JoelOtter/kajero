@@ -12,6 +12,21 @@ body {
 .metadata {
     font-size: 1em;
     font-family: "Amaranth", sans-serif;
+
+    .metadata-sep {
+        display: none;
+        @include respond-to($size-md) {
+            display: inline;
+        }
+    }
+
+    .metadata-item {
+        display: block;
+        margin: .5em 0;
+        @include respond-to($size-md) {
+            display: inline;
+        }
+    }
 }
 
 .edit-button {
@@ -36,8 +51,8 @@ hr {
     display: block;
     height: 1px;
     border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
+    border-top: 2px dashed $text-light;
+    margin: 1.5em 0;
     padding: 0;
 }
 
@@ -137,7 +152,7 @@ pre, .codeBlock, .resultBlock, .graphBlock {
 }
 
 .editable {
-    .title-field {
+    input {
         display: inherit;
         color: inherit;
         font-family: inherit;
@@ -146,6 +161,10 @@ pre, .codeBlock, .resultBlock, .graphBlock {
         width: 100%;
         outline: none;
         @include block-border;
+    }
+
+    .clickable {
+        cursor: pointer;
     }
 
     .text-block {
@@ -170,6 +189,26 @@ pre, .codeBlock, .resultBlock, .graphBlock {
         font-family: 'Source Code Pro', monospace;
         font-size: .8em;
         resize: none;
+    }
+
+    .metadata {
+
+        input {
+            width: 200px;
+            margin-left: 15px;
+            display: inline;
+            padding: .25em;
+            @include respond-to($size-md) {
+                width: 400px;
+            }
+        }
+
+        .metadata-row {
+            margin: .5em 0;
+            span {
+                margin-left: 15px;
+            }
+        }
     }
 
 }

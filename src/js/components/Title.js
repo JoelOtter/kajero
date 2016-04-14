@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
+import { updateTitle } from '../actions';
 
 class Title extends Component {
+
+    constructor(props) {
+        super(props);
+        this.exitEdit = this.exitEdit.bind(this);
+    }
+
+    exitEdit() {
+        this.props.dispatch(updateTitle(this.refs.titleField.value));
+    }
 
     render() {
         const { title, editable } = this.props;
@@ -9,7 +19,10 @@ class Title extends Component {
                 <h1>
                     <input type="text" className="title-field"
                         placeholder="Notebook title"
-                        defaultValue={title}/>
+                        defaultValue={title}
+                        ref="titleField"
+                        onBlur={this.exitEdit}
+                    />
                 </h1>
             );
         }
