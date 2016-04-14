@@ -76693,6 +76693,8 @@ var _actions = require('./actions');
 
 var _util = require('./util');
 
+var _selectors = require('./selectors');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -76723,6 +76725,9 @@ var Notebook = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
+            var editable = this.props.editable;
+
+            var cssClass = editable ? ' editable' : '';
             return _react2.default.createElement(
                 'div',
                 { className: 'pure-g' },
@@ -76733,10 +76738,10 @@ var Notebook = function (_Component) {
                 ),
                 _react2.default.createElement(
                     'div',
-                    { className: 'pure-u-1 pure-u-md-3-4 pure-u-lg-2-3' },
-                    _react2.default.createElement(_Header2.default, null),
+                    { className: 'pure-u-1 pure-u-md-3-4 pure-u-lg-2-3' + cssClass },
+                    _react2.default.createElement(_Header2.default, { editable: editable }),
                     _react2.default.createElement('hr', { className: 'top-sep' }),
-                    _react2.default.createElement(_Content2.default, null)
+                    _react2.default.createElement(_Content2.default, { editable: editable })
                 )
             );
         }
@@ -76745,9 +76750,9 @@ var Notebook = function (_Component) {
     return Notebook;
 }(_react.Component);
 
-exports.default = (0, _reactRedux.connect)()(Notebook);
+exports.default = (0, _reactRedux.connect)(_selectors.editorSelector)(Notebook);
 
-},{"./actions":440,"./components/Content":443,"./components/Header":444,"./util":454,"react":425,"react-redux":260}],440:[function(require,module,exports){
+},{"./actions":440,"./components/Content":444,"./components/Header":445,"./selectors":454,"./util":455,"react":425,"react-redux":260}],440:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76756,12 +76761,16 @@ Object.defineProperty(exports, "__esModule", {
 exports.loadMarkdown = loadMarkdown;
 exports.executeCodeBlock = executeCodeBlock;
 exports.fetchData = fetchData;
+exports.toggleEdit = toggleEdit;
+exports.updateBlock = updateBlock;
 /*
  * Action types
  */
 var LOAD_MARKDOWN = exports.LOAD_MARKDOWN = 'LOAD_MARKDOWN';
 var EXECUTE = exports.EXECUTE = 'EXECUTE';
 var RECEIVED_DATA = exports.RECEIVED_DATA = 'RECEIVED_DATA';
+var TOGGLE_EDIT = exports.TOGGLE_EDIT = 'TOGGLE_EDIT';
+var UPDATE_BLOCK = exports.UPDATE_BLOCK = 'UPDATE_BLOCK';
 
 function loadMarkdown(markdown) {
     return {
@@ -76799,6 +76808,20 @@ function fetchData() {
         });
     };
 }
+
+function toggleEdit() {
+    return {
+        type: TOGGLE_EDIT
+    };
+}
+
+function updateBlock(id, text) {
+    return {
+        type: UPDATE_BLOCK,
+        id: id,
+        text: text
+    };
+};
 
 },{}],441:[function(require,module,exports){
 'use strict';
@@ -76841,7 +76864,87 @@ var store = (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default
     )
 ), document.getElementById('kajero'));
 
-},{"./Notebook":439,"./reducers":452,"react":425,"react-dom":257,"react-redux":260,"redux":432,"redux-thunk":426,"whatwg-fetch":438}],442:[function(require,module,exports){
+},{"./Notebook":439,"./reducers":453,"react":425,"react-dom":257,"react-redux":260,"redux":432,"redux-thunk":426,"whatwg-fetch":438}],442:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _actions = require('../actions');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Block = function (_Component) {
+    _inherits(Block, _Component);
+
+    function Block(props) {
+        _classCallCheck(this, Block);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Block).call(this, props));
+
+        _this.state = { editing: false };
+        _this.enterEdit = _this.enterEdit.bind(_this);
+        _this.exitEdit = _this.exitEdit.bind(_this, _this.props.dispatch, _this.props.block.get('id'));
+        return _this;
+    }
+
+    _createClass(Block, [{
+        key: 'enterEdit',
+        value: function enterEdit() {
+            if (this.props.editable) {
+                this.setState({ editing: true });
+            }
+        }
+    }, {
+        key: 'exitEdit',
+        value: function exitEdit(dispatch, id) {
+            this.setState({ editing: false });
+            dispatch((0, _actions.updateBlock)(id, this.refs.editarea.value));
+        }
+    }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            if (this.refs.editarea) {
+                this.refs.editarea.focus();
+            }
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props;
+            var block = _props.block;
+            var editable = _props.editable;
+
+            if (!editable || !this.state.editing) {
+                return this.renderViewerMode();
+            }
+            var spellcheck = block.get('type') !== 'code';
+            var content = block.get('content');
+            return _react2.default.createElement('textarea', { className: 'text-edit', defaultValue: content,
+                onBlur: this.exitEdit, ref: 'editarea',
+                spellCheck: spellcheck });
+        }
+    }]);
+
+    return Block;
+}(_react.Component);
+
+exports.default = Block;
+
+},{"../actions":440,"react":425}],443:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76857,6 +76960,10 @@ var _react2 = _interopRequireDefault(_react);
 var _markdownIt = require('markdown-it');
 
 var _markdownIt2 = _interopRequireDefault(_markdownIt);
+
+var _Block2 = require('./Block');
+
+var _Block3 = _interopRequireDefault(_Block2);
 
 var _Visualiser = require('./visualiser/Visualiser');
 
@@ -76876,13 +76983,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var md = new _markdownIt2.default({ highlight: _util.highlight });
 
-var CodeBlock = function (_Component) {
-    _inherits(CodeBlock, _Component);
+var CodeBlock = function (_Block) {
+    _inherits(CodeBlock, _Block);
 
-    function CodeBlock() {
+    function CodeBlock(props) {
         _classCallCheck(this, CodeBlock);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(CodeBlock).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CodeBlock).call(this, props));
+
+        _this.clickPlay = _this.clickPlay.bind(_this);
+        return _this;
     }
 
     _createClass(CodeBlock, [{
@@ -76894,29 +77004,34 @@ var CodeBlock = function (_Component) {
         }
     }, {
         key: 'clickPlay',
-        value: function clickPlay(dispatch, codeBlock) {
-            dispatch((0, _actions.executeCodeBlock)(codeBlock));
-        }
-    }, {
-        key: 'render',
-        value: function render() {
+        value: function clickPlay() {
             var _props = this.props;
             var dispatch = _props.dispatch;
-            var codeBlock = _props.codeBlock;
+            var block = _props.block;
 
-            var hasBeenRun = codeBlock.get('hasBeenRun');
+            dispatch((0, _actions.executeCodeBlock)(block));
+        }
+    }, {
+        key: 'renderViewerMode',
+        value: function renderViewerMode() {
+            var _props2 = this.props;
+            var block = _props2.block;
+            var hasBeenRun = _props2.hasBeenRun;
+            var result = _props2.result;
+
             var icon = hasBeenRun ? "fa-repeat" : "fa-play-circle-o";
-            var result = codeBlock.get('result');
             return _react2.default.createElement(
                 'div',
                 { className: 'codeContainer' },
                 _react2.default.createElement(
                     'div',
                     { className: 'codeBlock' },
-                    _react2.default.createElement('div', { dangerouslySetInnerHTML: this.rawMarkup(codeBlock) }),
-                    _react2.default.createElement('i', { className: "fa " + icon, onClick: this.clickPlay.bind(this, dispatch, codeBlock) })
+                    _react2.default.createElement('div', { onClick: this.enterEdit,
+                        dangerouslySetInnerHTML: this.rawMarkup(block) }),
+                    _react2.default.createElement('i', { className: "fa " + icon, onClick: this.clickPlay })
                 ),
-                _react2.default.createElement('div', { hidden: !hasBeenRun, className: 'graphBlock', id: "kajero-graph-" + codeBlock.get('id') }),
+                _react2.default.createElement('div', { hidden: !hasBeenRun, className: 'graphBlock',
+                    id: "kajero-graph-" + block.get('id') }),
                 _react2.default.createElement(
                     'div',
                     { hidden: !hasBeenRun, className: 'resultBlock' },
@@ -76930,11 +77045,11 @@ var CodeBlock = function (_Component) {
     }]);
 
     return CodeBlock;
-}(_react.Component);
+}(_Block3.default);
 
 exports.default = CodeBlock;
 
-},{"../actions":440,"../util":454,"./visualiser/Visualiser":450,"markdown-it":191,"react":425}],443:[function(require,module,exports){
+},{"../actions":440,"../util":455,"./Block":442,"./visualiser/Visualiser":451,"markdown-it":191,"react":425}],444:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76980,18 +77095,29 @@ var Content = function (_Component) {
         key: 'render',
         value: function render() {
             var _props = this.props;
-            var content = _props.content;
             var dispatch = _props.dispatch;
+            var content = _props.content;
+            var results = _props.results;
+            var blocksExecuted = _props.blocksExecuted;
+            var editable = _props.editable;
 
             var blocks = [];
             for (var i = 0; i < content.size; i++) {
                 var block = content.get(i);
                 switch (block.get('type')) {
                     case 'text':
-                        blocks.push(_react2.default.createElement(_TextBlock2.default, { content: block.get('content'), key: String(i) }));
+                        blocks.push(_react2.default.createElement(_TextBlock2.default, { editable: editable, dispatch: dispatch,
+                            block: block, key: String(i)
+                        }));
                         break;
                     case 'code':
-                        blocks.push(_react2.default.createElement(_CodeBlock2.default, { dispatch: dispatch, codeBlock: block, key: String(i) }));
+                        var id = block.get('id');
+                        var hasBeenRun = blocksExecuted.includes(id);
+                        var result = results.get(id);
+                        blocks.push(_react2.default.createElement(_CodeBlock2.default, {
+                            block: block, result: result, editable: editable,
+                            key: String(i), hasBeenRun: hasBeenRun, dispatch: dispatch
+                        }));
                         break;
                 }
             }
@@ -77008,7 +77134,7 @@ var Content = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.contentSelector)(Content);
 
-},{"../selectors":453,"./CodeBlock":442,"./TextBlock":445,"react":425,"react-redux":260}],444:[function(require,module,exports){
+},{"../selectors":454,"./CodeBlock":443,"./TextBlock":446,"react":425,"react-redux":260}],445:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77029,6 +77155,8 @@ var _Title2 = _interopRequireDefault(_Title);
 
 var _selectors = require('../selectors');
 
+var _actions = require('../actions');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -77040,24 +77168,35 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Header = function (_Component) {
     _inherits(Header, _Component);
 
-    function Header() {
+    function Header(props) {
         _classCallCheck(this, Header);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Header).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Header).call(this, props));
+
+        _this.toggleEditClicked = _this.toggleEditClicked.bind(_this, props.dispatch);
+        return _this;
     }
 
     _createClass(Header, [{
+        key: 'toggleEditClicked',
+        value: function toggleEditClicked(dispatch) {
+            dispatch((0, _actions.toggleEdit)());
+        }
+    }, {
         key: 'render',
         value: function render() {
-            var metadata = this.props.metadata;
+            var _props = this.props;
+            var metadata = _props.metadata;
+            var editable = _props.editable;
 
             var date = new Date(metadata.get('created')).toUTCString();
             var title = metadata.get('title');
+            var icon = editable ? "fa-newspaper-o" : "fa-pencil";
             document.title = title;
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement(_Title2.default, { title: title }),
+                _react2.default.createElement(_Title2.default, { title: title, editable: editable }),
                 _react2.default.createElement(
                     'span',
                     { className: 'metadata' },
@@ -77068,6 +77207,11 @@ var Header = function (_Component) {
                     _react2.default.createElement('i', { className: 'fa fa-clock-o' }),
                     ' ',
                     date
+                ),
+                _react2.default.createElement(
+                    'span',
+                    { className: 'edit-button', onClick: this.toggleEditClicked },
+                    _react2.default.createElement('i', { className: 'fa ' + icon })
                 )
             );
         }
@@ -77078,7 +77222,7 @@ var Header = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.metadataSelector)(Header);
 
-},{"../selectors":453,"./Title":446,"react":425,"react-redux":260}],445:[function(require,module,exports){
+},{"../actions":440,"../selectors":454,"./Title":447,"react":425,"react-redux":260}],446:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77095,6 +77239,10 @@ var _markdownIt = require('markdown-it');
 
 var _markdownIt2 = _interopRequireDefault(_markdownIt);
 
+var _Block2 = require('./Block');
+
+var _Block3 = _interopRequireDefault(_Block2);
+
 var _util = require('../util');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -77107,13 +77255,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var md = new _markdownIt2.default({ highlight: _util.highlight });
 
-var TextBlock = function (_Component) {
-    _inherits(TextBlock, _Component);
+var TextBlock = function (_Block) {
+    _inherits(TextBlock, _Block);
 
-    function TextBlock() {
+    function TextBlock(props) {
         _classCallCheck(this, TextBlock);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(TextBlock).apply(this, arguments));
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(TextBlock).call(this, props));
     }
 
     _createClass(TextBlock, [{
@@ -77122,21 +77270,23 @@ var TextBlock = function (_Component) {
             return { __html: md.render(markdown) };
         }
     }, {
-        key: 'render',
-        value: function render() {
-            var content = this.props.content;
+        key: 'renderViewerMode',
+        value: function renderViewerMode() {
+            var block = this.props.block;
 
-            return _react2.default.createElement('div', { dangerouslySetInnerHTML: this.rawMarkup(content) });
+            return _react2.default.createElement('div', { className: 'text-block',
+                dangerouslySetInnerHTML: this.rawMarkup(block.get('content')),
+                onClick: this.enterEdit });
         }
     }]);
 
     return TextBlock;
-}(_react.Component);
+}(_Block3.default);
 
 exports.default = TextBlock;
 
-},{"../util":454,"markdown-it":191,"react":425}],446:[function(require,module,exports){
-'use strict';
+},{"../util":455,"./Block":442,"markdown-it":191,"react":425}],447:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -77144,7 +77294,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require('react');
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -77166,12 +77316,23 @@ var Title = function (_Component) {
     }
 
     _createClass(Title, [{
-        key: 'render',
+        key: "render",
         value: function render() {
-            var title = this.props.title;
+            var _props = this.props;
+            var title = _props.title;
+            var editable = _props.editable;
 
+            if (editable) {
+                return _react2.default.createElement(
+                    "h1",
+                    null,
+                    _react2.default.createElement("input", { type: "text", className: "title-field",
+                        placeholder: "Notebook title",
+                        defaultValue: title })
+                );
+            }
             return _react2.default.createElement(
-                'h1',
+                "h1",
                 null,
                 title
             );
@@ -77183,7 +77344,7 @@ var Title = function (_Component) {
 
 exports.default = Title;
 
-},{"react":425}],447:[function(require,module,exports){
+},{"react":425}],448:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77255,35 +77416,39 @@ var ArrayVisualiser = function (_Component) {
                     spaces = spaces.slice(2);
                 }
             }
-            var key = name ? name + ': ' : '';
+            var key = ' ' + (name ? name + ': ' : '');
 
             return _react2.default.createElement(
                 'div',
                 { className: 'array-visualiser' },
                 _react2.default.createElement(
                     'span',
-                    { className: 'visualiser-spacing' },
-                    spaces
-                ),
-                _react2.default.createElement(
-                    'span',
-                    { className: 'visualiser-arrow', onClick: this.collapse },
-                    arrow
-                ),
-                _react2.default.createElement(
-                    'span',
-                    null,
-                    key
-                ),
-                _react2.default.createElement(
-                    'span',
-                    { className: useHljs ? "hljs-keyword" : "" },
-                    ' Array'
-                ),
-                _react2.default.createElement(
-                    'span',
-                    null,
-                    '[' + data.length + ']'
+                    { className: 'visualiser-row' },
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'visualiser-spacing' },
+                        spaces
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'visualiser-arrow', onClick: this.collapse },
+                        arrow
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        key
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { className: useHljs ? "hljs-keyword" : "" },
+                        ' Array'
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        '[' + data.length + ']'
+                    )
                 ),
                 items
             );
@@ -77295,7 +77460,7 @@ var ArrayVisualiser = function (_Component) {
 
 exports.default = ArrayVisualiser;
 
-},{"./Visualiser":450,"react":425}],448:[function(require,module,exports){
+},{"./Visualiser":451,"react":425}],449:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77369,18 +77534,22 @@ var DefaultVisualiser = function (_Component) {
                 { className: 'default-visualiser' },
                 _react2.default.createElement(
                     'span',
-                    { className: 'visualiser-spacing' },
-                    spaces
-                ),
-                _react2.default.createElement(
-                    'span',
-                    null,
-                    key
-                ),
-                _react2.default.createElement(
-                    'span',
-                    { className: cssClass },
-                    repr
+                    { className: 'visualiser-row' },
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'visualiser-spacing' },
+                        spaces
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        key
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { className: cssClass },
+                        repr
+                    )
                 )
             );
         }
@@ -77391,7 +77560,7 @@ var DefaultVisualiser = function (_Component) {
 
 exports.default = DefaultVisualiser;
 
-},{"./Visualiser":450,"react":425}],449:[function(require,module,exports){
+},{"./Visualiser":451,"react":425}],450:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77470,28 +77639,32 @@ var ObjectVisualiser = function (_Component) {
                 { className: 'object-visualiser' },
                 _react2.default.createElement(
                     'span',
-                    { className: 'visualiser-spacing' },
-                    spaces
-                ),
-                _react2.default.createElement(
-                    'span',
-                    { className: 'visualiser-arrow', onClick: this.collapse },
-                    arrow
-                ),
-                _react2.default.createElement(
-                    'span',
-                    null,
-                    key
-                ),
-                _react2.default.createElement(
-                    'span',
-                    { className: useHljs ? "hljs-keyword" : "" },
-                    'Object'
-                ),
-                _react2.default.createElement(
-                    'span',
-                    null,
-                    '{}'
+                    { className: 'visualiser-row' },
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'visualiser-spacing' },
+                        spaces
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'visualiser-arrow', onClick: this.collapse },
+                        arrow
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        key
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { className: useHljs ? "hljs-keyword" : "" },
+                        'Object'
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        '{}'
+                    )
                 ),
                 items
             );
@@ -77503,7 +77676,7 @@ var ObjectVisualiser = function (_Component) {
 
 exports.default = ObjectVisualiser;
 
-},{"./Visualiser":450,"react":425}],450:[function(require,module,exports){
+},{"./Visualiser":451,"react":425}],451:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77608,7 +77781,7 @@ var Visualiser = function (_Component) {
 
 exports.default = Visualiser;
 
-},{"./ArrayVisualiser":447,"./DefaultVisualiser":448,"./ObjectVisualiser":449,"react":425}],451:[function(require,module,exports){
+},{"./ArrayVisualiser":448,"./DefaultVisualiser":449,"./ObjectVisualiser":450,"react":425}],452:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77658,8 +77831,7 @@ function parse(md) {
                     type: 'code',
                     content: block.content.trim(),
                     language: language,
-                    attrs: attrs,
-                    hasBeenRun: false
+                    attrs: attrs
                 }));
             }
         }
@@ -77707,12 +77879,16 @@ function parse(md) {
                             // If a code block isn't JavaScript, we'll just render it in
                             // the text box, as it won't be interactive.
                             if (codeBlock.get('language') === 'javascript') {
-                                body.push(blockCounter);
-                                blocks[blockCounter] = {
-                                    type: 'text',
-                                    id: String(blockCounter),
-                                    content: currentString
-                                };
+                                // Don't bother pushing the current block if it's
+                                // just whitespace.
+                                if (currentString.match(/\S+/gm)) {
+                                    body.push(blockCounter);
+                                    blocks[blockCounter] = {
+                                        type: 'text',
+                                        id: String(blockCounter),
+                                        content: currentString.trim()
+                                    };
+                                }
                                 blockCounter += 1;
                                 currentString = "";
                                 blocks[blockCounter] = codeBlock.set('id', String(blockCounter));
@@ -77725,7 +77901,7 @@ function parse(md) {
                             break;
                         case 'softbreak':
                         case 'hardbreak':
-                            currentString += "\n\n";
+                            currentString += "\n";
                             break;
                         case 'image':
                             var src = item.attrs[0][1];
@@ -77764,7 +77940,7 @@ function parse(md) {
                 blocks[blockCounter] = {
                     type: 'text',
                     id: String(blockCounter),
-                    content: currentString
+                    content: currentString.trim()
                 };
             }
         }
@@ -77797,7 +77973,7 @@ function parse(md) {
 
 exports.default = parse;
 
-},{"./util":454,"front-matter":7,"immutable":190,"markdown-it":191}],452:[function(require,module,exports){
+},{"./util":455,"front-matter":7,"immutable":190,"markdown-it":191}],453:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77826,16 +78002,50 @@ var _actions = require('./actions');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var defaultNotebook = _immutable2.default.Map({
-    metadata: _immutable2.default.fromJS({
-        datasources: {}
-    }),
-    content: _immutable2.default.List(),
-    blocks: _immutable2.default.Map(),
+/*
+ * This reducer handles the state of execution of code blocks -
+ * retaining results, carrying context around, and making note
+ * of which blocks have and haven't been executed. It's also
+ * where the obtained data is stored.
+ */
+var defaultExecutionState = _immutable2.default.Map({
+    executionContext: {},
     data: {},
-    executionContext: {}
-}); // Import d3 and nv as globals
+    results: _immutable2.default.Map(),
+    blocksExecuted: _immutable2.default.Set()
+}); // Imports d3 and nv as globals
 
+
+function execution() {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? defaultExecutionState : arguments[0];
+    var action = arguments[1];
+    var id = action.id;
+    var code = action.code;
+    var text = action.text;
+    var name = action.name;
+    var data = action.data;
+
+    switch (action.type) {
+        case _actions.EXECUTE:
+            try {
+                var context = state.get('executionContext');
+                var _data = state.get('data');
+                var _newState = state.set('blocksExecuted', state.get('blocksExecuted').add(id));
+                return _newState.setIn(['results', id], executeCode(code, context, _data, id)).set('executionContext', context);
+            } catch (err) {
+                console.error(err);
+                return newState.setIn(['results', id], err);
+            }
+        case _actions.RECEIVED_DATA:
+            var stateData = state.get('data');
+            stateData[name] = data;
+            return state.set(data, stateData);
+        case _actions.UPDATE_BLOCK:
+            return state.set('blocksExecuted', state.get('blocksExecuted').remove(id)).removeIn(['results', id]);
+        default:
+            return state;
+    }
+}
 
 function executeCode(code, context, data, id) {
     var graphElement = document.getElementById("kajero-graph-" + id);
@@ -77843,46 +78053,64 @@ function executeCode(code, context, data, id) {
     return new Function(['d3', 'nv', 'graphs', 'data', 'graphElement'], code).call(context, d3, nv, jutsu, data, graphElement);
 }
 
+/*
+ * This reducer handles the state of the notebook's actual content,
+ * obtained by parsing Markdown. This is kept separate from the execution
+ * state to help with implementing 'undo' in the editor.
+ */
+var defaultNotebook = _immutable2.default.Map({
+    metadata: _immutable2.default.fromJS({
+        datasources: {}
+    }),
+    content: _immutable2.default.List(),
+    blocks: _immutable2.default.Map()
+});
+
 function notebook() {
     var state = arguments.length <= 0 || arguments[0] === undefined ? defaultNotebook : arguments[0];
     var action = arguments[1];
 
-    // TODO split this out into functions...serious
     switch (action.type) {
         case _actions.LOAD_MARKDOWN:
             return (0, _parseMarkdown2.default)(action.markdown).mergeDeep(state);
-        case _actions.EXECUTE:
+        case _actions.UPDATE_BLOCK:
             var id = action.id;
-            var code = action.code;
+            var text = action.text;
 
-            var newState = state.setIn(['blocks', id, 'hasBeenRun'], true);
-            try {
-                var context = state.get('executionContext');
-                var _data = state.get('data');
-                return newState.setIn(['blocks', id, 'result'], executeCode(code, context, _data, id)).set('executionContext', context);
-            } catch (err) {
-                console.error(err);
-                return newState.setIn(['blocks', id, 'result'], err);
-            }
-        case _actions.RECEIVED_DATA:
-            var name = action.name;
-            var data = action.data;
+            return state.setIn(['blocks', id, 'content'], text);
+        default:
+            return state;
+    }
+}
 
-            var stateData = state.get('data');
-            stateData[name] = data;
-            return state.set('data', stateData);
+/*
+ * This reducer simply keeps track of the state of the editor.
+ */
+var defaultEditor = _immutable2.default.Map({
+    editable: false
+});
+
+function editor() {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? defaultEditor : arguments[0];
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _actions.TOGGLE_EDIT:
+            return state.set('editable', !state.get('editable'));
         default:
             return state;
     }
 }
 
 var reducer = (0, _redux.combineReducers)({
-    notebook: notebook
+    notebook: notebook,
+    execution: execution,
+    editor: editor
 });
 
 exports.default = reducer;
 
-},{"./actions":440,"./parseMarkdown":451,"immutable":190,"jutsu":1,"redux":432,"smolder":457}],453:[function(require,module,exports){
+},{"./actions":440,"./parseMarkdown":452,"immutable":190,"jutsu":1,"redux":432,"smolder":458}],454:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77896,11 +78124,17 @@ var contentSelector = exports.contentSelector = function contentSelector(state) 
     return {
         content: state.notebook.get('content').map(function (num) {
             return state.notebook.getIn(['blocks', String(num)]);
-        })
+        }),
+        results: state.execution.get('results'),
+        blocksExecuted: state.execution.get('blocksExecuted')
     };
 };
 
-},{}],454:[function(require,module,exports){
+var editorSelector = exports.editorSelector = function editorSelector(state) {
+    return { editable: state.editor.get('editable') };
+};
+
+},{}],455:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77956,7 +78190,7 @@ function extractMarkdownFromHTML() {
     return text.replace(re, "");
 }
 
-},{"highlight.js":39}],455:[function(require,module,exports){
+},{"highlight.js":39}],456:[function(require,module,exports){
 var util = require('./util');
 
 var dataStack; // TODO currently, this never pops
@@ -78102,7 +78336,7 @@ function findShape (data, schema, hint) {
 
 exports.findShape = findShape;
 
-},{"./util":456}],456:[function(require,module,exports){
+},{"./util":457}],457:[function(require,module,exports){
 function typeString (item, preserveStrings) {
     var typeString = Object.prototype.toString.call(item);
     typeString = typeString.split(' ')[1].split(']')[0];
@@ -78127,7 +78361,7 @@ exports.typeString = typeString;
 exports.typesMatch = typesMatch;
 exports.removeFromArray = removeFromArray;
 
-},{}],457:[function(require,module,exports){
+},{}],458:[function(require,module,exports){
 var getParamNames = require('get-parameter-names');
 var reshaper = require('reshaper');
 
@@ -78191,7 +78425,7 @@ function Smolder(toWrap, providedSchema) {
 
 module.exports = Smolder;
 
-},{"get-parameter-names":458,"reshaper":455}],458:[function(require,module,exports){
+},{"get-parameter-names":459,"reshaper":456}],459:[function(require,module,exports){
 var COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 var DEFAULT_PARAMS = /=[^,]+/mg;
 var FAT_ARROWS = /=>.*$/mg;
