@@ -6,7 +6,8 @@ import Jutsu from 'jutsu'; // Imports d3 and nv as globals
 import {
     LOAD_MARKDOWN,
     RECEIVED_DATA,
-    EXECUTE
+    EXECUTE,
+    TOGGLE_EDIT
 } from './actions';
 
 
@@ -81,9 +82,26 @@ function notebook(state = defaultNotebook, action) {
     }
 }
 
+/*
+ * This reducer simply keeps track of the state of the editor.
+ */
+const defaultEditor = Immutable.Map({
+    editable: false
+});
+
+function editor(state = defaultEditor, action) {
+    switch (action.type) {
+        case TOGGLE_EDIT:
+            return state.set('editable', !state.get('editable'));
+        default:
+            return state;
+    }
+}
+
 const reducer = combineReducers({
     notebook,
-    execution
+    execution,
+    editor
 });
 
 export default reducer;

@@ -29,3 +29,7 @@ $size-xl: 80em;
 @mixin respond-to($size) {
     @media only screen and (min-width: $size) { @content }
 }
+
+@mixin block-border {
+    border: 1px dashed $text-light;
+}

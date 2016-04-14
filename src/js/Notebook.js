@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Content from './components/Content';
 import { loadMarkdown, fetchData } from './actions';
 import { extractMarkdownFromHTML } from './util';
+import { editorSelector } from './selectors';
 
 class Notebook extends Component {
 
@@ -17,15 +18,17 @@ class Notebook extends Component {
     }
 
     render() {
+        const { editable } = this.props;
+        const cssClass = editable ? ' editable' : '';
         return (
             <div className="pure-g">
                 <div className="offset-col pure-u-1 pure-u-md-1-8 pure-u-lg-1-6">
                     &nbsp;
                 </div>
-                <div className="pure-u-1 pure-u-md-3-4 pure-u-lg-2-3">
-                    <Header />
+                <div className={'pure-u-1 pure-u-md-3-4 pure-u-lg-2-3' + cssClass}>
+                    <Header editable={editable} />
                     <hr className="top-sep"></hr>
-                    <Content />
+                    <Content editable={editable} />
                 </div>
             </div>
         );
@@ -33,4 +36,4 @@ class Notebook extends Component {
 
 }
 
-export default connect()(Notebook);
+export default connect(editorSelector)(Notebook);

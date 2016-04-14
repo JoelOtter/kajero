@@ -42,12 +42,16 @@ function parse(md) {
                     // If a code block isn't JavaScript, we'll just render it in
                     // the text box, as it won't be interactive.
                     if (codeBlock.get('language') === 'javascript') {
-                        body.push(blockCounter);
-                        blocks[blockCounter] = {
-                            type: 'text',
-                            id: String(blockCounter),
-                            content: currentString
-                        };
+                        // Don't bother pushing the current block if it's
+                        // just whitespace.
+                        if (currentString.match(/\S+/gm)) {
+                            body.push(blockCounter);
+                            blocks[blockCounter] = {
+                                type: 'text',
+                                id: String(blockCounter),
+                                content: currentString.trim()
+                            };
+                        }
                         blockCounter += 1;
                         currentString = "";
                         blocks[blockCounter] = codeBlock.set('id', String(blockCounter));
@@ -60,7 +64,7 @@ function parse(md) {
                     break;
                 case 'softbreak':
                 case 'hardbreak':
-                    currentString += "\n\n";
+                    currentString += "\n";
                     break;
                 case 'image':
                     const src = item.attrs[0][1];
@@ -84,7 +88,7 @@ function parse(md) {
             blocks[blockCounter] = {
                 type: 'text',
                 id: String(blockCounter),
-                content: currentString
+                content: currentString.trim()
             };
         }
     }

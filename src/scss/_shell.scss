@@ -14,6 +14,12 @@ body {
     font-family: "Amaranth", sans-serif;
 }
 
+.edit-button {
+    float: right;
+    margin: 0 .5em;
+    cursor: pointer;
+}
+
 code {
     font-family: "Source Code Pro", monospace;
     font-size: .8em;
@@ -62,7 +68,7 @@ img {
 pre, .codeBlock, .resultBlock, .graphBlock {
     overflow: scroll;
     padding: .5em;
-    border: 1px dashed $text-light;
+    @include block-border;
 }
 
 
@@ -80,6 +86,7 @@ pre, .codeBlock, .resultBlock, .graphBlock {
     .codeBlock .fa {
         float: right;
         display: inline;
+        cursor: pointer;
     }
 
     .graphBlock, .resultBlock {
@@ -111,7 +118,7 @@ pre, .codeBlock, .resultBlock, .graphBlock {
 }
 
 .visualiser {
-    font-family: 'Source Code Pro';
+    font-family: 'Source Code Pro', monospace;
     font-size: .8em;
     white-space: pre;
 
@@ -123,4 +130,42 @@ pre, .codeBlock, .resultBlock, .graphBlock {
         width: 100%;
         display: inline-block;
     }
+}
+
+.editable {
+    .title-field {
+        display: inherit;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        width: 100%;
+        outline: none;
+        @include block-border;
+    }
+
+    .text-block {
+        padding: .7em .5em;
+        @include block-border;
+        *:first-child {
+            margin-top: 0;
+        }
+        *:last-child {
+            margin-bottom: 0;
+        }
+        margin: 1em 0;
+    }
+
+    .text-edit {
+        width: 100%;
+        color: $text-black;
+        padding: .5em;
+        outline: none;
+        height: 300px;
+        @include block-border;
+        font-family: 'Source Code Pro', monospace;
+        font-size: .8em;
+        resize: none;
+    }
+
 }
