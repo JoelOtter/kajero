@@ -122,8 +122,12 @@ pre, .codeBlock, .resultBlock, .graphBlock {
     font-size: .8em;
     white-space: pre;
 
-    .visualiser-arrow, .visualiser-spacing {
+    .visualiser-spacing {
         cursor: default;
+    }
+
+    .visualiser-arrow {
+        cursor: pointer;
     }
 
     .visualiser-row {

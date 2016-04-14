@@ -11,7 +11,7 @@ class CodeBlock extends Block {
 
     constructor(props) {
         super(props);
-        this.clickPlay = this.clickPlay.bind(this, props.dispatch, props.block);
+        this.clickPlay = this.clickPlay.bind(this);
     }
 
     rawMarkup(codeBlock) {
@@ -20,7 +20,8 @@ class CodeBlock extends Block {
         };
     }
 
-    clickPlay(dispatch, block) {
+    clickPlay() {
+        const { dispatch, block } = this.props;
         dispatch(executeCodeBlock(block));
     }
 
