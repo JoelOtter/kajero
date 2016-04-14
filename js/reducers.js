@@ -8,7 +8,8 @@ import {
     RECEIVED_DATA,
     EXECUTE,
     TOGGLE_EDIT,
-    UPDATE_BLOCK
+    UPDATE_BLOCK,
+    UPDATE_META
 } from './actions';
 
 
@@ -78,12 +79,16 @@ const defaultNotebook = Immutable.Map({
 });
 
 function notebook(state = defaultNotebook, action) {
+    const { id, text, field } = action;
     switch (action.type) {
         case LOAD_MARKDOWN:
             return parse(action.markdown).mergeDeep(state);
         case UPDATE_BLOCK:
-            const { id, text } = action;
             return state.setIn(['blocks', id, 'content'], text);
+        case UPDATE_META:
+            return state.setIn(['metadata', field], text)
+        case TOGGLE_EDIT:
+            return state.setIn(['metadata', 'created'], new Date().toUTCString());
         default:
             return state;
     }
