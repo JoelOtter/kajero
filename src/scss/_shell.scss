@@ -189,6 +189,7 @@ pre, .codeBlock, .resultBlock, .graphBlock {
         font-family: 'Source Code Pro', monospace;
         font-size: .8em;
         resize: none;
+        margin: 1em 0;
     }
 
     .metadata {
@@ -208,6 +209,14 @@ pre, .codeBlock, .resultBlock, .graphBlock {
             span {
                 margin-left: 15px;
             }
+        }
+    }
+
+    .add-controls {
+        overflow: hidden;
+        i {
+            margin-left: .5em;
+            float: right;
         }
     }
 

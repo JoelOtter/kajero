@@ -45,7 +45,7 @@ function parse(md) {
                         // Don't bother pushing the current block if it's
                         // just whitespace.
                         if (currentString.match(/\S+/gm)) {
-                            body.push(blockCounter);
+                            body.push(String(blockCounter));
                             blocks[blockCounter] = {
                                 type: 'text',
                                 id: String(blockCounter),
@@ -55,7 +55,7 @@ function parse(md) {
                         blockCounter += 1;
                         currentString = "";
                         blocks[blockCounter] = codeBlock.set('id', String(blockCounter));
-                        body.push(blockCounter);
+                        body.push(String(blockCounter));
                         blockCounter += 1;
                     } else {
                         currentString += codeToText(codeBlock);
@@ -84,7 +84,7 @@ function parse(md) {
             }
         }
         if (currentString.length > 0) {
-            body.push(blockCounter);
+            body.push(String(blockCounter));
             blocks[blockCounter] = {
                 type: 'text',
                 id: String(blockCounter),

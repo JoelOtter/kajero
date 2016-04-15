@@ -8,6 +8,7 @@ export const TOGGLE_EDIT = 'TOGGLE_EDIT';
 export const UPDATE_BLOCK = 'UPDATE_BLOCK';
 export const UPDATE_META = 'UPDATE_META';
 export const TOGGLE_META = 'TOGGLE_META';
+export const ADD_BLOCK = 'ADD_BLOCK';
 
 export function loadMarkdown (markdown) {
     return {
@@ -80,5 +81,21 @@ export function toggleFooter() {
     return {
         type: TOGGLE_META,
         field: 'showFooter'
+    };
+};
+
+export function addCodeBlock(id) {
+    return {
+        type: ADD_BLOCK,
+        blockType: 'code',
+        id
+    };
+};
+
+export function addTextBlock(id) {
+    return {
+        type: ADD_BLOCK,
+        blockType: 'text',
+        id
     };
 };

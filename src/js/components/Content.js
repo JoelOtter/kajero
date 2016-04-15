@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { contentSelector } from '../selectors';
 import TextBlock from './TextBlock';
 import CodeBlock from './CodeBlock';
+import AddControls from './AddControls';
 
 class Content extends Component {
 
@@ -11,6 +12,10 @@ class Content extends Component {
         let blocks = [];
         for (let i = 0; i < content.size; i++) {
             const block = content.get(i);
+            blocks.push(
+                <AddControls key={'add' + i} dispatch={dispatch}
+                    id={block.get('id')} editable={editable} />
+            );
             switch(block.get('type')) {
                 case 'text':
                     blocks.push(
@@ -32,6 +37,9 @@ class Content extends Component {
                     break;
             }
         }
+        blocks.push(
+            <AddControls key="add-end" dispatch={dispatch} editable={editable} />
+        );
         return <div>{blocks}</div>;
     }
 

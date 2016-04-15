@@ -10,7 +10,8 @@ import {
     TOGGLE_EDIT,
     UPDATE_BLOCK,
     UPDATE_META,
-    TOGGLE_META
+    TOGGLE_META,
+    ADD_BLOCK
 } from './actions';
 
 
@@ -80,11 +81,12 @@ const defaultNotebook = Immutable.Map({
 });
 
 function notebook(state = defaultNotebook, action) {
-    const { id, text, field } = action;
+    const { id, text, field, blockType } = action;
     switch (action.type) {
         case LOAD_MARKDOWN:
             return parse(action.markdown).mergeDeep(state);
         case UPDATE_BLOCK:
+            console.log('updated ' + id);
             return state.setIn(['blocks', id, 'content'], text);
         case UPDATE_META:
             return state.setIn(['metadata', field], text);
@@ -92,9 +94,34 @@ function notebook(state = defaultNotebook, action) {
             return state.setIn(['metadata', field], !state.getIn(['metadata', field]));
         case TOGGLE_EDIT:
             return state.setIn(['metadata', 'created'], new Date().toUTCString());
+        case ADD_BLOCK:
+            const content = state.get('content');
+            const newId = getNewId(content);
+            let newBlock = {type: blockType, id: newId};
+            console.log('created ' + newId);
+            if (blockType === 'code') {
+                newBlock.content = '// New code block';
+                newBlock.language = 'javascript';
+                newBlock.attrs = [];
+            } else {
+                newBlock.content = 'New text block';
+            }
+            const newState = state.setIn(['blocks', newId], Immutable.fromJS(newBlock));
+            if (id === undefined) {
+                return newState.set('content', content.push(newId));
+            }
+            return newState.set('content', content.insert(content.indexOf(id), newId));
         default:
             return state;
     }
+}
+
+function getNewId(content) {
+    var id = 0;
+    while (content.contains(String(id))) {
+        id++;
+    }
+    return String(id);
 }
 
 /*
