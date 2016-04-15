@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { metadataSelector } from '../selectors';
+import config from '../config';
 
 class Footer extends Component {
 
@@ -20,7 +21,7 @@ class Footer extends Component {
                 </span>
                 <span className="footer-row">
                     <i className="fa fa-flask"></i>&nbsp;
-                    Made with <a href="http://joelotter.com/kajero">Kajero</a>.
+                    Made with <a href={config.kajeroHomepage}>Kajero</a>.
                 </span>
             </div>
         );
