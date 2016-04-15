@@ -9,7 +9,8 @@ import {
     EXECUTE,
     TOGGLE_EDIT,
     UPDATE_BLOCK,
-    UPDATE_META
+    UPDATE_META,
+    TOGGLE_META
 } from './actions';
 
 
@@ -86,7 +87,9 @@ function notebook(state = defaultNotebook, action) {
         case UPDATE_BLOCK:
             return state.setIn(['blocks', id, 'content'], text);
         case UPDATE_META:
-            return state.setIn(['metadata', field], text)
+            return state.setIn(['metadata', field], text);
+        case TOGGLE_META:
+            return state.setIn(['metadata', field], !state.getIn(['metadata', field]));
         case TOGGLE_EDIT:
             return state.setIn(['metadata', 'created'], new Date().toUTCString());
         default:
