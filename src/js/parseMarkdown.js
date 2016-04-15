@@ -98,7 +98,9 @@ function parse(md) {
             title: content.attributes.title,
             created: Date.parse(content.attributes.created),
             author: content.attributes.author,
-            datasources: content.attributes.datasources
+            datasources: content.attributes.datasources,
+            original: content.attributes.original,
+            showFooter: content.attributes.show_footer
         },
         content: body,
         blocks: blocks

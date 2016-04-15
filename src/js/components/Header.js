@@ -27,9 +27,7 @@ class Header extends Component {
                 <span className="edit-button" onClick={this.toggleEditClicked}>
                     <i className={'fa ' + icon}></i>
                 </span>
-                <Metadata editable={editable} created={metadata.get('created')}
-                    author={metadata.get('author')} dispatch={dispatch}
-                />
+                <Metadata editable={editable} metadata={metadata} dispatch={dispatch} />
             </div>
         );
     }

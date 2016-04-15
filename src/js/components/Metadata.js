@@ -1,21 +1,28 @@
 import React, { Component } from 'react';
-import { updateAuthor } from '../actions';
+import { updateAuthor, toggleFooter } from '../actions';
 
 export default class Metadata extends Component {
 
     constructor(props) {
         super(props);
         this.updateAuthor = this.updateAuthor.bind(this);
+        this.toggleFooter = this.toggleFooter.bind(this);
     }
 
     updateAuthor() {
         this.props.dispatch(updateAuthor(this.refs.authorField.value));
     }
 
+    toggleFooter() {
+        this.props.dispatch(toggleFooter());
+    }
+
     render() {
-        const { author, created, editable } = this.props;
-        const date = new Date(created).toUTCString();
+        const { editable, metadata } = this.props;
+        const author = metadata.get('author');
+        const date = new Date(metadata.get('created')).toUTCString();
         if (editable) {
+            const iconFooter = metadata.get('showFooter') ? 'check-circle' : 'circle-o';
             return (
                 <div className="metadata">
                     <div className="metadata-row">
@@ -24,12 +31,10 @@ export default class Metadata extends Component {
                             ref="authorField" onBlur={this.updateAuthor} />
                     </div>
                     <div className="metadata-row">
-                        <i className="fa fa-check-circle clickable"></i>
-                        <span>Link to original notebook</span>
-                    </div>
-                    <div className="metadata-row">
-                        <i className="fa fa-check-circle clickable"></i>
-                        <span>Show Kajero footer</span>
+                        <i className={'fa fa-' + iconFooter + ' clickable'}
+                            onClick={this.toggleFooter} >
+                        </i>
+                        <span>Show footer</span>
                     </div>
                 </div>
             );

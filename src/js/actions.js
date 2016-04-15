@@ -7,6 +7,7 @@ export const RECEIVED_DATA = 'RECEIVED_DATA';
 export const TOGGLE_EDIT = 'TOGGLE_EDIT';
 export const UPDATE_BLOCK = 'UPDATE_BLOCK';
 export const UPDATE_META = 'UPDATE_META';
+export const TOGGLE_META = 'TOGGLE_META';
 
 export function loadMarkdown (markdown) {
     return {
@@ -72,5 +73,12 @@ export function updateAuthor (text) {
         type: UPDATE_META,
         field: 'author',
         text
+    };
+};
+
+export function toggleFooter() {
+    return {
+        type: TOGGLE_META,
+        field: 'showFooter'
     };
 };
