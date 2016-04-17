@@ -31,7 +31,6 @@
     "immutable": "^3.7.6",
     "jutsu": "file:../jutsu",
     "markdown-it": "^6.0.1",
-    "purecss-sass": "^0.6.0",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
     "react-redux": "^4.4.1",
