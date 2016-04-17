@@ -76689,6 +76689,10 @@ var _Content = require('./components/Content');
 
 var _Content2 = _interopRequireDefault(_Content);
 
+var _Footer = require('./components/Footer');
+
+var _Footer2 = _interopRequireDefault(_Footer);
+
 var _actions = require('./actions');
 
 var _util = require('./util');
@@ -76741,7 +76745,8 @@ var Notebook = function (_Component) {
                     { className: 'pure-u-1 pure-u-md-3-4 pure-u-lg-2-3' + cssClass },
                     _react2.default.createElement(_Header2.default, { editable: editable }),
                     _react2.default.createElement('hr', { className: 'top-sep' }),
-                    _react2.default.createElement(_Content2.default, { editable: editable })
+                    _react2.default.createElement(_Content2.default, { editable: editable }),
+                    _react2.default.createElement(_Footer2.default, null)
                 )
             );
         }
@@ -76752,7 +76757,7 @@ var Notebook = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.editorSelector)(Notebook);
 
-},{"./actions":440,"./components/Content":444,"./components/Header":445,"./selectors":454,"./util":455,"react":425,"react-redux":260}],440:[function(require,module,exports){
+},{"./actions":440,"./components/Content":445,"./components/Footer":446,"./components/Header":447,"./selectors":459,"./util":460,"react":425,"react-redux":260}],440:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76763,6 +76768,14 @@ exports.executeCodeBlock = executeCodeBlock;
 exports.fetchData = fetchData;
 exports.toggleEdit = toggleEdit;
 exports.updateBlock = updateBlock;
+exports.updateTitle = updateTitle;
+exports.updateAuthor = updateAuthor;
+exports.toggleFooter = toggleFooter;
+exports.addCodeBlock = addCodeBlock;
+exports.addTextBlock = addTextBlock;
+exports.deleteBlock = deleteBlock;
+exports.moveBlockUp = moveBlockUp;
+exports.moveBlockDown = moveBlockDown;
 /*
  * Action types
  */
@@ -76771,6 +76784,12 @@ var EXECUTE = exports.EXECUTE = 'EXECUTE';
 var RECEIVED_DATA = exports.RECEIVED_DATA = 'RECEIVED_DATA';
 var TOGGLE_EDIT = exports.TOGGLE_EDIT = 'TOGGLE_EDIT';
 var UPDATE_BLOCK = exports.UPDATE_BLOCK = 'UPDATE_BLOCK';
+var UPDATE_META = exports.UPDATE_META = 'UPDATE_META';
+var TOGGLE_META = exports.TOGGLE_META = 'TOGGLE_META';
+var ADD_BLOCK = exports.ADD_BLOCK = 'ADD_BLOCK';
+var DELETE_BLOCK = exports.DELETE_BLOCK = 'DELETE_BLOCK';
+var MOVE_BLOCK_DOWN = exports.MOVE_BLOCK_DOWN = 'MOVE_BLOCK_DOWN';
+var MOVE_BLOCK_UP = exports.MOVE_BLOCK_UP = 'MOVE_BLOCK_UP';
 
 function loadMarkdown(markdown) {
     return {
@@ -76823,6 +76842,66 @@ function updateBlock(id, text) {
     };
 };
 
+function updateTitle(text) {
+    return {
+        type: UPDATE_META,
+        field: 'title',
+        text: text
+    };
+};
+
+function updateAuthor(text) {
+    return {
+        type: UPDATE_META,
+        field: 'author',
+        text: text
+    };
+};
+
+function toggleFooter() {
+    return {
+        type: TOGGLE_META,
+        field: 'showFooter'
+    };
+};
+
+function addCodeBlock(id) {
+    return {
+        type: ADD_BLOCK,
+        blockType: 'code',
+        id: id
+    };
+};
+
+function addTextBlock(id) {
+    return {
+        type: ADD_BLOCK,
+        blockType: 'text',
+        id: id
+    };
+};
+
+function deleteBlock(id) {
+    return {
+        type: DELETE_BLOCK,
+        id: id
+    };
+};
+
+function moveBlockUp(id) {
+    return {
+        type: MOVE_BLOCK_UP,
+        id: id
+    };
+};
+
+function moveBlockDown(id) {
+    return {
+        type: MOVE_BLOCK_DOWN,
+        id: id
+    };
+};
+
 },{}],441:[function(require,module,exports){
 'use strict';
 
@@ -76864,7 +76943,75 @@ var store = (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default
     )
 ), document.getElementById('kajero'));
 
-},{"./Notebook":439,"./reducers":453,"react":425,"react-dom":257,"react-redux":260,"redux":432,"redux-thunk":426,"whatwg-fetch":438}],442:[function(require,module,exports){
+},{"./Notebook":439,"./reducers":458,"react":425,"react-dom":257,"react-redux":260,"redux":432,"redux-thunk":426,"whatwg-fetch":438}],442:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _actions = require('../actions');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AddControls = function (_Component) {
+    _inherits(AddControls, _Component);
+
+    function AddControls(props) {
+        _classCallCheck(this, AddControls);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AddControls).call(this, props));
+
+        _this.addCodeBlock = _this.addCodeBlock.bind(_this);
+        _this.addTextBlock = _this.addTextBlock.bind(_this);
+        return _this;
+    }
+
+    _createClass(AddControls, [{
+        key: 'addCodeBlock',
+        value: function addCodeBlock() {
+            this.props.dispatch((0, _actions.addCodeBlock)(this.props.id));
+        }
+    }, {
+        key: 'addTextBlock',
+        value: function addTextBlock() {
+            this.props.dispatch((0, _actions.addTextBlock)(this.props.id));
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var editable = this.props.editable;
+
+            if (!editable) {
+                return null;
+            }
+            return _react2.default.createElement(
+                'div',
+                { className: 'add-controls' },
+                _react2.default.createElement('i', { className: 'fa fa-file-text-o clickable', onClick: this.addTextBlock }),
+                _react2.default.createElement('i', { className: 'fa fa-file-code-o clickable', onClick: this.addCodeBlock })
+            );
+        }
+    }]);
+
+    return AddControls;
+}(_react.Component);
+
+exports.default = AddControls;
+
+},{"../actions":440,"react":425}],443:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76897,7 +77044,11 @@ var Block = function (_Component) {
 
         _this.state = { editing: false };
         _this.enterEdit = _this.enterEdit.bind(_this);
-        _this.exitEdit = _this.exitEdit.bind(_this, _this.props.dispatch, _this.props.block.get('id'));
+        _this.exitEdit = _this.exitEdit.bind(_this);
+        _this.getButtons = _this.getButtons.bind(_this);
+        _this.deleteBlock = _this.deleteBlock.bind(_this);
+        _this.moveBlockUp = _this.moveBlockUp.bind(_this);
+        _this.moveBlockDown = _this.moveBlockDown.bind(_this);
         return _this;
     }
 
@@ -76910,9 +77061,9 @@ var Block = function (_Component) {
         }
     }, {
         key: 'exitEdit',
-        value: function exitEdit(dispatch, id) {
+        value: function exitEdit() {
             this.setState({ editing: false });
-            dispatch((0, _actions.updateBlock)(id, this.refs.editarea.value));
+            this.props.dispatch((0, _actions.updateBlock)(this.props.block.get('id'), this.refs.editarea.value));
         }
     }, {
         key: 'componentDidUpdate',
@@ -76920,6 +77071,40 @@ var Block = function (_Component) {
             if (this.refs.editarea) {
                 this.refs.editarea.focus();
             }
+        }
+    }, {
+        key: 'deleteBlock',
+        value: function deleteBlock() {
+            this.props.dispatch((0, _actions.deleteBlock)(this.props.block.get('id')));
+        }
+    }, {
+        key: 'moveBlockUp',
+        value: function moveBlockUp() {
+            this.props.dispatch((0, _actions.moveBlockUp)(this.props.block.get('id')));
+        }
+    }, {
+        key: 'moveBlockDown',
+        value: function moveBlockDown() {
+            this.props.dispatch((0, _actions.moveBlockDown)(this.props.block.get('id')));
+        }
+    }, {
+        key: 'getButtons',
+        value: function getButtons() {
+            if (!this.props.editable) {
+                return null;
+            }
+            var buttons = [];
+            if (!this.props.isLast) {
+                buttons.push(_react2.default.createElement('i', { className: 'fa fa-arrow-circle-o-down', key: 'down',
+                    onClick: this.moveBlockDown }));
+            }
+            if (!this.props.isFirst) {
+                buttons.push(_react2.default.createElement('i', { className: 'fa fa-arrow-circle-o-up', key: 'up',
+                    onClick: this.moveBlockUp }));
+            }
+            buttons.push(_react2.default.createElement('i', { className: 'fa fa-times-circle-o', key: 'delete',
+                onClick: this.deleteBlock }));
+            return buttons;
         }
     }, {
         key: 'render',
@@ -76944,7 +77129,7 @@ var Block = function (_Component) {
 
 exports.default = Block;
 
-},{"../actions":440,"react":425}],443:[function(require,module,exports){
+},{"../actions":440,"react":425}],444:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77020,15 +77205,26 @@ var CodeBlock = function (_Block) {
             var result = _props2.result;
 
             var icon = hasBeenRun ? "fa-repeat" : "fa-play-circle-o";
+            var buttons = this.getButtons();
+            var runButton = _react2.default.createElement('i', { className: "fa " + icon, onClick: this.clickPlay, key: 'run' });
+            if (buttons == null) {
+                buttons = runButton;
+            } else {
+                buttons.unshift(runButton);
+            }
             return _react2.default.createElement(
                 'div',
                 { className: 'codeContainer' },
                 _react2.default.createElement(
                     'div',
                     { className: 'codeBlock' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'editor-buttons' },
+                        buttons
+                    ),
                     _react2.default.createElement('div', { onClick: this.enterEdit,
-                        dangerouslySetInnerHTML: this.rawMarkup(block) }),
-                    _react2.default.createElement('i', { className: "fa " + icon, onClick: this.clickPlay })
+                        dangerouslySetInnerHTML: this.rawMarkup(block) })
                 ),
                 _react2.default.createElement('div', { hidden: !hasBeenRun, className: 'graphBlock',
                     id: "kajero-graph-" + block.get('id') }),
@@ -77049,7 +77245,7 @@ var CodeBlock = function (_Block) {
 
 exports.default = CodeBlock;
 
-},{"../actions":440,"../util":455,"./Block":442,"./visualiser/Visualiser":451,"markdown-it":191,"react":425}],444:[function(require,module,exports){
+},{"../actions":440,"../util":460,"./Block":443,"./visualiser/Visualiser":454,"markdown-it":191,"react":425}],445:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77073,6 +77269,10 @@ var _TextBlock2 = _interopRequireDefault(_TextBlock);
 var _CodeBlock = require('./CodeBlock');
 
 var _CodeBlock2 = _interopRequireDefault(_CodeBlock);
+
+var _AddControls = require('./AddControls');
+
+var _AddControls2 = _interopRequireDefault(_AddControls);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -77104,10 +77304,15 @@ var Content = function (_Component) {
             var blocks = [];
             for (var i = 0; i < content.size; i++) {
                 var block = content.get(i);
+                var isFirst = i === 0;
+                var isLast = i === content.size - 1;
+                blocks.push(_react2.default.createElement(_AddControls2.default, { key: 'add' + i, dispatch: dispatch,
+                    id: block.get('id'), editable: editable }));
                 switch (block.get('type')) {
                     case 'text':
                         blocks.push(_react2.default.createElement(_TextBlock2.default, { editable: editable, dispatch: dispatch,
-                            block: block, key: String(i)
+                            block: block, key: String(i), isFirst: isFirst,
+                            isLast: isLast
                         }));
                         break;
                     case 'code':
@@ -77116,11 +77321,13 @@ var Content = function (_Component) {
                         var result = results.get(id);
                         blocks.push(_react2.default.createElement(_CodeBlock2.default, {
                             block: block, result: result, editable: editable,
-                            key: String(i), hasBeenRun: hasBeenRun, dispatch: dispatch
+                            key: String(i), hasBeenRun: hasBeenRun, dispatch: dispatch,
+                            isFirst: isFirst, isLast: isLast
                         }));
                         break;
                 }
             }
+            blocks.push(_react2.default.createElement(_AddControls2.default, { key: 'add-end', dispatch: dispatch, editable: editable }));
             return _react2.default.createElement(
                 'div',
                 null,
@@ -77134,7 +77341,96 @@ var Content = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.contentSelector)(Content);
 
-},{"../selectors":454,"./CodeBlock":443,"./TextBlock":446,"react":425,"react-redux":260}],445:[function(require,module,exports){
+},{"../selectors":459,"./AddControls":442,"./CodeBlock":444,"./TextBlock":449,"react":425,"react-redux":260}],446:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = require('react-redux');
+
+var _selectors = require('../selectors');
+
+var _config = require('../config');
+
+var _config2 = _interopRequireDefault(_config);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Footer = function (_Component) {
+    _inherits(Footer, _Component);
+
+    function Footer() {
+        _classCallCheck(this, Footer);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Footer).apply(this, arguments));
+    }
+
+    _createClass(Footer, [{
+        key: 'render',
+        value: function render() {
+            var metadata = this.props.metadata;
+
+            if (!metadata.get('showFooter')) {
+                return _react2.default.createElement('div', { className: 'footer' });
+            }
+            var originalTitle = metadata.getIn(['original', 'title']);
+            var originalUrl = metadata.getIn(['original', 'url']);
+            var original = void 0;
+            if (originalTitle !== undefined && originalUrl !== undefined) {
+                original = _react2.default.createElement(
+                    'span',
+                    { className: 'footer-row' },
+                    _react2.default.createElement('i', { className: 'fa fa-sitemap' }),
+                    '  Forked from ',
+                    _react2.default.createElement(
+                        'a',
+                        { href: originalUrl },
+                        originalTitle
+                    ),
+                    '.'
+                );
+            }
+            return _react2.default.createElement(
+                'div',
+                { className: 'footer' },
+                _react2.default.createElement('hr', { className: 'footer-sep top-sep' }),
+                original,
+                _react2.default.createElement(
+                    'span',
+                    { className: 'footer-row' },
+                    _react2.default.createElement('i', { className: 'fa fa-flask' }),
+                    '  Made with ',
+                    _react2.default.createElement(
+                        'a',
+                        { href: _config2.default.kajeroHomepage },
+                        'Kajero'
+                    ),
+                    '.'
+                )
+            );
+        }
+    }]);
+
+    return Footer;
+}(_react.Component);
+
+exports.default = (0, _reactRedux.connect)(_selectors.metadataSelector)(Footer);
+
+},{"../config":456,"../selectors":459,"react":425,"react-redux":260}],447:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77152,6 +77448,10 @@ var _reactRedux = require('react-redux');
 var _Title = require('./Title');
 
 var _Title2 = _interopRequireDefault(_Title);
+
+var _Metadata = require('./Metadata');
+
+var _Metadata2 = _interopRequireDefault(_Metadata);
 
 var _selectors = require('../selectors');
 
@@ -77188,31 +77488,21 @@ var Header = function (_Component) {
             var _props = this.props;
             var metadata = _props.metadata;
             var editable = _props.editable;
+            var dispatch = _props.dispatch;
 
-            var date = new Date(metadata.get('created')).toUTCString();
             var title = metadata.get('title');
             var icon = editable ? "fa-newspaper-o" : "fa-pencil";
             document.title = title;
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement(_Title2.default, { title: title, editable: editable }),
-                _react2.default.createElement(
-                    'span',
-                    { className: 'metadata' },
-                    _react2.default.createElement('i', { className: 'fa fa-user' }),
-                    ' ',
-                    metadata.get('author'),
-                    ' // ',
-                    _react2.default.createElement('i', { className: 'fa fa-clock-o' }),
-                    ' ',
-                    date
-                ),
+                _react2.default.createElement(_Title2.default, { title: title, editable: editable, dispatch: dispatch }),
                 _react2.default.createElement(
                     'span',
                     { className: 'edit-button', onClick: this.toggleEditClicked },
                     _react2.default.createElement('i', { className: 'fa ' + icon })
-                )
+                ),
+                _react2.default.createElement(_Metadata2.default, { editable: editable, metadata: metadata, dispatch: dispatch })
             );
         }
     }]);
@@ -77222,7 +77512,116 @@ var Header = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.metadataSelector)(Header);
 
-},{"../actions":440,"../selectors":454,"./Title":447,"react":425,"react-redux":260}],446:[function(require,module,exports){
+},{"../actions":440,"../selectors":459,"./Metadata":448,"./Title":450,"react":425,"react-redux":260}],448:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _actions = require('../actions');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Metadata = function (_Component) {
+    _inherits(Metadata, _Component);
+
+    function Metadata(props) {
+        _classCallCheck(this, Metadata);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Metadata).call(this, props));
+
+        _this.updateAuthor = _this.updateAuthor.bind(_this);
+        _this.toggleFooter = _this.toggleFooter.bind(_this);
+        return _this;
+    }
+
+    _createClass(Metadata, [{
+        key: 'updateAuthor',
+        value: function updateAuthor() {
+            this.props.dispatch((0, _actions.updateAuthor)(this.refs.authorField.value));
+        }
+    }, {
+        key: 'toggleFooter',
+        value: function toggleFooter() {
+            this.props.dispatch((0, _actions.toggleFooter)());
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props;
+            var editable = _props.editable;
+            var metadata = _props.metadata;
+
+            var author = metadata.get('author');
+            var date = new Date(metadata.get('created')).toUTCString();
+            if (editable) {
+                var iconFooter = metadata.get('showFooter') ? 'check-circle' : 'circle-o';
+                return _react2.default.createElement(
+                    'div',
+                    { className: 'metadata' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'metadata-row' },
+                        _react2.default.createElement('i', { className: 'fa fa-user' }),
+                        _react2.default.createElement('input', { type: 'text', defaultValue: author,
+                            ref: 'authorField', onBlur: this.updateAuthor })
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'metadata-row' },
+                        _react2.default.createElement('i', { className: 'fa fa-' + iconFooter + ' clickable',
+                            onClick: this.toggleFooter }),
+                        _react2.default.createElement(
+                            'span',
+                            null,
+                            'Show footer'
+                        )
+                    )
+                );
+            }
+            return _react2.default.createElement(
+                'div',
+                { className: 'metadata' },
+                _react2.default.createElement(
+                    'span',
+                    { className: 'metadata-item' },
+                    _react2.default.createElement('i', { className: 'fa fa-user' }),
+                    ' ' + author
+                ),
+                _react2.default.createElement(
+                    'span',
+                    { className: 'metadata-sep' },
+                    ' // '
+                ),
+                _react2.default.createElement(
+                    'span',
+                    { className: 'metadata-item' },
+                    _react2.default.createElement('i', { className: 'fa fa-clock-o' }),
+                    ' ' + date
+                )
+            );
+        }
+    }]);
+
+    return Metadata;
+}(_react.Component);
+
+exports.default = Metadata;
+
+},{"../actions":440,"react":425}],449:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77274,9 +77673,19 @@ var TextBlock = function (_Block) {
         value: function renderViewerMode() {
             var block = this.props.block;
 
-            return _react2.default.createElement('div', { className: 'text-block',
-                dangerouslySetInnerHTML: this.rawMarkup(block.get('content')),
-                onClick: this.enterEdit });
+            var buttons = this.getButtons();
+            return _react2.default.createElement(
+                'div',
+                { className: 'text-block' },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'editor-buttons' },
+                    buttons
+                ),
+                _react2.default.createElement('div', {
+                    dangerouslySetInnerHTML: this.rawMarkup(block.get('content')),
+                    onClick: this.enterEdit })
+            );
         }
     }]);
 
@@ -77285,8 +77694,8 @@ var TextBlock = function (_Block) {
 
 exports.default = TextBlock;
 
-},{"../util":455,"./Block":442,"markdown-it":191,"react":425}],447:[function(require,module,exports){
-"use strict";
+},{"../util":460,"./Block":443,"markdown-it":191,"react":425}],450:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -77294,9 +77703,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _actions = require('../actions');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -77309,14 +77720,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Title = function (_Component) {
     _inherits(Title, _Component);
 
-    function Title() {
+    function Title(props) {
         _classCallCheck(this, Title);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Title).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Title).call(this, props));
+
+        _this.exitEdit = _this.exitEdit.bind(_this);
+        return _this;
     }
 
     _createClass(Title, [{
-        key: "render",
+        key: 'exitEdit',
+        value: function exitEdit() {
+            this.props.dispatch((0, _actions.updateTitle)(this.refs.titleField.value));
+        }
+    }, {
+        key: 'render',
         value: function render() {
             var _props = this.props;
             var title = _props.title;
@@ -77324,15 +77743,18 @@ var Title = function (_Component) {
 
             if (editable) {
                 return _react2.default.createElement(
-                    "h1",
+                    'h1',
                     null,
-                    _react2.default.createElement("input", { type: "text", className: "title-field",
-                        placeholder: "Notebook title",
-                        defaultValue: title })
+                    _react2.default.createElement('input', { type: 'text', className: 'title-field',
+                        placeholder: 'Notebook title',
+                        defaultValue: title,
+                        ref: 'titleField',
+                        onBlur: this.exitEdit
+                    })
                 );
             }
             return _react2.default.createElement(
-                "h1",
+                'h1',
                 null,
                 title
             );
@@ -77344,7 +77766,7 @@ var Title = function (_Component) {
 
 exports.default = Title;
 
-},{"react":425}],448:[function(require,module,exports){
+},{"../actions":440,"react":425}],451:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77460,7 +77882,7 @@ var ArrayVisualiser = function (_Component) {
 
 exports.default = ArrayVisualiser;
 
-},{"./Visualiser":451,"react":425}],449:[function(require,module,exports){
+},{"./Visualiser":454,"react":425}],452:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77560,7 +77982,7 @@ var DefaultVisualiser = function (_Component) {
 
 exports.default = DefaultVisualiser;
 
-},{"./Visualiser":451,"react":425}],450:[function(require,module,exports){
+},{"./Visualiser":454,"react":425}],453:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77676,7 +78098,7 @@ var ObjectVisualiser = function (_Component) {
 
 exports.default = ObjectVisualiser;
 
-},{"./Visualiser":451,"react":425}],451:[function(require,module,exports){
+},{"./Visualiser":454,"react":425}],454:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77781,7 +78203,28 @@ var Visualiser = function (_Component) {
 
 exports.default = Visualiser;
 
-},{"./ArrayVisualiser":448,"./DefaultVisualiser":449,"./ObjectVisualiser":450,"react":425}],452:[function(require,module,exports){
+},{"./ArrayVisualiser":451,"./DefaultVisualiser":452,"./ObjectVisualiser":453,"react":425}],455:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+    kajeroHomepage: 'http://www.joelotter.com/kajero'
+};
+
+},{}],456:[function(require,module,exports){
+(function (process){
+'use strict';
+
+var env = process.env.NODE_ENV || 'development';
+
+var config = {
+    development: require('./development.config')
+};
+
+module.exports = config[env];
+
+}).call(this,require('_process'))
+
+},{"./development.config":455,"_process":5}],457:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77882,7 +78325,7 @@ function parse(md) {
                                 // Don't bother pushing the current block if it's
                                 // just whitespace.
                                 if (currentString.match(/\S+/gm)) {
-                                    body.push(blockCounter);
+                                    body.push(String(blockCounter));
                                     blocks[blockCounter] = {
                                         type: 'text',
                                         id: String(blockCounter),
@@ -77892,7 +78335,7 @@ function parse(md) {
                                 blockCounter += 1;
                                 currentString = "";
                                 blocks[blockCounter] = codeBlock.set('id', String(blockCounter));
-                                body.push(blockCounter);
+                                body.push(String(blockCounter));
                                 blockCounter += 1;
                             } else {
                                 currentString += (0, _util.codeToText)(codeBlock);
@@ -77936,7 +78379,7 @@ function parse(md) {
             }
 
             if (currentString.length > 0) {
-                body.push(blockCounter);
+                body.push(String(blockCounter));
                 blocks[blockCounter] = {
                     type: 'text',
                     id: String(blockCounter),
@@ -77964,7 +78407,9 @@ function parse(md) {
             title: content.attributes.title,
             created: Date.parse(content.attributes.created),
             author: content.attributes.author,
-            datasources: content.attributes.datasources
+            datasources: content.attributes.datasources,
+            original: content.attributes.original,
+            showFooter: content.attributes.show_footer
         },
         content: body,
         blocks: blocks
@@ -77973,7 +78418,7 @@ function parse(md) {
 
 exports.default = parse;
 
-},{"./util":455,"front-matter":7,"immutable":190,"markdown-it":191}],453:[function(require,module,exports){
+},{"./util":460,"front-matter":7,"immutable":190,"markdown-it":191}],458:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78069,18 +78514,67 @@ var defaultNotebook = _immutable2.default.Map({
 function notebook() {
     var state = arguments.length <= 0 || arguments[0] === undefined ? defaultNotebook : arguments[0];
     var action = arguments[1];
+    var id = action.id;
+    var text = action.text;
+    var field = action.field;
+    var blockType = action.blockType;
 
+    var content = state.get('content');
     switch (action.type) {
         case _actions.LOAD_MARKDOWN:
             return (0, _parseMarkdown2.default)(action.markdown).mergeDeep(state);
         case _actions.UPDATE_BLOCK:
-            var id = action.id;
-            var text = action.text;
-
             return state.setIn(['blocks', id, 'content'], text);
+        case _actions.UPDATE_META:
+            return state.setIn(['metadata', field], text);
+        case _actions.TOGGLE_META:
+            return state.setIn(['metadata', field], !state.getIn(['metadata', field]));
+        case _actions.TOGGLE_EDIT:
+            return state.setIn(['metadata', 'created'], new Date().toUTCString());
+        case _actions.ADD_BLOCK:
+            var newId = getNewId(content);
+            var newBlock = { type: blockType, id: newId };
+            console.log('created ' + newId);
+            if (blockType === 'code') {
+                newBlock.content = '// New code block';
+                newBlock.language = 'javascript';
+                newBlock.attrs = [];
+            } else {
+                newBlock.content = 'New text block';
+            }
+            var newState = state.setIn(['blocks', newId], _immutable2.default.fromJS(newBlock));
+            if (id === undefined) {
+                return newState.set('content', content.push(newId));
+            }
+            return newState.set('content', content.insert(content.indexOf(id), newId));
+        case _actions.DELETE_BLOCK:
+            return state.deleteIn(['blocks', id]).set('content', content.delete(content.indexOf(id)));
+        case _actions.MOVE_BLOCK_UP:
+            return state.set('content', moveItem(content, id, true));
+        case _actions.MOVE_BLOCK_DOWN:
+            return state.set('content', moveItem(content, id, false));
         default:
             return state;
     }
+}
+
+function getNewId(content) {
+    var id = 0;
+    while (content.contains(String(id))) {
+        id++;
+    }
+    return String(id);
+}
+
+function moveItem(content, id, up) {
+    var index = content.indexOf(id);
+    if (index === 0 && up || index === content.size - 1 && !up) {
+        return content;
+    }
+    if (up) {
+        return content.slice(0, index - 1).push(id).push(content.get(index - 1)).concat(content.slice(index + 1));
+    }
+    return content.slice(0, index).push(content.get(index + 1)).push(id).concat(content.slice(index + 2));
 }
 
 /*
@@ -78110,7 +78604,7 @@ var reducer = (0, _redux.combineReducers)({
 
 exports.default = reducer;
 
-},{"./actions":440,"./parseMarkdown":452,"immutable":190,"jutsu":1,"redux":432,"smolder":458}],454:[function(require,module,exports){
+},{"./actions":440,"./parseMarkdown":457,"immutable":190,"jutsu":1,"redux":432,"smolder":463}],459:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78123,7 +78617,7 @@ var metadataSelector = exports.metadataSelector = function metadataSelector(stat
 var contentSelector = exports.contentSelector = function contentSelector(state) {
     return {
         content: state.notebook.get('content').map(function (num) {
-            return state.notebook.getIn(['blocks', String(num)]);
+            return state.notebook.getIn(['blocks', num]);
         }),
         results: state.execution.get('results'),
         blocksExecuted: state.execution.get('blocksExecuted')
@@ -78134,7 +78628,7 @@ var editorSelector = exports.editorSelector = function editorSelector(state) {
     return { editable: state.editor.get('editable') };
 };
 
-},{}],455:[function(require,module,exports){
+},{}],460:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78190,7 +78684,7 @@ function extractMarkdownFromHTML() {
     return text.replace(re, "");
 }
 
-},{"highlight.js":39}],456:[function(require,module,exports){
+},{"highlight.js":39}],461:[function(require,module,exports){
 var util = require('./util');
 
 var dataStack; // TODO currently, this never pops
@@ -78336,7 +78830,7 @@ function findShape (data, schema, hint) {
 
 exports.findShape = findShape;
 
-},{"./util":457}],457:[function(require,module,exports){
+},{"./util":462}],462:[function(require,module,exports){
 function typeString (item, preserveStrings) {
     var typeString = Object.prototype.toString.call(item);
     typeString = typeString.split(' ')[1].split(']')[0];
@@ -78361,7 +78855,7 @@ exports.typeString = typeString;
 exports.typesMatch = typesMatch;
 exports.removeFromArray = removeFromArray;
 
-},{}],458:[function(require,module,exports){
+},{}],463:[function(require,module,exports){
 var getParamNames = require('get-parameter-names');
 var reshaper = require('reshaper');
 
@@ -78425,7 +78919,7 @@ function Smolder(toWrap, providedSchema) {
 
 module.exports = Smolder;
 
-},{"get-parameter-names":459,"reshaper":456}],459:[function(require,module,exports){
+},{"get-parameter-names":464,"reshaper":461}],464:[function(require,module,exports){
 var COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 var DEFAULT_PARAMS = /=[^,]+/mg;
 var FAT_ARROWS = /=>.*$/mg;
