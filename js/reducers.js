@@ -11,7 +11,10 @@ import {
     UPDATE_BLOCK,
     UPDATE_META,
     TOGGLE_META,
-    ADD_BLOCK
+    ADD_BLOCK,
+    DELETE_BLOCK,
+    MOVE_BLOCK_UP,
+    MOVE_BLOCK_DOWN
 } from './actions';
 
 
@@ -82,11 +85,11 @@ const defaultNotebook = Immutable.Map({
 
 function notebook(state = defaultNotebook, action) {
     const { id, text, field, blockType } = action;
+    const content = state.get('content');
     switch (action.type) {
         case LOAD_MARKDOWN:
             return parse(action.markdown).mergeDeep(state);
         case UPDATE_BLOCK:
-            console.log('updated ' + id);
             return state.setIn(['blocks', id, 'content'], text);
         case UPDATE_META:
             return state.setIn(['metadata', field], text);
@@ -95,7 +98,6 @@ function notebook(state = defaultNotebook, action) {
         case TOGGLE_EDIT:
             return state.setIn(['metadata', 'created'], new Date().toUTCString());
         case ADD_BLOCK:
-            const content = state.get('content');
             const newId = getNewId(content);
             let newBlock = {type: blockType, id: newId};
             console.log('created ' + newId);
@@ -111,6 +113,13 @@ function notebook(state = defaultNotebook, action) {
                 return newState.set('content', content.push(newId));
             }
             return newState.set('content', content.insert(content.indexOf(id), newId));
+        case DELETE_BLOCK:
+            return state.deleteIn(['blocks', id])
+                .set('content', content.delete(content.indexOf(id)));
+        case MOVE_BLOCK_UP:
+            return state.set('content', moveItem(content, id, true));
+        case MOVE_BLOCK_DOWN:
+            return state.set('content', moveItem(content, id, false));
         default:
             return state;
     }
@@ -122,6 +131,21 @@ function getNewId(content) {
         id++;
     }
     return String(id);
+}
+
+function moveItem(content, id, up) {
+    const index = content.indexOf(id);
+    if ((index === 0 && up) || (index === content.size - 1 && !up)) {
+        return content;
+    }
+    if (up) {
+        return content.slice(0, index - 1)
+            .push(id).push(content.get(index-1))
+            .concat(content.slice(index + 1));
+    }
+    return content.slice(0, index)
+        .push(content.get(index + 1)).push(id)
+        .concat(content.slice(index + 2));
 }
 
 /*

@@ -17,10 +17,16 @@ class TextBlock extends Block {
 
     renderViewerMode() {
         const { block } = this.props;
+        const buttons = this.getButtons();
         return (
-            <div className="text-block"
-                dangerouslySetInnerHTML={this.rawMarkup(block.get('content'))}
-                onClick={this.enterEdit}>
+            <div className="text-block">
+                <div className="editor-buttons">
+                    {buttons}
+                </div>
+                <div
+                    dangerouslySetInnerHTML={this.rawMarkup(block.get('content'))}
+                    onClick={this.enterEdit}>
+                </div>
             </div>
         );
     }

@@ -12,13 +12,19 @@ class Footer extends Component {
         }
         const originalTitle = metadata.getIn(['original', 'title']);
         const originalUrl = metadata.getIn(['original', 'url']);
-        return (
-            <div className="footer">
-                <hr className="footer-sep top-sep" />
+        let original;
+        if (originalTitle !== undefined && originalUrl !== undefined) {
+            original = (
                 <span className="footer-row">
                     <i className="fa fa-sitemap"></i>&nbsp;
                     Forked from <a href={originalUrl}>{originalTitle}</a>.
                 </span>
+            );
+        }
+        return (
+            <div className="footer">
+                <hr className="footer-sep top-sep" />
+                {original}
                 <span className="footer-row">
                     <i className="fa fa-flask"></i>&nbsp;
                     Made with <a href={config.kajeroHomepage}>Kajero</a>.
