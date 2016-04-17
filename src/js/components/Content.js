@@ -12,6 +12,8 @@ class Content extends Component {
         let blocks = [];
         for (let i = 0; i < content.size; i++) {
             const block = content.get(i);
+            const isFirst = (i === 0);
+            const isLast = (i === content.size - 1);
             blocks.push(
                 <AddControls key={'add' + i} dispatch={dispatch}
                     id={block.get('id')} editable={editable} />
@@ -20,7 +22,8 @@ class Content extends Component {
                 case 'text':
                     blocks.push(
                         <TextBlock editable={editable} dispatch={dispatch}
-                            block={block} key={String(i)}
+                            block={block} key={String(i)} isFirst={isFirst}
+                            isLast={isLast}
                         />
                     );
                     break;
@@ -32,6 +35,7 @@ class Content extends Component {
                         <CodeBlock
                             block={block} result={result} editable={editable}
                             key={String(i)} hasBeenRun={hasBeenRun} dispatch={dispatch}
+                            isFirst={isFirst} isLast={isLast}
                         />
                     );
                     break;

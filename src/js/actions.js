@@ -9,6 +9,9 @@ export const UPDATE_BLOCK = 'UPDATE_BLOCK';
 export const UPDATE_META = 'UPDATE_META';
 export const TOGGLE_META = 'TOGGLE_META';
 export const ADD_BLOCK = 'ADD_BLOCK';
+export const DELETE_BLOCK = 'DELETE_BLOCK';
+export const MOVE_BLOCK_DOWN = 'MOVE_BLOCK_DOWN';
+export const MOVE_BLOCK_UP = 'MOVE_BLOCK_UP';
 
 export function loadMarkdown (markdown) {
     return {
@@ -96,6 +99,27 @@ export function addTextBlock(id) {
     return {
         type: ADD_BLOCK,
         blockType: 'text',
+        id
+    };
+};
+
+export function deleteBlock(id) {
+    return {
+        type: DELETE_BLOCK,
+        id
+    };
+};
+
+export function moveBlockUp(id) {
+    return {
+        type: MOVE_BLOCK_UP,
+        id
+    };
+};
+
+export function moveBlockDown(id) {
+    return {
+        type: MOVE_BLOCK_DOWN,
         id
     };
 };

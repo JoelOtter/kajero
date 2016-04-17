@@ -28,13 +28,22 @@ class CodeBlock extends Block {
     renderViewerMode() {
         const { block, hasBeenRun, result } = this.props;
         const icon = hasBeenRun ? "fa-repeat" : "fa-play-circle-o";
+        let buttons = this.getButtons();
+        const runButton = <i className={"fa " + icon} onClick={this.clickPlay} key="run"></i>;
+        if (buttons == null) {
+            buttons = runButton;
+        } else {
+            buttons.unshift(runButton);
+        }
         return (
             <div className="codeContainer">
                 <div className="codeBlock">
+                    <div className="editor-buttons">
+                        {buttons}
+                    </div>
                     <div onClick={this.enterEdit}
                         dangerouslySetInnerHTML={this.rawMarkup(block)}>
                     </div>
-                    <i className={"fa " + icon} onClick={this.clickPlay}></i>
                 </div>
                 <div hidden={!hasBeenRun} className="graphBlock"
                     id={"kajero-graph-" + block.get('id')}>

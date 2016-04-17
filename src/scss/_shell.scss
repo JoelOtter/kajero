@@ -35,6 +35,14 @@ body {
     cursor: pointer;
 }
 
+.editor-buttons {
+    float: right;
+    i {
+        margin-left: .25em;
+        cursor: pointer;
+    }
+}
+
 code {
     font-family: "Source Code Pro", monospace;
     font-size: .8em;
@@ -94,14 +102,6 @@ pre, .codeBlock, .resultBlock, .graphBlock {
         border: none;
         overflow: auto;
         margin: 0;
-        width: 95%;
-        float: left;
-    }
-
-    .codeBlock .fa {
-        float: right;
-        display: inline;
-        cursor: pointer;
     }
 
     .graphBlock, .resultBlock {
@@ -168,7 +168,7 @@ pre, .codeBlock, .resultBlock, .graphBlock {
     }
 
     .text-block {
-        padding: .7em .5em;
+        padding: .5em;
         @include block-border;
         *:first-child {
             margin-top: 0;
