@@ -51,7 +51,7 @@ code {
 .offset-col {
     display: none;
     @include respond-to($size-md) {
-        display: inherit;
+        display: inline-block;
     }
 }
 
@@ -194,20 +194,50 @@ pre, .codeBlock, .resultBlock, .graphBlock {
 
     .metadata {
 
-        input {
-            width: 200px;
-            margin-left: 15px;
-            display: inline;
-            padding: .25em;
-            @include respond-to($size-md) {
-                width: 400px;
-            }
-        }
-
         .metadata-row {
             margin: .5em 0;
             span {
                 margin-left: 15px;
+            }
+            input {
+                width: 200px;
+                margin-left: 15px;
+                display: inline;
+                padding: .25em;
+                @include respond-to($size-md) {
+                    width: 400px;
+                }
+            }
+        }
+
+        .datasource {
+            margin: 0.5em 0;
+            .fa {
+                text-align: center;
+                margin-top: 0.5em;
+                cursor: pointer;
+                @include respond-to($size-md) {
+                    margin-top: .25em;
+                }
+            }
+            input {
+                width: 100%;
+                padding: .25em;
+                margin: .25em 0;
+                @include respond-to($size-md) {
+                    margin: 0;
+                }
+            }
+            .source-name input {
+                @include respond-to($size-md) {
+                    width: 95%;
+                }
+            }
+            p {
+                margin:  .5em .25em;
+                @include respond-to($size-md) {
+                    margin: .25em;
+                }
             }
         }
     }

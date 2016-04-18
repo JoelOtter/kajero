@@ -14,7 +14,9 @@ import {
     ADD_BLOCK,
     DELETE_BLOCK,
     MOVE_BLOCK_UP,
-    MOVE_BLOCK_DOWN
+    MOVE_BLOCK_DOWN,
+    DELETE_DATASOURCE,
+    UPDATE_DATASOURCE
 } from './actions';
 
 
@@ -33,6 +35,7 @@ const defaultExecutionState = Immutable.Map({
 
 function execution(state = defaultExecutionState, action) {
     const { id, code, text, name, data } = action;
+    const stateData = state.get('data');
     switch (action.type) {
         case EXECUTE:
             try {
@@ -50,13 +53,15 @@ function execution(state = defaultExecutionState, action) {
                     .setIn(['results', id], err);
             }
         case RECEIVED_DATA:
-            const stateData = state.get('data');
             stateData[name] = data;
-            return state.set(data, stateData);
+            return state.set('data', stateData);
         case UPDATE_BLOCK:
             return state
                 .set('blocksExecuted', state.get('blocksExecuted').remove(id))
                 .removeIn(['results', id]);
+        case DELETE_DATASOURCE:
+            delete stateData[id];
+            return state.set('data', stateData);
         default:
             return state;
     }
@@ -100,7 +105,6 @@ function notebook(state = defaultNotebook, action) {
         case ADD_BLOCK:
             const newId = getNewId(content);
             let newBlock = {type: blockType, id: newId};
-            console.log('created ' + newId);
             if (blockType === 'code') {
                 newBlock.content = '// New code block';
                 newBlock.language = 'javascript';
@@ -120,6 +124,10 @@ function notebook(state = defaultNotebook, action) {
             return state.set('content', moveItem(content, id, true));
         case MOVE_BLOCK_DOWN:
             return state.set('content', moveItem(content, id, false));
+        case DELETE_DATASOURCE:
+            return state.deleteIn(['metadata', 'datasources', id]);
+        case UPDATE_DATASOURCE:
+            return state.setIn(['metadata', 'datasources', id], text);
         default:
             return state;
     }

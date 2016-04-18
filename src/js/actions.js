@@ -12,6 +12,8 @@ export const ADD_BLOCK = 'ADD_BLOCK';
 export const DELETE_BLOCK = 'DELETE_BLOCK';
 export const MOVE_BLOCK_DOWN = 'MOVE_BLOCK_DOWN';
 export const MOVE_BLOCK_UP = 'MOVE_BLOCK_UP';
+export const DELETE_DATASOURCE = 'DELETE_DATASOURCE';
+export const UPDATE_DATASOURCE = 'UPDATE_DATASOURCE';
 
 export function loadMarkdown (markdown) {
     return {
@@ -121,5 +123,20 @@ export function moveBlockDown(id) {
     return {
         type: MOVE_BLOCK_DOWN,
         id
+    };
+};
+
+export function deleteDatasource(id) {
+    return {
+        type: DELETE_DATASOURCE,
+        id
+    };
+};
+
+export function updateDatasource(id, url) {
+    return {
+        type: UPDATE_DATASOURCE,
+        id,
+        text: url
     };
 };
