@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { updateAuthor, toggleFooter } from '../actions';
+import Datasources from './Datasources';
 
 export default class Metadata extends Component {
 
@@ -18,7 +19,7 @@ export default class Metadata extends Component {
     }
 
     render() {
-        const { editable, metadata } = this.props;
+        const { editable, metadata, dispatch } = this.props;
         const author = metadata.get('author');
         const date = new Date(metadata.get('created')).toUTCString();
         if (editable) {
@@ -36,6 +37,10 @@ export default class Metadata extends Component {
                         </i>
                         <span>Show footer</span>
                     </div>
+                    <hr/>
+                    <p>Data sources</p>
+                    <Datasources dispatch={dispatch}
+                        datasources={metadata.get('datasources')} />
                 </div>
             );
         }
