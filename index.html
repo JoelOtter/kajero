@@ -206,6 +206,11 @@
             From a user's perspective, the details don't really matter. Let's use Jutsu (available in Kajero code samples as **graphs**) to create a pie chart, based on the most popular GitHub repositories of 2016.
 
             ```javascript
+            // Here's what the 'popular' data looks like before it's reshaped.
+            return data.popular;
+            ```
+
+            ```javascript
             // The graph functions return the reshaped data, so we can see
             // what's going on.
             return graphs.pieChart(data.popular);
