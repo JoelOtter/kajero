@@ -76757,7 +76757,7 @@ var Notebook = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.editorSelector)(Notebook);
 
-},{"./actions":440,"./components/Content":445,"./components/Footer":446,"./components/Header":447,"./selectors":459,"./util":460,"react":425,"react-redux":260}],440:[function(require,module,exports){
+},{"./actions":440,"./components/Content":445,"./components/Footer":447,"./components/Header":448,"./selectors":460,"./util":461,"react":425,"react-redux":260}],440:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -76776,6 +76776,8 @@ exports.addTextBlock = addTextBlock;
 exports.deleteBlock = deleteBlock;
 exports.moveBlockUp = moveBlockUp;
 exports.moveBlockDown = moveBlockDown;
+exports.deleteDatasource = deleteDatasource;
+exports.updateDatasource = updateDatasource;
 /*
  * Action types
  */
@@ -76790,6 +76792,8 @@ var ADD_BLOCK = exports.ADD_BLOCK = 'ADD_BLOCK';
 var DELETE_BLOCK = exports.DELETE_BLOCK = 'DELETE_BLOCK';
 var MOVE_BLOCK_DOWN = exports.MOVE_BLOCK_DOWN = 'MOVE_BLOCK_DOWN';
 var MOVE_BLOCK_UP = exports.MOVE_BLOCK_UP = 'MOVE_BLOCK_UP';
+var DELETE_DATASOURCE = exports.DELETE_DATASOURCE = 'DELETE_DATASOURCE';
+var UPDATE_DATASOURCE = exports.UPDATE_DATASOURCE = 'UPDATE_DATASOURCE';
 
 function loadMarkdown(markdown) {
     return {
@@ -76902,6 +76906,21 @@ function moveBlockDown(id) {
     };
 };
 
+function deleteDatasource(id) {
+    return {
+        type: DELETE_DATASOURCE,
+        id: id
+    };
+};
+
+function updateDatasource(id, url) {
+    return {
+        type: UPDATE_DATASOURCE,
+        id: id,
+        text: url
+    };
+};
+
 },{}],441:[function(require,module,exports){
 'use strict';
 
@@ -76943,7 +76962,7 @@ var store = (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default
     )
 ), document.getElementById('kajero'));
 
-},{"./Notebook":439,"./reducers":458,"react":425,"react-dom":257,"react-redux":260,"redux":432,"redux-thunk":426,"whatwg-fetch":438}],442:[function(require,module,exports){
+},{"./Notebook":439,"./reducers":459,"react":425,"react-dom":257,"react-redux":260,"redux":432,"redux-thunk":426,"whatwg-fetch":438}],442:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77245,7 +77264,7 @@ var CodeBlock = function (_Block) {
 
 exports.default = CodeBlock;
 
-},{"../actions":440,"../util":460,"./Block":443,"./visualiser/Visualiser":454,"markdown-it":191,"react":425}],445:[function(require,module,exports){
+},{"../actions":440,"../util":461,"./Block":443,"./visualiser/Visualiser":455,"markdown-it":191,"react":425}],445:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77341,7 +77360,163 @@ var Content = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.contentSelector)(Content);
 
-},{"../selectors":459,"./AddControls":442,"./CodeBlock":444,"./TextBlock":449,"react":425,"react-redux":260}],446:[function(require,module,exports){
+},{"../selectors":460,"./AddControls":442,"./CodeBlock":444,"./TextBlock":450,"react":425,"react-redux":260}],446:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _actions = require('../actions');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Datasources = function (_Component) {
+    _inherits(Datasources, _Component);
+
+    function Datasources(props) {
+        _classCallCheck(this, Datasources);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Datasources).call(this, props));
+
+        _this.deleteSource = _this.deleteSource.bind(_this);
+        _this.updateSource = _this.updateSource.bind(_this);
+        _this.addSource = _this.addSource.bind(_this);
+        return _this;
+    }
+
+    _createClass(Datasources, [{
+        key: 'deleteSource',
+        value: function deleteSource(name) {
+            this.props.dispatch((0, _actions.deleteDatasource)(name));
+        }
+    }, {
+        key: 'updateSource',
+        value: function updateSource(name) {
+            this.props.dispatch((0, _actions.updateDatasource)(name, this.refs['set-' + name].value));
+            this.props.dispatch((0, _actions.fetchData)());
+        }
+    }, {
+        key: 'addSource',
+        value: function addSource() {
+            var name = this.refs['new-name'].value;
+            var url = this.refs['new-url'].value;
+            if (name === '' || name === undefined || url === '' || url === undefined) {
+                return;
+            }
+            this.props.dispatch((0, _actions.updateDatasource)(name, url));
+            this.refs['new-name'].value = '';
+            this.refs['new-url'].value = '';
+            this.props.dispatch((0, _actions.fetchData)());
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var datasources = this.props.datasources;
+
+            var result = [];
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                var _loop = function _loop() {
+                    var _step$value = _slicedToArray(_step.value, 2);
+
+                    var name = _step$value[0];
+                    var source = _step$value[1];
+
+                    result.push(_react2.default.createElement(
+                        'div',
+                        { className: 'pure-g datasource', key: name },
+                        _react2.default.createElement('i', { className: 'fa fa-times-circle-o pure-u-1-12 pure-u-md-1-24',
+                            onClick: function onClick() {
+                                return _this2.deleteSource(name);
+                            } }),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'pure-u-11-12 pure-u-md-7-24 source-name' },
+                            _react2.default.createElement(
+                                'p',
+                                null,
+                                name
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'pure-u-1 pure-u-md-2-3 source-url' },
+                            _react2.default.createElement('input', { type: 'text', defaultValue: source, ref: 'set-' + name,
+                                onBlur: function onBlur() {
+                                    return _this2.updateSource(name);
+                                } })
+                        )
+                    ));
+                };
+
+                for (var _iterator = datasources[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    _loop();
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return _react2.default.createElement(
+                'div',
+                null,
+                result,
+                _react2.default.createElement(
+                    'div',
+                    { className: 'pure-g datasource' },
+                    _react2.default.createElement('i', { className: 'fa fa-plus pure-u-1-12 pure-u-md-1-24',
+                        onClick: this.addSource }),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'pure-u-11-12 pure-u-md-7-24 source-name' },
+                        _react2.default.createElement('input', { type: 'text', ref: 'new-name', placeholder: 'Data source name' })
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'pure-u-1 pure-u-md-2-3 source-url' },
+                        _react2.default.createElement('input', { type: 'text', ref: 'new-url', placeholder: 'URL' })
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Datasources;
+}(_react.Component);
+
+exports.default = Datasources;
+
+},{"../actions":440,"react":425}],447:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77430,7 +77605,7 @@ var Footer = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.metadataSelector)(Footer);
 
-},{"../config":456,"../selectors":459,"react":425,"react-redux":260}],447:[function(require,module,exports){
+},{"../config":457,"../selectors":460,"react":425,"react-redux":260}],448:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77512,7 +77687,7 @@ var Header = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(_selectors.metadataSelector)(Header);
 
-},{"../actions":440,"../selectors":459,"./Metadata":448,"./Title":450,"react":425,"react-redux":260}],448:[function(require,module,exports){
+},{"../actions":440,"../selectors":460,"./Metadata":449,"./Title":451,"react":425,"react-redux":260}],449:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77526,6 +77701,10 @@ var _react = require('react');
 var _react2 = _interopRequireDefault(_react);
 
 var _actions = require('../actions');
+
+var _Datasources = require('./Datasources');
+
+var _Datasources2 = _interopRequireDefault(_Datasources);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -77564,6 +77743,7 @@ var Metadata = function (_Component) {
             var _props = this.props;
             var editable = _props.editable;
             var metadata = _props.metadata;
+            var dispatch = _props.dispatch;
 
             var author = metadata.get('author');
             var date = new Date(metadata.get('created')).toUTCString();
@@ -77589,7 +77769,15 @@ var Metadata = function (_Component) {
                             null,
                             'Show footer'
                         )
-                    )
+                    ),
+                    _react2.default.createElement('hr', null),
+                    _react2.default.createElement(
+                        'p',
+                        null,
+                        'Data sources'
+                    ),
+                    _react2.default.createElement(_Datasources2.default, { dispatch: dispatch,
+                        datasources: metadata.get('datasources') })
                 );
             }
             return _react2.default.createElement(
@@ -77621,7 +77809,7 @@ var Metadata = function (_Component) {
 
 exports.default = Metadata;
 
-},{"../actions":440,"react":425}],449:[function(require,module,exports){
+},{"../actions":440,"./Datasources":446,"react":425}],450:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77694,7 +77882,7 @@ var TextBlock = function (_Block) {
 
 exports.default = TextBlock;
 
-},{"../util":460,"./Block":443,"markdown-it":191,"react":425}],450:[function(require,module,exports){
+},{"../util":461,"./Block":443,"markdown-it":191,"react":425}],451:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77766,7 +77954,7 @@ var Title = function (_Component) {
 
 exports.default = Title;
 
-},{"../actions":440,"react":425}],451:[function(require,module,exports){
+},{"../actions":440,"react":425}],452:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77864,7 +78052,7 @@ var ArrayVisualiser = function (_Component) {
                     _react2.default.createElement(
                         'span',
                         { className: useHljs ? "hljs-keyword" : "" },
-                        ' Array'
+                        'Array'
                     ),
                     _react2.default.createElement(
                         'span',
@@ -77882,7 +78070,7 @@ var ArrayVisualiser = function (_Component) {
 
 exports.default = ArrayVisualiser;
 
-},{"./Visualiser":454,"react":425}],452:[function(require,module,exports){
+},{"./Visualiser":455,"react":425}],453:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -77982,7 +78170,7 @@ var DefaultVisualiser = function (_Component) {
 
 exports.default = DefaultVisualiser;
 
-},{"./Visualiser":454,"react":425}],453:[function(require,module,exports){
+},{"./Visualiser":455,"react":425}],454:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78098,7 +78286,7 @@ var ObjectVisualiser = function (_Component) {
 
 exports.default = ObjectVisualiser;
 
-},{"./Visualiser":454,"react":425}],454:[function(require,module,exports){
+},{"./Visualiser":455,"react":425}],455:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78203,14 +78391,14 @@ var Visualiser = function (_Component) {
 
 exports.default = Visualiser;
 
-},{"./ArrayVisualiser":451,"./DefaultVisualiser":452,"./ObjectVisualiser":453,"react":425}],455:[function(require,module,exports){
+},{"./ArrayVisualiser":452,"./DefaultVisualiser":453,"./ObjectVisualiser":454,"react":425}],456:[function(require,module,exports){
 'use strict';
 
 module.exports = {
     kajeroHomepage: 'http://www.joelotter.com/kajero'
 };
 
-},{}],456:[function(require,module,exports){
+},{}],457:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -78224,7 +78412,7 @@ module.exports = config[env];
 
 }).call(this,require('_process'))
 
-},{"./development.config":455,"_process":5}],457:[function(require,module,exports){
+},{"./development.config":456,"_process":5}],458:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78359,8 +78547,10 @@ function parse(md) {
                         case 'link_close':
                             currentString += '](' + linkStack.pop() + ')';
                             break;
-                        default:
+                        case 'text':
                             currentString += item.content;
+                        default:
+                            currentString += item.markup;
                     }
                 }
             } catch (err) {
@@ -78378,7 +78568,7 @@ function parse(md) {
                 }
             }
 
-            if (currentString.length > 0) {
+            if (currentString.match(/\S+/gm)) {
                 body.push(String(blockCounter));
                 blocks[blockCounter] = {
                     type: 'text',
@@ -78418,7 +78608,7 @@ function parse(md) {
 
 exports.default = parse;
 
-},{"./util":460,"front-matter":7,"immutable":190,"markdown-it":191}],458:[function(require,module,exports){
+},{"./util":461,"front-matter":7,"immutable":190,"markdown-it":191}],459:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78470,6 +78660,7 @@ function execution() {
     var name = action.name;
     var data = action.data;
 
+    var stateData = state.get('data');
     switch (action.type) {
         case _actions.EXECUTE:
             try {
@@ -78482,11 +78673,13 @@ function execution() {
                 return newState.setIn(['results', id], err);
             }
         case _actions.RECEIVED_DATA:
-            var stateData = state.get('data');
             stateData[name] = data;
-            return state.set(data, stateData);
+            return state.set('data', stateData);
         case _actions.UPDATE_BLOCK:
             return state.set('blocksExecuted', state.get('blocksExecuted').remove(id)).removeIn(['results', id]);
+        case _actions.DELETE_DATASOURCE:
+            delete stateData[id];
+            return state.set('data', stateData);
         default:
             return state;
     }
@@ -78534,7 +78727,6 @@ function notebook() {
         case _actions.ADD_BLOCK:
             var newId = getNewId(content);
             var newBlock = { type: blockType, id: newId };
-            console.log('created ' + newId);
             if (blockType === 'code') {
                 newBlock.content = '// New code block';
                 newBlock.language = 'javascript';
@@ -78553,6 +78745,10 @@ function notebook() {
             return state.set('content', moveItem(content, id, true));
         case _actions.MOVE_BLOCK_DOWN:
             return state.set('content', moveItem(content, id, false));
+        case _actions.DELETE_DATASOURCE:
+            return state.deleteIn(['metadata', 'datasources', id]);
+        case _actions.UPDATE_DATASOURCE:
+            return state.setIn(['metadata', 'datasources', id], text);
         default:
             return state;
     }
@@ -78604,7 +78800,7 @@ var reducer = (0, _redux.combineReducers)({
 
 exports.default = reducer;
 
-},{"./actions":440,"./parseMarkdown":457,"immutable":190,"jutsu":1,"redux":432,"smolder":463}],459:[function(require,module,exports){
+},{"./actions":440,"./parseMarkdown":458,"immutable":190,"jutsu":1,"redux":432,"smolder":464}],460:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78628,7 +78824,7 @@ var editorSelector = exports.editorSelector = function editorSelector(state) {
     return { editable: state.editor.get('editable') };
 };
 
-},{}],460:[function(require,module,exports){
+},{}],461:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -78684,7 +78880,7 @@ function extractMarkdownFromHTML() {
     return text.replace(re, "");
 }
 
-},{"highlight.js":39}],461:[function(require,module,exports){
+},{"highlight.js":39}],462:[function(require,module,exports){
 var util = require('./util');
 
 var dataStack; // TODO currently, this never pops
@@ -78830,7 +79026,7 @@ function findShape (data, schema, hint) {
 
 exports.findShape = findShape;
 
-},{"./util":462}],462:[function(require,module,exports){
+},{"./util":463}],463:[function(require,module,exports){
 function typeString (item, preserveStrings) {
     var typeString = Object.prototype.toString.call(item);
     typeString = typeString.split(' ')[1].split(']')[0];
@@ -78855,7 +79051,7 @@ exports.typeString = typeString;
 exports.typesMatch = typesMatch;
 exports.removeFromArray = removeFromArray;
 
-},{}],463:[function(require,module,exports){
+},{}],464:[function(require,module,exports){
 var getParamNames = require('get-parameter-names');
 var reshaper = require('reshaper');
 
@@ -78919,7 +79115,7 @@ function Smolder(toWrap, providedSchema) {
 
 module.exports = Smolder;
 
-},{"get-parameter-names":464,"reshaper":461}],464:[function(require,module,exports){
+},{"get-parameter-names":465,"reshaper":462}],465:[function(require,module,exports){
 var COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 var DEFAULT_PARAMS = /=[^,]+/mg;
 var FAT_ARROWS = /=>.*$/mg;
