@@ -79,11 +79,13 @@ function parse(md) {
                 case 'link_close':
                     currentString += '](' + linkStack.pop() + ')';
                     break;
-                default:
+                case 'text':
                     currentString += item.content;
+                default:
+                    currentString += item.markup;
             }
         }
-        if (currentString.length > 0) {
+        if (currentString.match(/\S+/gm)) {
             body.push(String(blockCounter));
             blocks[blockCounter] = {
                 type: 'text',
