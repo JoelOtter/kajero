@@ -40,5 +40,18 @@
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
     "whatwg-fetch": "^0.11.0"
+  },
+  "devDependencies": {
+    "babel-register": "^6.7.2",
+    "chai": "^3.5.0",
+    "fetch-mock": "^4.4.0",
+    "gulp-jsx-coverage": "^0.3.8",
+    "isparta": "^4.0.0",
+    "mocha": "^2.4.5",
+    "redux-mock-store": "^1.0.2"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-register --recursive ./src/**/*-spec.js",
+    "test-cov": "./node_modules/.bin/gulp --gulpfile Gulpfile_test.js test-cov"
   }
 }
