@@ -40,15 +40,19 @@ function receivedData (name, data) {
 
 export function fetchData() {
     return (dispatch, getState) => {
+        let proms = [];
         getState().notebook.getIn(['metadata', 'datasources']).forEach(
             (url, name) => {
-                fetch(url, {
-                    method: 'get'
-                })
-                .then(response => response.json())
-                .then(j => dispatch(receivedData(name, j)));
+                proms.push(
+                    fetch(url, {
+                        method: 'get'
+                    })
+                    .then(response => response.json())
+                    .then(j => dispatch(receivedData(name, j)))
+                );
             }
         );
+        return Promise.all(proms);
     };
 }
 
