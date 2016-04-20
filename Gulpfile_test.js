@@ -22,7 +22,7 @@ gulp.task('test-cov', require('gulp-jsx-coverage').createTask({
         }
     },
     coverage: {
-        reporters: ['text-summary', 'json'],
+        reporters: ['text-summary', 'json', 'lcov'],
         directory: 'coverage'
     },
     mocha: {
