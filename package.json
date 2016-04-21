@@ -46,12 +46,14 @@
     "chai": "^3.5.0",
     "fetch-mock": "^4.4.0",
     "gulp-jsx-coverage": "^0.3.8",
-    "isparta": "^4.0.0",
+    "jsdom": "^8.4.0",
     "mocha": "^2.4.5",
-    "redux-mock-store": "^1.0.2"
+    "mocha-jsdom": "^1.1.0",
+    "redux-mock-store": "^1.0.2",
+    "sinon": "^1.17.3"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-register --recursive ./src/**/*-spec.js",
+    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-register --recursive \"./src/**/*-spec.js\"",
     "test-cov": "./node_modules/.bin/gulp --gulpfile Gulpfile_test.js test-cov"
   }
 }

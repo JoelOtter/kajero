@@ -15,42 +15,37 @@ import {
  * of which blocks have and haven't been executed. It's also
  * where the obtained data is stored.
  */
-const defaultExecutionState = Immutable.Map({
-    executionContext: {},
-    data: {},
+export const initialState = Immutable.Map({
+    executionContext: Immutable.Map(),
+    data: Immutable.Map(),
     results: Immutable.Map(),
     blocksExecuted: Immutable.Set()
 });
 
-export default function execution(state = defaultExecutionState, action) {
+export default function execution(state = initialState, action) {
     const { id, code, text, name, data } = action;
-    const stateData = state.get('data');
     switch (action.type) {
         case EXECUTE:
             try {
-                let context = state.get('executionContext');
-                const data = state.get('data');
-                const newState = state.set(
-                    'blocksExecuted', state.get('blocksExecuted').add(id)
-                );
-                return newState
+                const context = state.get('executionContext').toJS();
+                const data = state.get('data').toJS();
+                return state
                     .setIn(['results', id], executeCode(code, context, data, id))
-                    .set('executionContext', context);
+                    .set('blocksExecuted', state.get('blocksExecuted').add(id))
+                    .set('executionContext', Immutable.fromJS(context));
             } catch (err) {
-                console.error(err);
-                return newState
-                    .setIn(['results', id], err);
+                return state
+                    .setIn(['results', id], err)
+                    .set('blocksExecuted', state.get('blocksExecuted').add(id));
             }
         case RECEIVED_DATA:
-            stateData[name] = data;
-            return state.set('data', stateData);
+            return state.setIn(['data', name], Immutable.fromJS(data));
         case UPDATE_BLOCK:
             return state
                 .set('blocksExecuted', state.get('blocksExecuted').remove(id))
                 .removeIn(['results', id]);
         case DELETE_DATASOURCE:
-            delete stateData[id];
-            return state.set('data', stateData);
+            return state.deleteIn(['data', id]);
         default:
             return state;
     }
