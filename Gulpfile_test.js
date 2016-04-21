@@ -6,6 +6,7 @@ var gulp = require('gulp');
 
 gulp.task('test-cov', require('gulp-jsx-coverage').createTask({
     src: './src/**/*-spec.js',
+    //isparta: true,
     istanbul: {
         preserveComments: true,
         coverageVariable: '__MY_TEST_COVERAGE__',
@@ -26,9 +27,5 @@ gulp.task('test-cov', require('gulp-jsx-coverage').createTask({
     },
     mocha: {
         reporter: 'spec'
-    },
-
-    babel: {
-        auxiliaryCommentBefore: 'istanbul ignore next'
     }
 }));

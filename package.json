@@ -46,6 +46,7 @@
     "chai": "^3.5.0",
     "fetch-mock": "^4.4.0",
     "gulp-jsx-coverage": "^0.3.8",
+    "isparta": "^4.0.0",
     "jsdom": "^8.4.0",
     "mocha": "^2.4.5",
     "mocha-jsdom": "^1.1.0",
