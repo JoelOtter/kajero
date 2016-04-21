@@ -19,7 +19,7 @@ import {
  * obtained by parsing Markdown. This is kept separate from the execution
  * state to help with implementing 'undo' in the editor.
  */
-const defaultNotebook = Immutable.Map({
+export const initialState = Immutable.Map({
     metadata: Immutable.fromJS({
         datasources: {}
     }),
@@ -27,7 +27,7 @@ const defaultNotebook = Immutable.Map({
     blocks: Immutable.Map()
 });
 
-export default function notebook(state = defaultNotebook, action) {
+export default function notebook(state = initialState, action) {
     const { id, text, field, blockType } = action;
     const content = state.get('content');
     switch (action.type) {

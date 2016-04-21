@@ -6,7 +6,7 @@ import { codeToText } from './util';
 
 let markedownIt = new MarkdownIt();
 
-function parse(md) {
+export default function parse(md) {
     const content = fm(md);
     const parsedMarkdown = markedownIt.parseInline(content.body);
     const blockParsedMarkdown = markedownIt.parse(content.body);
@@ -108,5 +108,3 @@ function parse(md) {
         blocks: blocks
     });
 }
-
-export default parse;
