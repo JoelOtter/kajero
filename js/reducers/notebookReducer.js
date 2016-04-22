@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import parse from '../parseMarkdown';
+import { parse } from '../markdown';
 import {
     LOAD_MARKDOWN,
     TOGGLE_EDIT,
