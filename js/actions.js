@@ -1,3 +1,7 @@
+import { extractMarkdownFromHTML } from './util';
+import { gistUrl } from './config';
+import { parse } from 'query-string';
+
 /*
  * Action types
  */
@@ -15,10 +19,38 @@ export const MOVE_BLOCK_UP = 'MOVE_BLOCK_UP';
 export const DELETE_DATASOURCE = 'DELETE_DATASOURCE';
 export const UPDATE_DATASOURCE = 'UPDATE_DATASOURCE';
 
-export function loadMarkdown (markdown) {
+function checkStatus (response) {
+    if (response.status >= 200 && response.status < 300) {
+        return response;
+    } else {
+        throw new Error(response.statusText);
+    }
+}
+
+export function loadMarkdown() {
+    const queryParams = parse(location.search);
+    if (queryParams.id) {
+        const url = gistUrl + queryParams.id + '/raw';
+        return (dispatch, getState) => {
+            return fetch(url, {
+                method: 'get'
+            })
+            .then(checkStatus)
+            .then(response => response.text())
+            .then(md => dispatch({
+                type: LOAD_MARKDOWN,
+                markdown: md
+            }))
+            .catch(() => dispatch(loadMarkdownFromHTML()));
+        };
+    }
+    return loadMarkdownFromHTML();
+}
+
+function loadMarkdownFromHTML() {
     return {
         type: LOAD_MARKDOWN,
-        markdown: markdown
+        markdown: extractMarkdownFromHTML()
     };
 }
 

@@ -5,13 +5,12 @@ import Header from './components/Header';
 import Content from './components/Content';
 import Footer from './components/Footer';
 import { loadMarkdown, fetchData } from './actions';
-import { extractMarkdownFromHTML } from './util';
 import { editorSelector } from './selectors';
 
 class Notebook extends Component {
 
     componentWillMount() {
-        this.props.dispatch(loadMarkdown(extractMarkdownFromHTML()));
+        this.props.dispatch(loadMarkdown());
     }
 
     componentDidMount() {

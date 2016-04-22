@@ -169,7 +169,7 @@ export function parse(md) {
             author: doc.attributes.author,
             datasources: doc.attributes.datasources || {},
             original: doc.attributes.original,
-            showFooter: doc.attributes.show_footer || true
+            showFooter: doc.attributes.show_footer !== false
         },
         content,
         blocks
