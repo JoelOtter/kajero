@@ -2,7 +2,7 @@ import Immutable from 'immutable';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import reducer, { initialState } from './notebookReducer';
-import * as markdown from '../parseMarkdown';
+import * as markdown from '../markdown';
 import * as actions from '../actions';
 
 describe('notebook reducer', () => {
@@ -254,11 +254,11 @@ describe('notebook reducer', () => {
         });
 
         before(() => {
-            sinon.stub(markdown, "default").returns(parsed);
+            sinon.stub(markdown, "parse").returns(parsed);
         });
 
         after(() => {
-            markdown.default.restore()
+            markdown.parse.restore()
         });
 
         it('should merge in parsed notebook', () => {
