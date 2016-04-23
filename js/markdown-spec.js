@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import fs from 'fs';
 import Immutable from 'immutable';
-import { parse, extractCodeBlocks } from './markdown';
+import { parse, render, extractCodeBlocks } from './markdown';
 
 function loadMarkdown(filename) {
     return fs.readFileSync('./test/' + filename + '.md').toString();
@@ -93,6 +93,34 @@ describe('markdown', () => {
                 content: []
             });
             expect(parse('').toJS()).to.eql(expected.toJS());
+        });
+
+    });
+
+    describe('render', () => {
+
+        it('should correctly render a sample notebook', () => {
+            const sampleMd = loadMarkdown('sampleNotebook');
+            expect(render(sampleNotebook)).to.equal(sampleMd);
+        });
+
+        it('should correctly render an empty notebook', () => {
+            const nb = Immutable.fromJS({
+                metadata: {},
+                blocks: {},
+                content: []
+            });
+            const expected = '---\n---\n\n\n';
+            expect(render(nb)).to.equal(expected);
+        });
+
+    });
+
+    describe('parse and render', () => {
+
+        it('should render a parsed notebook to the original markdown', () => {
+            const sampleMd = loadMarkdown('index');
+            expect(render(parse(sampleMd))).to.equal(sampleMd);
         });
 
     });
