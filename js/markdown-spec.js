@@ -9,6 +9,38 @@ function loadMarkdown(filename) {
 
 describe('markdown', () => {
 
+    const sampleNotebook = Immutable.fromJS({
+        metadata: {
+            title: 'A sample notebook',
+            author: 'Joel Auterson',
+            created: Date.parse("Mon Apr 18 2016 21:48:01 GMT+0100 (BST)"),
+            showFooter: true,
+            original: undefined,
+            datasources: {}
+        },
+        content: ['0', '1'],
+        blocks: {
+            '0': {
+                type: 'text',
+                id: '0',
+                content: '## This is a sample Notebook\n\n' +
+                    'It _should_ get correctly parsed.\n\n' +
+                    '[This is a link](http://github.com)\n\n' +
+                    '![Image, with alt](https://github.com/thing.jpg "Optional title")\n' +
+                    '![](https://github.com/thing.jpg)\n\n' +
+                    '```python\nprint "Non-runnable code sample"\n```\n\n' +
+                    'And finally a runnable one...'
+                },
+            '1': {
+                type: 'code',
+                id: '1',
+                language: 'javascript',
+                attrs: [],
+                content: 'console.log("Runnable");'
+            }
+        }
+    });
+
     describe('extractCodeBlocks', () => {
 
         it('correctly extracts all code blocks', () => {
@@ -43,39 +75,8 @@ describe('markdown', () => {
     describe('parse', () => {
 
         it('correctly parses sample markdown', () => {
-            const expected = Immutable.fromJS({
-                metadata: {
-                    title: 'A sample notebook',
-                    author: 'Joel Auterson',
-                    created: Date.parse("Mon Apr 18 2016 21:48:01 GMT+0100 (BST)"),
-                    showFooter: true,
-                    original: undefined,
-                    datasources: {}
-                },
-                content: ['0', '1'],
-                blocks: {
-                    '0': {
-                        type: 'text',
-                        id: '0',
-                        content: '## This is a sample Notebook\n\n' +
-                            'It _should_ get correctly parsed.\n\n' +
-                            '[This is a link](http://github.com)\n\n' +
-                            '![Image, with alt](https://github.com/thing.jpg "Optional title")\n' +
-                            '![](https://github.com/thing.jpg)\n\n' +
-                            '```python\nprint "Non-runnable code sample"\n```\n\n' +
-                            'And finally a runnable one...'
-                        },
-                    '1': {
-                        type: 'code',
-                        id: '1',
-                        language: 'javascript',
-                        attrs: [],
-                        content: 'console.log("Runnable");'
-                    }
-                }
-            });
             const sampleMd = loadMarkdown('sampleNotebook');
-            expect(parse(sampleMd).toJS()).to.eql(expected.toJS());
+            expect(parse(sampleMd).toJS()).to.eql(sampleNotebook.toJS());
         });
 
         it('uses placeholders for a blank document', () => {
