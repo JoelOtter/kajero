@@ -175,3 +175,64 @@ export function parse(md) {
         blocks
     });
 }
+
+/*
+ * Functions for rendering blocks back into Markdown
+ */
+
+function renderDatasources(datasources) {
+    let rendered = "datasources:\n";
+    datasources.map((url, name) => {
+        rendered += '    ' + name + ': ' + url + '\n';
+    });
+    return rendered;
+}
+
+function renderMetadata(metadata) {
+    let rendered = '---\n';
+    if (metadata.get('title') !== undefined) {
+        rendered += 'title: ' + metadata.get('title') + '\n';
+    }
+    if (metadata.get('author') !== undefined) {
+        rendered += 'author: ' + metadata.get('author') + '\n';
+    }
+    if (metadata.get('created') !== undefined) {
+        rendered += 'created: ' +
+            new Date(metadata.get('created')).toString() + '\n';
+    }
+    const datasources = metadata.get('datasources');
+    if (datasources && datasources.size > 0) {
+        rendered += renderDatasources(datasources);
+    }
+    const original = metadata.get('original');
+    if (original && original.get('title') && original.get('url')) {
+        rendered += 'original:\n';
+        rendered += '    title: ' + original.get('title') + '\n';
+        rendered += '    url: ' + original.get('url') + '\n';
+    }
+    if (metadata.get('showFooter') !== undefined) {
+        rendered += 'show_footer: ' + metadata.get('showFooter') + '\n';
+    }
+    return rendered + '---\n\n';
+}
+
+function renderBlock(block) {
+    if (block.get('type') === 'code') {
+        return codeToText(block);
+    }
+    return block.get('content');
+}
+
+function renderBody(blocks, blockOrder) {
+    return blockOrder
+        .map((id) => blocks.get(id))
+        .map(renderBlock)
+        .join('\n\n') + '\n';
+}
+
+export function render(notebook) {
+    let rendered = "";
+    rendered += renderMetadata(notebook.get('metadata'));
+    rendered += renderBody(notebook.get('blocks'), notebook.get('content'));
+    return rendered;
+}
