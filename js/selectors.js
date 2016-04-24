@@ -13,5 +13,9 @@ export const contentSelector = state => {
 };
 
 export const editorSelector = state => {
-    return {editable: state.editor.get('editable')};
+    return state.editor.toJS();
+};
+
+export const saveSelector = state => {
+    return {notebook: state.notebook};
 };

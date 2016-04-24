@@ -29,7 +29,7 @@ body {
     }
 }
 
-.edit-button {
+.edit-button, .save-button {
     float: right;
     margin: 0 .5em;
     cursor: pointer;
@@ -151,6 +151,19 @@ pre, .codeBlock, .resultBlock, .graphBlock {
     }
 }
 
+textarea {
+    width: 100%;
+    color: $text-black;
+    padding: .5em;
+    outline: none;
+    height: 300px;
+    @include block-border;
+    font-family: 'Source Code Pro', monospace;
+    font-size: .8em;
+    resize: none;
+    margin: 1em 0;
+}
+
 .editable {
     input {
         display: inherit;
@@ -176,19 +189,6 @@ pre, .codeBlock, .resultBlock, .graphBlock {
         *:last-child {
             margin-bottom: 0;
         }
-        margin: 1em 0;
-    }
-
-    .text-edit {
-        width: 100%;
-        color: $text-black;
-        padding: .5em;
-        outline: none;
-        height: 300px;
-        @include block-border;
-        font-family: 'Source Code Pro', monospace;
-        font-size: .8em;
-        resize: none;
         margin: 1em 0;
     }
 
@@ -257,4 +257,72 @@ pre, .codeBlock, .resultBlock, .graphBlock {
     .footer-row {
         display: block;
     }
+}
+
+.save-dialog {
+
+    .close-button {
+        float: right;
+        margin-top: .75em;
+        margin-right: .25em;
+        cursor: pointer;
+    }
+
+    .export-option, .clipboard-button {
+        font-family: 'Amaranth', sans-serif;
+        @include block-border;
+        padding: .25em;
+        cursor: pointer;
+        display: inline-block;
+
+        &.selected {
+            font-weight: bold;
+            color: $text-black;
+            @include block-border;
+            border: 1px dashed $text-black;
+            cursor: default;
+        }
+    }
+
+    textarea {
+        height: 400px;
+    }
+
+    .export-option {
+        margin-top: .5em;
+        margin-right: .5em;
+        color: $text-light;
+    }
+
+    .clipboard-button {
+        font-weight: bold;
+        float: right;
+    }
+
+    input {
+        width: 100%;
+        @include block-border;
+        padding: .25em;
+        margin-top: .25em;
+        margin-bottom: .5em;
+        display: inherit;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        width: 100%;
+        outline: none;
+    }
+
+    .pure-g {
+        margin-top: .75em;
+        p {
+            font-family: 'Amaranth', sans-serif;
+        }
+    }
+
+    p {
+        clear: both;
+    }
+
 }

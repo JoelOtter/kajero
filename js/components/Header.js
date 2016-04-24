@@ -3,17 +3,22 @@ import { connect } from 'react-redux';
 import Title from './Title';
 import Metadata from './Metadata';
 import { metadataSelector } from '../selectors';
-import { toggleEdit } from '../actions';
+import { toggleEdit, toggleSave } from '../actions';
 
 class Header extends Component {
 
     constructor(props) {
         super(props);
-        this.toggleEditClicked = this.toggleEditClicked.bind(this, props.dispatch);
+        this.toggleEditClicked = this.toggleEditClicked.bind(this);
+        this.toggleSaveClicked = this.toggleSaveClicked.bind(this);
     }
 
-    toggleEditClicked(dispatch) {
-        dispatch(toggleEdit());
+    toggleEditClicked() {
+        this.props.dispatch(toggleEdit());
+    }
+
+    toggleSaveClicked() {
+        this.props.dispatch(toggleSave());
     }
 
     render() {
@@ -21,12 +26,14 @@ class Header extends Component {
         const title = metadata.get('title');
         const icon = editable ? "fa-newspaper-o" : "fa-pencil";
         document.title = title;
+        const saveButton = (
+            <i className="fa fa-save save-button" onClick={this.toggleSaveClicked}></i>
+        );
         return (
             <div>
                 <Title title={title} editable={editable} dispatch={dispatch} />
-                <span className="edit-button" onClick={this.toggleEditClicked}>
-                    <i className={'fa ' + icon}></i>
-                </span>
+                <i className={'fa ' + icon + ' edit-button'} onClick={this.toggleEditClicked}></i>
+                {editable ? saveButton : null}
                 <Metadata editable={editable} metadata={metadata} dispatch={dispatch} />
             </div>
         );

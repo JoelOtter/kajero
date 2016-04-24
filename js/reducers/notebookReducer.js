@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import { parse } from '../markdown';
+import { kajeroHomepage } from '../config';
 import {
     LOAD_MARKDOWN,
     TOGGLE_EDIT,
@@ -11,7 +12,8 @@ import {
     MOVE_BLOCK_UP,
     MOVE_BLOCK_DOWN,
     DELETE_DATASOURCE,
-    UPDATE_DATASOURCE
+    UPDATE_DATASOURCE,
+    GIST_CREATED
 } from '../actions';
 
 /*
@@ -67,6 +69,8 @@ export default function notebook(state = initialState, action) {
             return state.deleteIn(['metadata', 'datasources', id]);
         case UPDATE_DATASOURCE:
             return state.setIn(['metadata', 'datasources', id], text);
+        case GIST_CREATED:
+            return state.setIn(['metadata', 'gistUrl'], kajeroHomepage + '?id=' + id);
         default:
             return state;
     }
