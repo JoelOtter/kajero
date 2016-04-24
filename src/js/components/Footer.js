@@ -8,7 +8,7 @@ class Footer extends Component {
     render() {
         const { metadata } = this.props;
         if (!metadata.get('showFooter')) {
-            return <div className="footer"></div>;
+            return <div className="footer">&nbsp;</div>;
         }
         const originalTitle = metadata.getIn(['original', 'title']);
         const originalUrl = metadata.getIn(['original', 'url']);

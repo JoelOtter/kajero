@@ -1,5 +1,5 @@
 import { extractMarkdownFromHTML } from './util';
-import { gistUrl } from './config';
+import { gistUrl, gistApi } from './config';
 import { parse } from 'query-string';
 
 /*
@@ -18,6 +18,8 @@ export const MOVE_BLOCK_DOWN = 'MOVE_BLOCK_DOWN';
 export const MOVE_BLOCK_UP = 'MOVE_BLOCK_UP';
 export const DELETE_DATASOURCE = 'DELETE_DATASOURCE';
 export const UPDATE_DATASOURCE = 'UPDATE_DATASOURCE';
+export const TOGGLE_SAVE = 'TOGGLE_SAVE';
+export const GIST_CREATED = 'GIST_CREATED';
 
 function checkStatus (response) {
     if (response.status >= 200 && response.status < 300) {
@@ -174,5 +176,41 @@ export function updateDatasource(id, url) {
         type: UPDATE_DATASOURCE,
         id,
         text: url
+    };
+};
+
+export function toggleSave() {
+    return {
+        type: TOGGLE_SAVE
+    };
+};
+
+function gistCreated(id) {
+    return {
+        type: GIST_CREATED,
+        id
+    };
+}
+
+export function saveGist (title, markdown) {
+    return (dispatch, getState) => {
+        fetch(gistApi, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({
+                description: title,
+                'public': true,
+                files: {
+                    'notebook.md': {
+                        content: markdown
+                    }
+                }
+            })
+        })
+        .then(response => response.json())
+        .then(gist => dispatch(gistCreated(gist.id)));
     };
 };

@@ -1,4 +1,5 @@
 import hljs from 'highlight.js';
+import config from './config';
 
 export function codeToText(codeBlock) {
     let result = "```";
@@ -39,4 +40,21 @@ export function extractMarkdownFromHTML() {
     }
     const re = new RegExp("^ {" + leadingSpaces + "}", "gm");
     return text.replace(re, "");
+}
+
+export function renderHTML(markdown) {
+    let result = "<html>\n    <head>\n";
+    result += '        <meta name="viewport" content="width=device-width, initial-scale=1">\n';
+    result += '        <meta http-equiv="content-type" content="text/html; charset=UTF8">\n';
+    result += '        <link rel="stylesheet" href="' + config.cssUrl + '">\n';
+    result += '    </head>\n    <body>\n        <script type="text/markdown" id="kajero-md">\n';
+    result += markdown.split('\n').map((line) => {
+        return '            ' + line;
+    }).join('\n');
+    result += '\n';
+    result += '        </script>\n';
+    result += '        <div id="kajero"></div>\n';
+    result += '        <script type="text/javascript" src="' + config.scriptUrl + '"></script>\n';
+    result += '    </body>\n</html>';
+    return result;
 }

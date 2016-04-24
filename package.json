@@ -21,6 +21,7 @@
     "babelify": "^7.2.0",
     "browser-sync": "^2.11.2",
     "browserify": "^13.0.0",
+    "clipboard": "^1.5.10",
     "exorcist": "^0.4.0",
     "font-awesome": "^4.5.0",
     "front-matter": "^2.0.6",
