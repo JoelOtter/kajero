@@ -43,6 +43,7 @@ export function loadMarkdown() {
                 type: LOAD_MARKDOWN,
                 markdown: md
             }))
+            .then(() => dispatch(fetchData()))
             .catch(() => dispatch(loadMarkdownFromHTML()));
         };
     }
