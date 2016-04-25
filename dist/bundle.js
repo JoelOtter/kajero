@@ -78059,7 +78059,7 @@ exports.default = (0, _reactRedux.connect)(_selectors.editorSelector)(Notebook);
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.GIST_CREATED = exports.TOGGLE_SAVE = exports.UPDATE_DATASOURCE = exports.DELETE_DATASOURCE = exports.MOVE_BLOCK_UP = exports.MOVE_BLOCK_DOWN = exports.DELETE_BLOCK = exports.ADD_BLOCK = exports.TOGGLE_META = exports.UPDATE_META = exports.UPDATE_BLOCK = exports.TOGGLE_EDIT = exports.RECEIVED_DATA = exports.EXECUTE = exports.LOAD_MARKDOWN = undefined;
+exports.UNDO = exports.GIST_CREATED = exports.TOGGLE_SAVE = exports.UPDATE_DATASOURCE = exports.DELETE_DATASOURCE = exports.MOVE_BLOCK_UP = exports.MOVE_BLOCK_DOWN = exports.DELETE_BLOCK = exports.ADD_BLOCK = exports.TOGGLE_META = exports.UPDATE_META = exports.UPDATE_BLOCK = exports.TOGGLE_EDIT = exports.RECEIVED_DATA = exports.EXECUTE = exports.LOAD_MARKDOWN = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
@@ -78080,6 +78080,7 @@ exports.deleteDatasource = deleteDatasource;
 exports.updateDatasource = updateDatasource;
 exports.toggleSave = toggleSave;
 exports.saveGist = saveGist;
+exports.undo = undo;
 
 var _util = require('./util');
 
@@ -78105,6 +78106,7 @@ var DELETE_DATASOURCE = exports.DELETE_DATASOURCE = 'DELETE_DATASOURCE';
 var UPDATE_DATASOURCE = exports.UPDATE_DATASOURCE = 'UPDATE_DATASOURCE';
 var TOGGLE_SAVE = exports.TOGGLE_SAVE = 'TOGGLE_SAVE';
 var GIST_CREATED = exports.GIST_CREATED = 'GIST_CREATED';
+var UNDO = exports.UNDO = 'UNDO';
 
 function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -78170,14 +78172,17 @@ function receivedData(name, data) {
 function fetchData() {
     return function (dispatch, getState) {
         var proms = [];
+        var currentData = getState().execution.get('data');
         getState().notebook.getIn(['metadata', 'datasources']).forEach(function (url, name) {
-            proms.push(fetch(url, {
-                method: 'get'
-            }).then(function (response) {
-                return response.json();
-            }).then(function (j) {
-                return dispatch(receivedData(name, j));
-            }));
+            if (!currentData.has(name)) {
+                proms.push(fetch(url, {
+                    method: 'get'
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (j) {
+                    return dispatch(receivedData(name, j));
+                }));
+            }
         });
         return Promise.all(proms);
     };
@@ -78309,6 +78314,12 @@ function saveGist(title, markdown) {
         });
     };
 };
+
+function undo() {
+    return {
+        type: UNDO
+    };
+}
 
 },{"./config":471,"./util":478,"query-string":288}],454:[function(require,module,exports){
 'use strict';
@@ -79043,6 +79054,7 @@ var Header = function (_Component) {
 
         _this.toggleEditClicked = _this.toggleEditClicked.bind(_this);
         _this.toggleSaveClicked = _this.toggleSaveClicked.bind(_this);
+        _this.undoClicked = _this.undoClicked.bind(_this);
         return _this;
     }
 
@@ -79057,23 +79069,37 @@ var Header = function (_Component) {
             this.props.dispatch((0, _actions.toggleSave)());
         }
     }, {
+        key: 'undoClicked',
+        value: function undoClicked() {
+            this.props.dispatch((0, _actions.undo)());
+            this.props.dispatch((0, _actions.fetchData)());
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _props = this.props;
             var metadata = _props.metadata;
             var editable = _props.editable;
+            var undoSize = _props.undoSize;
             var dispatch = _props.dispatch;
 
             var title = metadata.get('title');
             var icon = editable ? "fa-newspaper-o" : "fa-pencil";
             document.title = title;
-            var saveButton = _react2.default.createElement('i', { className: 'fa fa-save save-button', onClick: this.toggleSaveClicked });
+            var saveButton = _react2.default.createElement('i', { className: 'fa fa-save', onClick: this.toggleSaveClicked });
+            var undoButton = _react2.default.createElement('i', { className: 'fa fa-rotate-left', onClick: this.undoClicked });
+            var showUndo = editable && undoSize > 0;
             return _react2.default.createElement(
                 'div',
                 null,
                 _react2.default.createElement(_Title2.default, { title: title, editable: editable, dispatch: dispatch }),
-                _react2.default.createElement('i', { className: 'fa ' + icon + ' edit-button', onClick: this.toggleEditClicked }),
-                editable ? saveButton : null,
+                _react2.default.createElement(
+                    'span',
+                    { className: 'controls' },
+                    showUndo ? undoButton : null,
+                    editable ? saveButton : null,
+                    _react2.default.createElement('i', { className: 'fa ' + icon, onClick: this.toggleEditClicked })
+                ),
                 _react2.default.createElement(_Metadata2.default, { editable: editable, metadata: metadata, dispatch: dispatch })
             );
         }
@@ -80374,6 +80400,7 @@ function execution() {
             return state.setIn(['data', name], _immutable2.default.fromJS(data));
         case _actions.UPDATE_BLOCK:
             return state.set('blocksExecuted', state.get('blocksExecuted').remove(id)).removeIn(['results', id]);
+        case _actions.UPDATE_DATASOURCE:
         case _actions.DELETE_DATASOURCE:
             return state.deleteIn(['data', id]);
         default:
@@ -80447,7 +80474,8 @@ var initialState = exports.initialState = _immutable2.default.Map({
         datasources: {}
     }),
     content: _immutable2.default.List(),
-    blocks: _immutable2.default.Map()
+    blocks: _immutable2.default.Map(),
+    undoStack: _immutable2.default.List()
 });
 
 function notebook() {
@@ -80463,11 +80491,11 @@ function notebook() {
         case _actions.LOAD_MARKDOWN:
             return (0, _markdown.parse)(action.markdown).mergeDeep(state);
         case _actions.UPDATE_BLOCK:
-            return state.setIn(['blocks', id, 'content'], text);
+            return handleChange(state, state.setIn(['blocks', id, 'content'], text));
         case _actions.UPDATE_META:
-            return state.setIn(['metadata', field], text);
+            return handleChange(state, state.setIn(['metadata', field], text));
         case _actions.TOGGLE_META:
-            return state.setIn(['metadata', field], !state.getIn(['metadata', field]));
+            return handleChange(state, state.setIn(['metadata', field], !state.getIn(['metadata', field])));
         case _actions.TOGGLE_EDIT:
             return state.setIn(['metadata', 'created'], new Date().toUTCString());
         case _actions.ADD_BLOCK:
@@ -80480,23 +80508,25 @@ function notebook() {
             } else {
                 newBlock.content = 'New text block';
             }
-            var newState = state.setIn(['blocks', newId], _immutable2.default.fromJS(newBlock));
+            var newState = handleChange(state, state.setIn(['blocks', newId], _immutable2.default.fromJS(newBlock)));
             if (id === undefined) {
                 return newState.set('content', content.push(newId));
             }
             return newState.set('content', content.insert(content.indexOf(id), newId));
         case _actions.DELETE_BLOCK:
-            return state.deleteIn(['blocks', id]).set('content', content.delete(content.indexOf(id)));
+            return handleChange(state, state.deleteIn(['blocks', id]).set('content', content.delete(content.indexOf(id))));
         case _actions.MOVE_BLOCK_UP:
-            return state.set('content', moveItem(content, id, true));
+            return handleChange(state, state.set('content', moveItem(content, id, true)));
         case _actions.MOVE_BLOCK_DOWN:
-            return state.set('content', moveItem(content, id, false));
+            return handleChange(state, state.set('content', moveItem(content, id, false)));
         case _actions.DELETE_DATASOURCE:
-            return state.deleteIn(['metadata', 'datasources', id]);
+            return handleChange(state, state.deleteIn(['metadata', 'datasources', id]));
         case _actions.UPDATE_DATASOURCE:
-            return state.setIn(['metadata', 'datasources', id], text);
+            return handleChange(state, state.setIn(['metadata', 'datasources', id], text));
         case _actions.GIST_CREATED:
             return state.setIn(['metadata', 'gistUrl'], _config.kajeroHomepage + '?id=' + id);
+        case _actions.UNDO:
+            return undo(state);
         default:
             return state;
     }
@@ -80521,6 +80551,23 @@ function moveItem(content, id, up) {
     return content.slice(0, index).push(content.get(index + 1)).push(id).concat(content.slice(index + 2));
 }
 
+/*
+ * Handles changes, if they exist, by pushing to the undo stack.
+ */
+function handleChange(currentState, newState) {
+    if (currentState.equals(newState)) {
+        return newState;
+    }
+    return newState.set('undoStack', newState.get('undoStack').push(currentState.remove('undoStack'))).deleteIn(['metadata', 'gistUrl']);
+}
+
+function undo(state) {
+    if (state.get('undoStack').size === 0) {
+        return state;
+    }
+    return state.get('undoStack').last().set('undoStack', state.get('undoStack').pop());
+}
+
 },{"../actions":453,"../config":471,"../markdown":472,"immutable":194}],477:[function(require,module,exports){
 'use strict';
 
@@ -80528,7 +80575,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var metadataSelector = exports.metadataSelector = function metadataSelector(state) {
-    return { metadata: state.notebook.get('metadata') };
+    return {
+        metadata: state.notebook.get('metadata'),
+        undoSize: state.notebook.get('undoStack').size
+    };
 };
 
 var contentSelector = exports.contentSelector = function contentSelector(state) {
