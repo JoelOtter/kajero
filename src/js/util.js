@@ -49,12 +49,14 @@ export function renderHTML(markdown) {
     result += '        <link rel="stylesheet" href="' + config.cssUrl + '">\n';
     result += '    </head>\n    <body>\n        <script type="text/markdown" id="kajero-md">\n';
     result += markdown.split('\n').map((line) => {
-        return '            ' + line;
+        if (line.match(/\S+/m)) {
+            return '            ' + line;
+        }
+        return '';
     }).join('\n');
-    result += '\n';
     result += '        </script>\n';
     result += '        <div id="kajero"></div>\n';
     result += '        <script type="text/javascript" src="' + config.scriptUrl + '"></script>\n';
-    result += '    </body>\n</html>';
+    result += '    </body>\n</html>\n';
     return result;
 }

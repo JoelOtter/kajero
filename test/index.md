@@ -210,19 +210,19 @@ return graphs.pieChart(data.popular);
 
 It's worked! Smolder knows that a pie chart needs labels and numerical values, so it's reshaped the data to get these.
 
-It's picked the repository name for the label, which seems sensible. However, it's picked the first number it could find for the value, which in this case looks to be the repo IDs. This isn't really useful for a pie chart! We'd rather look at something like the number of stargazers. We can pass in a 'hint', to tell Jutsu which value we care about.
+However, it's picked the first number it could find for the value, which in this case looks to be the repo IDs. This isn't really useful for a pie chart! We'd rather look at something like the number of stargazers. We can pass in a 'hint', to tell Jutsu which value we care about.
 
 ```javascript
 return graphs.pieChart(data.popular, 'stargazers_count');
 ```
 
-We can give multiple hints. Let's say we want to use the repository URL, instead of the name.
+We can give multiple hints. Let's say we want to use the name of the repository.
 
 ```javascript
-return graphs.pieChart(data.popular, ['git_url', 'stargazers_count']);
+return graphs.pieChart(data.popular, ['name', 'stargazers_count']);
 ```
 
-Not terribly readable! It _is_ what we asked for, though.
+Good, that's a bit more readable.
 
 It's kind of hard to compare the stargazers counts in a pie chart - they're all relatively similar. Let's try a bar chart instead.
 

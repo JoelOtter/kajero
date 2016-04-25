@@ -4,7 +4,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import fetchMock from 'fetch-mock';
 import sinon from 'sinon';
-import { gistUrl } from './config';
+import { gistUrl, gistApi } from './config';
 import * as actions from './actions';
 import * as util from './util';
 
@@ -29,7 +29,7 @@ describe('actions', () => {
 
         afterEach(fetchMock.restore);
 
-        it('creates RECEIVED_DATA when data is received', () => {
+        it('should create RECEIVED_DATA when data is received', () => {
             fetchMock
                 .mock('http://example.com/data1', {body: {thing: 'data1'}})
                 .mock('http://example.com/data2', {body: {thing: 'data2'}});
@@ -56,12 +56,18 @@ describe('actions', () => {
                 });
         });
 
-        it('creates LOAD_MARKDOWN with received markdown', () => {
+        it('should create LOAD_MARKDOWN with received markdown', () => {
             const md = '## Some markdown';
             fetchMock
                 .mock(gistUrl + '123/raw', {body: md});
 
-            const store = mockStore({});
+            const store = mockStore({
+                notebook: Immutable.fromJS({
+                    metadata: {
+                        datasources: {}
+                    }
+                })
+            });
             const expected = [{type: actions.LOAD_MARKDOWN, markdown: md}];
 
             return store.dispatch(actions.loadMarkdown())
@@ -70,7 +76,7 @@ describe('actions', () => {
                 });
         });
 
-        it('uses markdown from HTML on fetch error', () => {
+        it('should use markdown from HTML on fetch error', () => {
             fetchMock
                 .mock(gistUrl + '123/raw', 404);
 
@@ -83,6 +89,17 @@ describe('actions', () => {
                 });
 
         });
+
+        it('should save a gist and return a GIST_CREATED action', () => {
+            fetchMock.mock(gistApi, 'POST', {
+                id: 'test_gist_id'
+            });
+
+            const store = mockStore({});
+            const expected = [{type: actions.GIST_CREATED, id: 'test_gist_id'}]
+
+            return store.dispatch(actions.saveGist('title', '## markdown'));
+        })
 
     });
 
@@ -231,6 +248,13 @@ describe('actions', () => {
                 id: name
             };
             expect(actions.deleteDatasource(name)).to.eql(expected);
+        });
+
+        it('should create an action to toggle the save form', () => {
+            const expected = {
+                type: actions.TOGGLE_SAVE
+            };
+            expect(actions.toggleSave()).to.eql(expected);
         });
 
     });
