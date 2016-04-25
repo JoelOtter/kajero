@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import Immutable from 'immutable';
 import jsdom from 'mocha-jsdom';
 import sinon from 'sinon';
+import fs from 'fs';
 import * as util from './util';
 
 describe('util', () => {
@@ -52,6 +53,16 @@ describe('util', () => {
         it('correctly removes indentation when loading Markdown from HTML', () => {
             const expected = '---\n---\n\n## This has spaces\n\n    Are they removed?';
             expect(util.extractMarkdownFromHTML()).to.equal(expected);
+        });
+
+    });
+
+    describe('renderHTML', () => {
+
+        it('should correctly render the index.html from its markdown', () => {
+            const indexMd = fs.readFileSync('./test/index.md').toString();
+            const indexHTML = fs.readFileSync('./src/index.html').toString();
+            expect(util.renderHTML(indexMd)).to.equal(indexHTML);
         });
 
     });

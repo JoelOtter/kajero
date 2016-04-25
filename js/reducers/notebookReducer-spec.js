@@ -4,6 +4,7 @@ import sinon from 'sinon';
 import reducer, { initialState } from './notebookReducer';
 import * as markdown from '../markdown';
 import * as actions from '../actions';
+import { kajeroHomepage } from '../config';
 
 describe('notebook reducer', () => {
 
@@ -75,7 +76,7 @@ describe('notebook reducer', () => {
         it('should update the date when edit mode is toggled', () => {
             const dateFirst = new Date().toUTCString();
             const action = {
-                type: 'TOGGLE_EDIT'
+                type: actions.TOGGLE_EDIT
             };
             const betweenState = initialState.setIn(['metadata', 'created'], dateFirst);
             expect(reducer(initialState, action).toJS()).to.eql(betweenState.toJS());
@@ -84,6 +85,18 @@ describe('notebook reducer', () => {
             const dateSecond = new Date().toUTCString();
             const afterState = initialState.setIn(['metadata', 'created'], dateSecond);
             expect(reducer(betweenState, action).toJS()).to.eql(afterState.toJS());
+        });
+
+        it('should update the gist url after creation', () => {
+            const action = {
+                type: actions.GIST_CREATED,
+                id: 'test_id'
+            };
+            const expected = initialState.setIn(
+                ['metadata', 'gistUrl'],
+                kajeroHomepage + '?id=test_id'
+            );
+            expect(reducer(initialState, action).toJS()).to.eql(expected.toJS());
         });
 
     });

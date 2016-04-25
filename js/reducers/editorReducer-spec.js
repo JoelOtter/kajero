@@ -26,7 +26,25 @@ describe('editor reducer', () => {
     });
 
     it('should return the inital state', () => {
-       expect(reducer(undefined, {})).to.eql(Immutable.Map({editable: false}));
+        expect(reducer(undefined, {})).to.eql(Immutable.Map({
+            editable: false,
+            saving: false
+        }));
+    });
+
+    it('should toggle save state for TOGGLE_SAVE', () => {
+        expect(
+            reducer(
+                Immutable.Map({saving: false}),
+                {type: actions.TOGGLE_SAVE}
+            ).equals(Immutable.Map({saving: true}))
+        ).to.be.true;
+        expect(
+            reducer(
+                Immutable.Map({saving: true}),
+                {type: actions.TOGGLE_SAVE}
+            ).equals(Immutable.Map({saving: false}))
+        ).to.be.true;
     });
 
 });
