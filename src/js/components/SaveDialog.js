@@ -84,7 +84,7 @@ class SaveDialog extends Component {
                     </div>
                     <div className="pure-u-1 pure-u-md-2-3">
                         <input type="text" readOnly
-                            value={gistUrl ? gistUrl : 'Loading...'}
+                            value={gistUrl} placeholder="Loading..."
                         />
                     </div>
                 </div>
