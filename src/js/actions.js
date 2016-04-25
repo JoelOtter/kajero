@@ -20,6 +20,7 @@ export const DELETE_DATASOURCE = 'DELETE_DATASOURCE';
 export const UPDATE_DATASOURCE = 'UPDATE_DATASOURCE';
 export const TOGGLE_SAVE = 'TOGGLE_SAVE';
 export const GIST_CREATED = 'GIST_CREATED';
+export const UNDO = 'UNDO';
 
 function checkStatus (response) {
     if (response.status >= 200 && response.status < 300) {
@@ -76,15 +77,18 @@ function receivedData (name, data) {
 export function fetchData() {
     return (dispatch, getState) => {
         let proms = [];
+        const currentData = getState().execution.get('data');
         getState().notebook.getIn(['metadata', 'datasources']).forEach(
             (url, name) => {
-                proms.push(
-                    fetch(url, {
-                        method: 'get'
-                    })
-                    .then(response => response.json())
-                    .then(j => dispatch(receivedData(name, j)))
-                );
+                if (!currentData.has(name)) {
+                    proms.push(
+                        fetch(url, {
+                            method: 'get'
+                        })
+                        .then(response => response.json())
+                        .then(j => dispatch(receivedData(name, j)))
+                    );
+                }
             }
         );
         return Promise.all(proms);
@@ -215,3 +219,9 @@ export function saveGist (title, markdown) {
         .then(gist => dispatch(gistCreated(gist.id)));
     };
 };
+
+export function undo() {
+    return {
+        type: UNDO
+    };
+}

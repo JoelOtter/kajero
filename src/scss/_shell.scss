@@ -29,10 +29,13 @@ body {
     }
 }
 
-.edit-button, .save-button {
+.controls {
     float: right;
     margin: 0 .5em;
     cursor: pointer;
+    i {
+        margin-left: .5em;
+    }
 }
 
 .editor-buttons {

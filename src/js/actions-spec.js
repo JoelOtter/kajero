@@ -42,6 +42,9 @@ describe('actions', () => {
                             two: 'http://example.com/data2'
                         }
                     }
+                }),
+                execution: Immutable.fromJS({
+                    data: {}
                 })
             });
 
@@ -56,6 +59,35 @@ describe('actions', () => {
                 });
         });
 
+        it('should not fetch data unless necessary', () => {
+            fetchMock
+                .mock('http://example.com/data1', {body: {thing: 'data1'}})
+                .mock('http://example.com/data2', {body: {thing: 'data2'}});
+
+            const store = mockStore({
+                notebook: Immutable.fromJS({
+                    metadata: {
+                        datasources: {
+                            one: 'http://example.com/data1',
+                            two: 'http://example.com/data2'
+                        }
+                    }
+                }),
+                execution: Immutable.fromJS({
+                    data: {one: 'hooray'}
+                })
+            });
+
+            const expected = [
+                {type: actions.RECEIVED_DATA, name: 'two', data: {thing: 'data2'}}
+            ];
+
+            return store.dispatch(actions.fetchData())
+                .then(() => {
+                    expect(store.getActions()).to.eql(expected);
+                });
+        });
+
         it('should create LOAD_MARKDOWN with received markdown', () => {
             const md = '## Some markdown';
             fetchMock
@@ -66,6 +98,9 @@ describe('actions', () => {
                     metadata: {
                         datasources: {}
                     }
+                }),
+                execution: Immutable.fromJS({
+                    data: {}
                 })
             });
             const expected = [{type: actions.LOAD_MARKDOWN, markdown: md}];
@@ -255,6 +290,13 @@ describe('actions', () => {
                 type: actions.TOGGLE_SAVE
             };
             expect(actions.toggleSave()).to.eql(expected);
+        });
+
+        it('should create an action for undo', () => {
+            const expected = {
+                type: actions.UNDO
+            };
+            expect(actions.undo()).to.eql(expected);
         });
 
     });

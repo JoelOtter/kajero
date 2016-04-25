@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Title from './Title';
 import Metadata from './Metadata';
 import { metadataSelector } from '../selectors';
-import { toggleEdit, toggleSave } from '../actions';
+import { toggleEdit, toggleSave, undo, fetchData } from '../actions';
 
 class Header extends Component {
 
@@ -11,6 +11,7 @@ class Header extends Component {
         super(props);
         this.toggleEditClicked = this.toggleEditClicked.bind(this);
         this.toggleSaveClicked = this.toggleSaveClicked.bind(this);
+        this.undoClicked = this.undoClicked.bind(this);
     }
 
     toggleEditClicked() {
@@ -21,19 +22,31 @@ class Header extends Component {
         this.props.dispatch(toggleSave());
     }
 
+    undoClicked() {
+        this.props.dispatch(undo());
+        this.props.dispatch(fetchData());
+    }
+
     render() {
-        const { metadata, editable, dispatch } = this.props;
+        const { metadata, editable, undoSize, dispatch } = this.props;
         const title = metadata.get('title');
         const icon = editable ? "fa-newspaper-o" : "fa-pencil";
         document.title = title;
         const saveButton = (
-            <i className="fa fa-save save-button" onClick={this.toggleSaveClicked}></i>
+            <i className="fa fa-save" onClick={this.toggleSaveClicked}></i>
         );
+        const undoButton = (
+            <i className="fa fa-rotate-left" onClick={this.undoClicked}></i>
+        );
+        const showUndo = editable && undoSize > 0;
         return (
             <div>
                 <Title title={title} editable={editable} dispatch={dispatch} />
-                <i className={'fa ' + icon + ' edit-button'} onClick={this.toggleEditClicked}></i>
-                {editable ? saveButton : null}
+                <span className="controls">
+                    {showUndo ? undoButton : null}
+                    {editable ? saveButton : null}
+                    <i className={'fa ' + icon} onClick={this.toggleEditClicked}></i>
+                </span>
                 <Metadata editable={editable} metadata={metadata} dispatch={dispatch} />
             </div>
         );

@@ -1,5 +1,8 @@
 export const metadataSelector = state => {
-    return {metadata: state.notebook.get('metadata')};
+    return {
+        metadata: state.notebook.get('metadata'),
+        undoSize: state.notebook.get('undoStack').size
+    };
 };
 
 export const contentSelector = state => {

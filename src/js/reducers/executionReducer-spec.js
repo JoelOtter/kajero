@@ -44,6 +44,16 @@ describe('execution reducer', () => {
         expect(reducer(beforeState, action).toJS()).to.eql(initialState.toJS());
     });
 
+    it('should clear datasource data when the datasource is updated', () => {
+        const action = {
+            type: actions.UPDATE_DATASOURCE,
+            id: 'github'
+        };
+        const beforeState = initialState.setIn(['data', 'github', 'repos'], 12);
+        expect(reducer(beforeState, action).toJS()).to.eql(initialState.toJS());
+    });
+
+
     it('should save results and mark execution on EXECUTE action', () => {
         const id = '1';
         const code = 'return 12 + 5;';
