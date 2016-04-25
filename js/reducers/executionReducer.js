@@ -5,7 +5,8 @@ import {
     RECEIVED_DATA,
     EXECUTE,
     UPDATE_BLOCK,
-    DELETE_DATASOURCE
+    DELETE_DATASOURCE,
+    UPDATE_DATASOURCE
 } from '../actions';
 
 
@@ -44,6 +45,7 @@ export default function execution(state = initialState, action) {
             return state
                 .set('blocksExecuted', state.get('blocksExecuted').remove(id))
                 .removeIn(['results', id]);
+        case UPDATE_DATASOURCE:
         case DELETE_DATASOURCE:
             return state.deleteIn(['data', id]);
         default:

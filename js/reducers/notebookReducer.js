@@ -13,7 +13,8 @@ import {
     MOVE_BLOCK_DOWN,
     DELETE_DATASOURCE,
     UPDATE_DATASOURCE,
-    GIST_CREATED
+    GIST_CREATED,
+    UNDO
 } from '../actions';
 
 /*
@@ -26,7 +27,8 @@ export const initialState = Immutable.Map({
         datasources: {}
     }),
     content: Immutable.List(),
-    blocks: Immutable.Map()
+    blocks: Immutable.Map(),
+    undoStack: Immutable.List()
 });
 
 export default function notebook(state = initialState, action) {
@@ -36,11 +38,17 @@ export default function notebook(state = initialState, action) {
         case LOAD_MARKDOWN:
             return parse(action.markdown).mergeDeep(state);
         case UPDATE_BLOCK:
-            return state.setIn(['blocks', id, 'content'], text);
+            return handleChange(
+                state, state.setIn(['blocks', id, 'content'], text)
+            );
         case UPDATE_META:
-            return state.setIn(['metadata', field], text);
+            return handleChange(
+                state, state.setIn(['metadata', field], text)
+            );
         case TOGGLE_META:
-            return state.setIn(['metadata', field], !state.getIn(['metadata', field]));
+            return handleChange(
+                state, state.setIn(['metadata', field], !state.getIn(['metadata', field]))
+            );
         case TOGGLE_EDIT:
             return state.setIn(['metadata', 'created'], new Date().toUTCString());
         case ADD_BLOCK:
@@ -53,24 +61,40 @@ export default function notebook(state = initialState, action) {
             } else {
                 newBlock.content = 'New text block';
             }
-            const newState = state.setIn(['blocks', newId], Immutable.fromJS(newBlock));
+            const newState = handleChange(
+                state, state.setIn(['blocks', newId], Immutable.fromJS(newBlock))
+            );
             if (id === undefined) {
                 return newState.set('content', content.push(newId));
             }
             return newState.set('content', content.insert(content.indexOf(id), newId));
         case DELETE_BLOCK:
-            return state.deleteIn(['blocks', id])
-                .set('content', content.delete(content.indexOf(id)));
+            return handleChange(
+                state,
+                state.deleteIn(['blocks', id]).set(
+                    'content', content.delete(content.indexOf(id))
+                )
+            );
         case MOVE_BLOCK_UP:
-            return state.set('content', moveItem(content, id, true));
+            return handleChange(
+                state, state.set('content', moveItem(content, id, true))
+            );
         case MOVE_BLOCK_DOWN:
-            return state.set('content', moveItem(content, id, false));
+            return handleChange(
+                state, state.set('content', moveItem(content, id, false))
+            );
         case DELETE_DATASOURCE:
-            return state.deleteIn(['metadata', 'datasources', id]);
+            return handleChange(
+                state, state.deleteIn(['metadata', 'datasources', id])
+            );
         case UPDATE_DATASOURCE:
-            return state.setIn(['metadata', 'datasources', id], text);
+            return handleChange(
+                state, state.setIn(['metadata', 'datasources', id], text)
+            );
         case GIST_CREATED:
             return state.setIn(['metadata', 'gistUrl'], kajeroHomepage + '?id=' + id);
+        case UNDO:
+            return undo(state);
         default:
             return state;
     }
@@ -97,4 +121,25 @@ function moveItem(content, id, up) {
     return content.slice(0, index)
         .push(content.get(index + 1)).push(id)
         .concat(content.slice(index + 2));
+}
+
+/*
+ * Handles changes, if they exist, by pushing to the undo stack.
+ */
+function handleChange(currentState, newState) {
+    if (currentState.equals(newState)) {
+        return newState;
+    }
+    return newState.set(
+        'undoStack',
+        newState.get('undoStack').push(currentState.remove('undoStack'))
+    ).deleteIn(['metadata', 'gistUrl']);
+}
+
+function undo(state) {
+    if (state.get('undoStack').size === 0) {
+        return state;
+    }
+    return state.get('undoStack').last()
+        .set('undoStack', state.get('undoStack').pop());
 }
