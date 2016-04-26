@@ -79088,7 +79088,7 @@ var Header = function (_Component) {
             document.title = title;
             var saveButton = _react2.default.createElement('i', { className: 'fa fa-save', onClick: this.toggleSaveClicked });
             var undoButton = _react2.default.createElement('i', { className: 'fa fa-rotate-left', onClick: this.undoClicked });
-            var showUndo = editable && undoSize > 0;
+            var changesMade = editable && undoSize > 0;
             return _react2.default.createElement(
                 'div',
                 null,
@@ -79096,8 +79096,8 @@ var Header = function (_Component) {
                 _react2.default.createElement(
                     'span',
                     { className: 'controls' },
-                    showUndo ? undoButton : null,
-                    editable ? saveButton : null,
+                    changesMade ? undoButton : null,
+                    changesMade ? saveButton : null,
                     _react2.default.createElement('i', { className: 'fa ' + icon, onClick: this.toggleEditClicked })
                 ),
                 _react2.default.createElement(_Metadata2.default, { editable: editable, metadata: metadata, dispatch: dispatch })
@@ -79169,7 +79169,7 @@ var Metadata = function (_Component) {
             var dispatch = _props.dispatch;
 
             var author = metadata.get('author');
-            var date = new Date(metadata.get('created')).toUTCString();
+            var date = metadata.get('created');
             if (editable) {
                 var iconFooter = metadata.get('showFooter') ? 'check-circle' : 'circle-o';
                 return _react2.default.createElement(
@@ -80213,6 +80213,13 @@ function extractBlocks(body, codeBlocks) {
     };
 }
 
+function getDate(attributes) {
+    if (attributes.created) {
+        return new Date(Date.parse(attributes.created));
+    }
+    return undefined;
+}
+
 function parse(md) {
     // Separate front-matter and body
     var doc = (0, _frontMatter2.default)(md);
@@ -80231,7 +80238,7 @@ function parse(md) {
     return _immutable2.default.fromJS({
         metadata: {
             title: doc.attributes.title,
-            created: Date.parse(doc.attributes.created) || undefined,
+            created: getDate(doc.attributes),
             author: doc.attributes.author,
             datasources: doc.attributes.datasources || {},
             original: doc.attributes.original,
@@ -80263,7 +80270,7 @@ function renderMetadata(metadata) {
         rendered += 'author: ' + metadata.get('author') + '\n';
     }
     if (metadata.get('created') !== undefined) {
-        rendered += 'created: ' + new Date(metadata.get('created')).toString() + '\n';
+        rendered += 'created: ' + metadata.get('created').toString() + '\n';
     }
     var datasources = metadata.get('datasources');
     if (datasources && datasources.size > 0) {
@@ -80496,8 +80503,6 @@ function notebook() {
             return handleChange(state, state.setIn(['metadata', field], text));
         case _actions.TOGGLE_META:
             return handleChange(state, state.setIn(['metadata', field], !state.getIn(['metadata', field])));
-        case _actions.TOGGLE_EDIT:
-            return state.setIn(['metadata', 'created'], new Date().toUTCString());
         case _actions.ADD_BLOCK:
             var newId = getNewId(content);
             var newBlock = { type: blockType, id: newId };
@@ -80558,7 +80563,16 @@ function handleChange(currentState, newState) {
     if (currentState.equals(newState)) {
         return newState;
     }
-    return newState.set('undoStack', newState.get('undoStack').push(currentState.remove('undoStack'))).deleteIn(['metadata', 'gistUrl']);
+    var result = newState.set('undoStack', newState.get('undoStack').push(currentState.remove('undoStack'))).deleteIn(['metadata', 'gistUrl']).setIn(['metadata', 'created'], new Date());
+
+    // If it's the first change, update the parent link.
+    if (currentState.get('undoStack').size === 0) {
+        result = result.setIn(['metadata', 'original'], _immutable2.default.fromJS({
+            title: currentState.getIn(['metadata', 'title']),
+            url: location.href
+        }));
+    }
+    return result;
 }
 
 function undo(state) {
