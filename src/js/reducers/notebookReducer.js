@@ -3,7 +3,6 @@ import { parse } from '../markdown';
 import { kajeroHomepage } from '../config';
 import {
     LOAD_MARKDOWN,
-    TOGGLE_EDIT,
     UPDATE_BLOCK,
     UPDATE_META,
     TOGGLE_META,
@@ -49,8 +48,6 @@ export default function notebook(state = initialState, action) {
             return handleChange(
                 state, state.setIn(['metadata', field], !state.getIn(['metadata', field]))
             );
-        case TOGGLE_EDIT:
-            return state.setIn(['metadata', 'created'], new Date().toUTCString());
         case ADD_BLOCK:
             const newId = getNewId(content);
             let newBlock = {type: blockType, id: newId};
@@ -130,10 +127,24 @@ function handleChange(currentState, newState) {
     if (currentState.equals(newState)) {
         return newState;
     }
-    return newState.set(
+    let result = newState.set(
         'undoStack',
         newState.get('undoStack').push(currentState.remove('undoStack'))
-    ).deleteIn(['metadata', 'gistUrl']);
+    ).deleteIn(
+        ['metadata', 'gistUrl']
+    ).setIn(
+        ['metadata', 'created'],
+        new Date()
+    );
+
+    // If it's the first change, update the parent link.
+    if (currentState.get('undoStack').size === 0) {
+        result = result.setIn(['metadata', 'original'], Immutable.fromJS({
+            title: currentState.getIn(['metadata', 'title']),
+            url: location.href
+        }));
+    }
+    return result;
 }
 
 function undo(state) {

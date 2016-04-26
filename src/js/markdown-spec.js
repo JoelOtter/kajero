@@ -13,7 +13,7 @@ describe('markdown', () => {
         metadata: {
             title: 'A sample notebook',
             author: 'Joel Auterson',
-            created: Date.parse("Mon Apr 18 2016 21:48:01 GMT+0100 (BST)"),
+            created: new Date(Date.parse("Mon Apr 18 2016 21:48:01 GMT+0100 (BST)")),
             showFooter: true,
             original: undefined,
             datasources: {}

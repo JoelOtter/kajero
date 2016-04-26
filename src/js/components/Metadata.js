@@ -21,7 +21,7 @@ export default class Metadata extends Component {
     render() {
         const { editable, metadata, dispatch } = this.props;
         const author = metadata.get('author');
-        const date = new Date(metadata.get('created')).toUTCString();
+        const date = metadata.get('created');
         if (editable) {
             const iconFooter = metadata.get('showFooter') ? 'check-circle' : 'circle-o';
             return (
