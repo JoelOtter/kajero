@@ -38,13 +38,13 @@ class Header extends Component {
         const undoButton = (
             <i className="fa fa-rotate-left" onClick={this.undoClicked}></i>
         );
-        const showUndo = editable && undoSize > 0;
+        const changesMade = editable && undoSize > 0;
         return (
             <div>
                 <Title title={title} editable={editable} dispatch={dispatch} />
                 <span className="controls">
-                    {showUndo ? undoButton : null}
-                    {editable ? saveButton : null}
+                    {changesMade ? undoButton : null}
+                    {changesMade ? saveButton : null}
                     <i className={'fa ' + icon} onClick={this.toggleEditClicked}></i>
                 </span>
                 <Metadata editable={editable} metadata={metadata} dispatch={dispatch} />

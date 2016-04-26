@@ -6,7 +6,32 @@ import * as markdown from '../markdown';
 import * as actions from '../actions';
 import { kajeroHomepage } from '../config';
 
+function handleFirstChange(state) {
+    return state.set(
+        'undoStack', Immutable.List([state.remove('undoStack')])
+    ).setIn(
+        ['metadata', 'created'],
+        new Date()
+    ).setIn(
+        ['metadata', 'original'],
+        Immutable.fromJS({
+            title: undefined,
+            url: undefined
+        })
+    );
+}
+
 describe('notebook reducer', () => {
+
+    let clock;
+
+    beforeEach(() => {
+        clock = sinon.useFakeTimers();
+    });
+
+    afterEach(() => {
+        clock.restore();
+    });
 
     it('should return the initial state', () => {
         expect(reducer(undefined, {}).toJS()).to.eql(initialState.toJS());
@@ -14,28 +39,17 @@ describe('notebook reducer', () => {
 
     describe('metadata', () => {
 
-        let clock;
-
-        before(() => {
-            clock = sinon.useFakeTimers();
-        });
-
-        after(() => {
-            clock.restore();
-        });
-
         it('should update metadata on UPDATE_META', () => {
             const action = {
                 type: actions.UPDATE_META,
                 field: 'title',
                 text: 'New Title'
             };
-            const expectedState = initialState.setIn(
+            const expectedState = handleFirstChange(initialState).setIn(
                 ['metadata', 'title'], 'New Title'
-            ).set(
-                'undoStack', Immutable.List([initialState.remove('undoStack')])
             );
-            expect(reducer(initialState, action).toJS()).to.eql(expectedState.toJS());
+            const result = reducer(initialState, action).toJS();
+            expect(result).to.eql(expectedState.toJS());
         });
 
         it('should correctly delete datasources on DELETE_DATASOURCE', () => {
@@ -48,12 +62,8 @@ describe('notebook reducer', () => {
             ).setIn(
                 ['metadata', 'datasources', 'github'], 'http://github.com'
             );
-            const afterState = initialState.setIn(
-                ['metadata', 'datasources', 'github'], 'http://github.com'
-            ).set(
-                'undoStack', Immutable.List([
-                    beforeState.remove('undoStack')
-                ])
+            const afterState = handleFirstChange(beforeState).deleteIn(
+                ['metadata', 'datasources', 'facebook']
             );
             expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
         });
@@ -67,24 +77,16 @@ describe('notebook reducer', () => {
             const beforeState = initialState.setIn(
                 ['metadata', 'datasources', 'facebook'], 'http://github.com'
             );
-            const afterState = initialState.setIn(
+            const afterState = handleFirstChange(beforeState).setIn(
                 ['metadata', 'datasources', 'facebook'], 'http://www.facebook.com'
-            ).set(
-                'undoStack', Immutable.List([
-                    beforeState.remove('undoStack')
-                ])
             );
             expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
         });
 
         it('should correctly toggle metadata items', () => {
             const beforeState = initialState.setIn(['metadata', 'showFooter'], false);
-            const afterState = initialState.setIn(
+            const afterState = handleFirstChange(beforeState).setIn(
                 ['metadata', 'showFooter'], true
-            ).set(
-                'undoStack', Immutable.List([
-                    beforeState.remove('undoStack')
-                ])
             );
 
             const action = {
@@ -92,20 +94,6 @@ describe('notebook reducer', () => {
                 field: 'showFooter'
             };
             expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
-        });
-
-        it('should update the date when edit mode is toggled', () => {
-            const dateFirst = new Date().toUTCString();
-            const action = {
-                type: actions.TOGGLE_EDIT
-            };
-            const betweenState = initialState.setIn(['metadata', 'created'], dateFirst);
-            expect(reducer(initialState, action).toJS()).to.eql(betweenState.toJS());
-
-            clock.tick(500);
-            const dateSecond = new Date().toUTCString();
-            const afterState = initialState.setIn(['metadata', 'created'], dateSecond);
-            expect(reducer(betweenState, action).toJS()).to.eql(afterState.toJS());
         });
 
         it('should update the gist url after creation', () => {
@@ -120,6 +108,42 @@ describe('notebook reducer', () => {
             expect(reducer(initialState, action).toJS()).to.eql(expected.toJS());
         });
 
+        it('should only update the parent link on first change', () => {
+            const beforeState = handleFirstChange(initialState).setIn(
+                ['metadata', 'title'],
+                'Test Title'
+            );
+            const action = {
+                type: actions.TOGGLE_META,
+                field: 'showFooter'
+            }
+            const result = reducer(beforeState, action).getIn(['metadata', 'original']);
+            expect(result).to.eql(beforeState.getIn(['metadata', 'original']));
+        });
+
+        it('should update the date on every change', () => {
+            const beforeState = handleFirstChange(initialState).setIn(
+                ['metadata', 'title'],
+                'Test Title'
+            );
+            clock.tick(50000);
+            const afterState = beforeState.setIn(
+                ['metadata', 'title'],
+                'New Title'
+            ).setIn(
+                ['metadata', 'created'],
+                new Date()
+            ).set(
+                'undoStack',
+                beforeState.get('undoStack').push(beforeState.remove('undoStack'))
+            );
+            const action = {
+                type: actions.UPDATE_META,
+                field: 'title',
+                text: 'New Title'
+            };
+            expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
+        });
     });
 
     describe('blocks', () => {
@@ -140,13 +164,8 @@ describe('notebook reducer', () => {
 
         it('should move a block up on MOVE_BLOCK_UP', () => {
             const beforeState = initialState.set('content', Immutable.List(['1', '2', '3']));
-            const afterState = initialState.set(
+            const afterState = handleFirstChange(beforeState).set(
                 'content', Immutable.List(['2', '1', '3'])
-            ).set(
-                'undoStack',
-                Immutable.List([
-                    beforeState.remove('undoStack')
-                ])
             );
             const action = {
                 type: actions.MOVE_BLOCK_UP,
@@ -166,13 +185,8 @@ describe('notebook reducer', () => {
 
         it('should move a block down on MOVE_BLOCK_DOWN', () => {
             const beforeState = initialState.set('content', Immutable.List(['1', '2', '3']));
-            const afterState = initialState.set(
+            const afterState = handleFirstChange(beforeState).set(
                 'content', Immutable.List(['1', '3', '2'])
-            ).set(
-                'undoStack',
-                Immutable.List([
-                    beforeState.remove('undoStack')
-                ])
             );
             const action = {
                 type: actions.MOVE_BLOCK_DOWN,
@@ -198,18 +212,12 @@ describe('notebook reducer', () => {
                     '2': {data: 'two'},
                     '3': {data: 'three'}
                 }));
-            const afterState = initialState
+            const afterState = handleFirstChange(beforeState)
                 .set('content', Immutable.List(['1', '3']))
                 .set('blocks', Immutable.Map({
                     '1': {data: 'one'},
                     '3': {data: 'three'}
-                }))
-                .set(
-                    'undoStack',
-                    Immutable.List([
-                        beforeState.remove('undoStack')
-                    ])
-                );
+                }));
             const action = {
                 type: actions.DELETE_BLOCK,
                 id: '2'
@@ -225,14 +233,8 @@ describe('notebook reducer', () => {
                     '1': exampleCodeBlock
                 }))
                 .set('content', Immutable.List(['0', '1']));
-            const afterState = beforeState
-                .setIn(['blocks', '1', 'content'], newCode)
-                .set(
-                    'undoStack',
-                    Immutable.List([
-                        beforeState.remove('undoStack')
-                    ])
-                );
+            const afterState = handleFirstChange(beforeState)
+                .setIn(['blocks', '1', 'content'], newCode);
             const action = {
                 type: actions.UPDATE_BLOCK,
                 id: '1',
@@ -245,18 +247,12 @@ describe('notebook reducer', () => {
             const beforeState = initialState
                 .setIn(['blocks', '0'], exampleTextBlock)
                 .set('content', Immutable.List(['0']));
-            const afterState = beforeState
+            const afterState = handleFirstChange(beforeState)
                 .setIn(
                     ['blocks', '1'],
                     exampleCodeBlock.set('content', '// New code block')
                 )
-                .set('content', ['1', '0'])
-                .set(
-                    'undoStack',
-                    Immutable.List([
-                        beforeState.remove('undoStack')
-                    ])
-                );
+                .set('content', ['1', '0']);
             const action = {
                 type: actions.ADD_BLOCK,
                 blockType: 'code',
@@ -272,23 +268,13 @@ describe('notebook reducer', () => {
                     '1': exampleCodeBlock
                 }))
                 .set('content', Immutable.List(['0', '1']));
-            const afterState = initialState
-                .set('blocks', Immutable.Map({
-                    '0': exampleTextBlock,
-                    '1': exampleCodeBlock,
-                    '2': Immutable.fromJS({
-                        type: 'text',
-                        id: '2',
-                        content: 'New text block'
-                    })
+            const afterState = handleFirstChange(beforeState)
+                .setIn(['blocks', '2'], Immutable.Map({
+                    type: 'text',
+                    id: '2',
+                    content: 'New text block'
                 }))
-                .set('content', Immutable.List(['0', '1', '2']))
-                .set(
-                    'undoStack',
-                    Immutable.List([
-                        beforeState.remove('undoStack')
-                    ])
-                );
+                .set('content', Immutable.List(['0', '1', '2']));
             const action = {
                 type: actions.ADD_BLOCK,
                 id: undefined,
@@ -302,11 +288,9 @@ describe('notebook reducer', () => {
                 ['metadata', 'gistUrl'],
                 'http://testgisturl.com'
             );
-            const afterState = initialState.setIn(
+            const afterState = handleFirstChange(beforeState).setIn(
                 ['metadata', 'showFooter'], true
-            ).set('undoStack', Immutable.List([
-                beforeState.remove('undoStack')
-            ]));
+            ).removeIn(['metadata', 'gistUrl']);
             const action = {
                 type: actions.TOGGLE_META,
                 field: 'showFooter'
