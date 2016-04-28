@@ -29,7 +29,11 @@ class CodeBlock extends Block {
         const { block, hasBeenRun, result } = this.props;
         const icon = hasBeenRun ? "fa-repeat" : "fa-play-circle-o";
         let buttons = this.getButtons();
-        const runButton = <i className={"fa " + icon} onClick={this.clickPlay} key="run"></i>;
+        const runButton = (
+            <i className={"fa " + icon} onClick={this.clickPlay} key="run"
+                title={hasBeenRun ? "Re-run code" : "Run code"}>
+            </i>
+        );
         if (buttons == null) {
             buttons = runButton;
         } else {

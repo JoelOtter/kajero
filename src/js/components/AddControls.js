@@ -24,8 +24,12 @@ export default class AddControls extends Component {
         }
         return (
             <div className="add-controls">
-                <i className="fa fa-file-text-o clickable" onClick={this.addTextBlock}></i>
-                <i className="fa fa-file-code-o clickable" onClick={this.addCodeBlock}></i>
+                <i className="fa fa-file-text-o clickable" onClick={this.addTextBlock}
+                    title="New text block">
+                </i>
+                <i className="fa fa-file-code-o clickable" onClick={this.addCodeBlock}
+                    title="New code block">
+                </i>
             </div>
         );
     }
