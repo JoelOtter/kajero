@@ -40,6 +40,7 @@ body {
 
 .editor-buttons {
     float: right;
+    margin-bottom: 1px; // Fixes overlap bug on Safari
     i {
         margin-left: .25em;
         cursor: pointer;
