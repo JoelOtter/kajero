@@ -93,7 +93,7 @@ img {
 }
 
 pre, .codeBlock, .resultBlock, .graphBlock {
-    overflow: scroll;
+    overflow: auto;
     padding: .5em;
     @include block-border;
 }
