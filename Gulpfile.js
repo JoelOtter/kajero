@@ -21,7 +21,7 @@ bundler.transform(babelify.configure({
 
 bundler.transform('envify');
 bundler.transform({
-    global: true,
+    global: isProduction,
     ignore: [
         '**/jutsu/lib/**'
     ]
