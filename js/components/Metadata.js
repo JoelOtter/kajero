@@ -29,7 +29,7 @@ export default class Metadata extends Component {
                     <div className="metadata-row">
                         <i className="fa fa-user"></i>
                         <input type="text" defaultValue={author}
-                            ref="authorField" onBlur={this.updateAuthor} />
+                            ref="authorField" onBlur={this.updateAuthor} title="Author" />
                     </div>
                     <div className="metadata-row">
                         <i className={'fa fa-' + iconFooter + ' clickable'}

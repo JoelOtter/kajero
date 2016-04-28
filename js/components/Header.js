@@ -33,10 +33,13 @@ class Header extends Component {
         const icon = editable ? "fa-newspaper-o" : "fa-pencil";
         document.title = title;
         const saveButton = (
-            <i className="fa fa-save" onClick={this.toggleSaveClicked}></i>
+            <i className="fa fa-save" onClick={this.toggleSaveClicked}
+                title="Export notebook">
+            </i>
         );
         const undoButton = (
-            <i className="fa fa-rotate-left" onClick={this.undoClicked}></i>
+            <i className="fa fa-rotate-left" onClick={this.undoClicked} title="Undo">
+            </i>
         );
         const changesMade = editable && undoSize > 0;
         return (
@@ -45,7 +48,9 @@ class Header extends Component {
                 <span className="controls">
                     {changesMade ? undoButton : null}
                     {changesMade ? saveButton : null}
-                    <i className={'fa ' + icon} onClick={this.toggleEditClicked}></i>
+                    <i className={'fa ' + icon} onClick={this.toggleEditClicked}
+                        title={editable ? "Exit edit mode" : "Enter edit mode"}>
+                    </i>
                 </span>
                 <Metadata editable={editable} metadata={metadata} dispatch={dispatch} />
             </div>

@@ -97,7 +97,9 @@ class SaveDialog extends Component {
             <div className="save-dialog">
                 <h1>Export notebook</h1>
                 <p>Here you can export your edited notebook as Markdown or HTML. You can also host it as a Gist, to get a unique URL for your notebook.</p>
-                <i className="fa fa-times-circle-o close-button" onClick={this.close}></i>
+                <i className="fa fa-times-circle-o close-button" onClick={this.close}
+                    title="Back to notebook">
+                </i>
                 <span className={this.getCssClass('md')} onClick={() => this.setMode('md')}>
                     <i className="fa fa-file-text-o"></i> Markdown
                 </span>

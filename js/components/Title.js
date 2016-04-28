@@ -20,7 +20,7 @@ class Title extends Component {
                     <input type="text" className="title-field"
                         placeholder="Notebook title"
                         defaultValue={title}
-                        ref="titleField"
+                        ref="titleField" title="Notebook title"
                         onBlur={this.exitEdit}
                     />
                 </h1>

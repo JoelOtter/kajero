@@ -40,7 +40,7 @@ export default class Datasources extends Component {
             result.push(
                 <div className="pure-g datasource" key={name}>
                     <i className="fa fa-times-circle-o pure-u-1-12 pure-u-md-1-24"
-                        onClick={() => this.deleteSource(name)}>
+                        onClick={() => this.deleteSource(name)} title="Remove datasource">
                     </i>
                     <div className="pure-u-11-12 pure-u-md-7-24 source-name">
                         <p>{name}</p>
@@ -57,7 +57,7 @@ export default class Datasources extends Component {
                 {result}
                 <div className="pure-g datasource">
                     <i className="fa fa-plus pure-u-1-12 pure-u-md-1-24"
-                        onClick={this.addSource}>
+                        onClick={this.addSource} title="Add datasource">
                     </i>
                     <div className="pure-u-11-12 pure-u-md-7-24 source-name">
                         <input type="text" ref="new-name" placeholder="Data source name" />

@@ -53,20 +53,20 @@ export default class Block extends Component {
         if (!this.props.isLast) {
             buttons.push(
                 <i className="fa fa-arrow-circle-o-down" key="down"
-                    onClick={this.moveBlockDown}>
+                    onClick={this.moveBlockDown} title="Move block down">
                 </i>
             );
         }
         if (!this.props.isFirst) {
             buttons.push(
                 <i className="fa fa-arrow-circle-o-up" key="up"
-                    onClick={this.moveBlockUp}>
+                    onClick={this.moveBlockUp} title="Move block up">
                 </i>
             );
         }
         buttons.push(
             <i className="fa fa-times-circle-o" key="delete"
-                onClick={this.deleteBlock}>
+                onClick={this.deleteBlock} title="Remove block">
             </i>)
         ;
         return buttons;
