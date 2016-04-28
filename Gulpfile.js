@@ -6,10 +6,11 @@ var browserify = require('browserify');
 var browserSync = require('browser-sync').create();
 var source = require('vinyl-source-stream');
 var sass = require('gulp-sass');
-var exorcist = require('exorcist');
+
+var isProduction = process.env.NODE_ENV === 'production';
 
 // Input file
-watchify.args.debug = true;
+watchify.args.debug = (!isProduction);
 var bundler = watchify(browserify('./src/js/app.js', watchify.args));
 
 // Babel transform (for ES6)
@@ -17,6 +18,14 @@ bundler.transform(babelify.configure({
     sourceMapRelative: 'src/js',
     presets: ['es2015', 'react']
 }));
+
+bundler.transform('envify');
+bundler.transform({
+    global: true,
+    ignore: [
+        '**/jutsu/lib/**'
+    ]
+}, 'uglifyify');
 
 // Recompile on updates.
 bundler.on('update', bundle);
@@ -30,7 +39,6 @@ function bundle() {
             browserSync.notify("Browserify error!");
             this.emit("end");
         })
-        .pipe(exorcist('src/dist/bundle.js.map'))
         .pipe(source('bundle.js'))
         .pipe(gulp.dest('./src/dist'))
         .pipe(browserSync.stream({once: true}));
@@ -49,7 +57,7 @@ gulp.task('sass', function() {
             noCache: true
         }))
         .on('error', function(err) {
-            //
+            gutil.log(err.message);
         })
         .pipe(gulp.dest('./src/dist'))
         .pipe(browserSync.stream({once: true}));

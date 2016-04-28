@@ -22,7 +22,7 @@
     "browser-sync": "^2.11.2",
     "browserify": "^13.0.0",
     "clipboard": "^1.5.10",
-    "exorcist": "^0.4.0",
+    "envify": "^3.4.0",
     "font-awesome": "^4.5.0",
     "front-matter": "^2.0.6",
     "gulp": "^3.9.1",
@@ -39,6 +39,7 @@
     "redux": "^3.3.1",
     "redux-thunk": "^2.0.1",
     "smolder": "git://github.com/JoelOtter/smolder.git#master",
+    "uglifyify": "^3.0.1",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
     "whatwg-fetch": "^0.11.0"
