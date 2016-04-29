@@ -1,0 +1,69 @@
+@import 'base';
+
+.save-dialog {
+
+    .close-button {
+        float: right;
+        margin-top: .75em;
+        margin-right: .25em;
+        cursor: pointer;
+    }
+
+    .export-option, .clipboard-button {
+        font-family: 'Amaranth', sans-serif;
+        @include block-border;
+        padding: .25em;
+        cursor: pointer;
+        display: inline-block;
+
+        &.selected {
+            font-weight: bold;
+            color: $text-black;
+            @include block-border;
+            border: 1px dashed $text-black;
+            cursor: default;
+        }
+    }
+
+    textarea {
+        height: 400px;
+    }
+
+    .export-option {
+        margin-top: .5em;
+        margin-right: .5em;
+        color: $text-light;
+    }
+
+    .clipboard-button {
+        font-weight: bold;
+        float: right;
+    }
+
+    input {
+        width: 100%;
+        @include block-border;
+        padding: .25em;
+        margin-top: .25em;
+        margin-bottom: .5em;
+        display: inherit;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        width: 100%;
+        outline: none;
+    }
+
+    .pure-g {
+        margin-top: .75em;
+        p {
+            font-family: 'Amaranth', sans-serif;
+        }
+    }
+
+    p {
+        clear: both;
+    }
+
+}

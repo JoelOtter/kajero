@@ -1,0 +1,89 @@
+@import 'base';
+
+.editable {
+    input {
+        display: inherit;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        width: 100%;
+        outline: none;
+        @include block-border;
+    }
+
+    .clickable {
+        cursor: pointer;
+    }
+
+    .text-block {
+        padding: .5em;
+        @include block-border;
+        *:first-child {
+            margin-top: 0;
+        }
+        *:last-child {
+            margin-bottom: 0;
+        }
+        margin: 1em 0;
+    }
+
+    .metadata {
+
+        .metadata-row {
+            margin: .5em 0;
+            span {
+                margin-left: 15px;
+            }
+            input {
+                width: 200px;
+                margin-left: 15px;
+                display: inline;
+                padding: .25em;
+                @include respond-to($size-md) {
+                    width: 400px;
+                }
+            }
+        }
+
+        .datasource {
+            margin: 0.5em 0;
+            .fa {
+                text-align: center;
+                margin-top: 0.5em;
+                cursor: pointer;
+                @include respond-to($size-md) {
+                    margin-top: .25em;
+                }
+            }
+            input {
+                width: 100%;
+                padding: .25em;
+                margin: .25em 0;
+                @include respond-to($size-md) {
+                    margin: 0;
+                }
+            }
+            .source-name input {
+                @include respond-to($size-md) {
+                    width: 95%;
+                }
+            }
+            p {
+                margin:  .5em .25em;
+                @include respond-to($size-md) {
+                    margin: .25em;
+                }
+            }
+        }
+    }
+
+    .add-controls {
+        overflow: hidden;
+        i {
+            margin-left: .5em;
+            float: right;
+        }
+    }
+
+}

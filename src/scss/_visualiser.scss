@@ -1,0 +1,19 @@
+.visualiser {
+    font-family: 'Source Code Pro', monospace;
+    font-size: .8em;
+    white-space: pre;
+
+    .visualiser-spacing {
+        cursor: default;
+    }
+
+    .visualiser-arrow {
+        cursor: pointer;
+    }
+
+    .visualiser-row {
+        width: 100%;
+        display: inline-block;
+    }
+}
+
