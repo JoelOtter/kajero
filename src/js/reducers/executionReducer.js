@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import reshaper from 'reshaper';
 import Smolder from 'smolder';
 import Jutsu from 'jutsu'; // Imports d3 and nv as globals
 import {
@@ -56,7 +57,9 @@ export default function execution(state = initialState, action) {
 function executeCode(code, context, data, id) {
     var graphElement = document.getElementById("kajero-graph-" + id);
     var jutsu = Smolder(Jutsu(graphElement));
-    return new Function(['d3', 'nv', 'graphs', 'data', 'graphElement'], code).call(
-        context, d3, nv, jutsu, data, graphElement
+    return new Function(
+        ['d3', 'nv', 'graphs', 'data', 'reshaper', 'graphElement'], code
+    ).call(
+        context, d3, nv, jutsu, data, reshaper, graphElement
     );
 }

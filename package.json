@@ -38,6 +38,7 @@
     "react-redux": "^4.4.1",
     "redux": "^3.3.1",
     "redux-thunk": "^2.0.1",
+    "reshaper": "git://github.com/JoelOtter/reshaper.git#master",
     "smolder": "git://github.com/JoelOtter/smolder.git#master",
     "uglifyify": "^3.0.1",
     "vinyl-source-stream": "^1.1.0",
