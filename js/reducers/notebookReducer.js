@@ -13,7 +13,8 @@ import {
     DELETE_DATASOURCE,
     UPDATE_DATASOURCE,
     GIST_CREATED,
-    UNDO
+    UNDO,
+    CHANGE_CODE_BLOCK_OPTION
 } from '../actions';
 
 /*
@@ -54,7 +55,7 @@ export default function notebook(state = initialState, action) {
             if (blockType === 'code') {
                 newBlock.content = '// New code block';
                 newBlock.language = 'javascript';
-                newBlock.attrs = [];
+                newBlock.option = 'runnable';
             } else {
                 newBlock.content = 'New text block';
             }
@@ -92,6 +93,11 @@ export default function notebook(state = initialState, action) {
             return state.setIn(['metadata', 'gistUrl'], kajeroHomepage + '?id=' + id);
         case UNDO:
             return undo(state);
+        case CHANGE_CODE_BLOCK_OPTION:
+            return handleChange(state, state.setIn(
+                ['blocks', id, 'option'],
+                getNewOption(state.getIn(['blocks', id, 'option']))
+            ));
         default:
             return state;
     }
@@ -103,6 +109,12 @@ function getNewId(content) {
         id++;
     }
     return String(id);
+}
+
+function getNewOption(option) {
+    const options = ['runnable', 'auto', 'hidden'];
+    const i = options.indexOf(option);
+    return options[(i + 1) % options.length];
 }
 
 function moveItem(content, id, up) {

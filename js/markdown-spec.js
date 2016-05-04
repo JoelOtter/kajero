@@ -35,7 +35,7 @@ describe('markdown', () => {
                 type: 'code',
                 id: '1',
                 language: 'javascript',
-                attrs: [],
+                option: undefined,
                 content: 'console.log("Runnable");'
             }
         }
@@ -48,20 +48,20 @@ describe('markdown', () => {
                 Immutable.fromJS({
                     type: 'code',
                     language: 'javascript',
-                    attrs: ['hidden'],
+                    option: 'hidden',
                     content: 'console.log("Hello!");'
                 }),
                 Immutable.fromJS({
                     type: 'code',
                     language: undefined,
-                    attrs: [],
+                    option: undefined,
                     content: 'print "Non-js block"'
                 }),
                 Immutable.fromJS({
                     type: 'code',
                     language: 'javascript',
                     content: 'return 1 + 1;',
-                    attrs: []
+                    option: undefined
                 })
             ]);
             const sampleMd = loadMarkdown('extractCodeBlocks');

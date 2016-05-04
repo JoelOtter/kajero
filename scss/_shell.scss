@@ -136,6 +136,20 @@ pre, .codeBlock, .resultBlock, .graphBlock {
 
 }
 
+.hiddenCode {
+    .codeBlock {
+        display: none;
+    }
+
+    .resultBlock, .graphBlock {
+        border-top: 1px dashed $text-light;
+    }
+
+    .graphBlock {
+        border-bottom: none;
+    }
+}
+
 textarea {
     width: 100%;
     color: $text-black;

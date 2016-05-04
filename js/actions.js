@@ -21,6 +21,8 @@ export const UPDATE_DATASOURCE = 'UPDATE_DATASOURCE';
 export const TOGGLE_SAVE = 'TOGGLE_SAVE';
 export const GIST_CREATED = 'GIST_CREATED';
 export const UNDO = 'UNDO';
+export const EXECUTE_AUTO = 'EXECUTE_AUTO';
+export const CHANGE_CODE_BLOCK_OPTION = 'CHANGE_CODE_BLOCK_OPTION';
 
 function checkStatus (response) {
     if (response.status >= 200 && response.status < 300) {
@@ -45,7 +47,10 @@ export function loadMarkdown() {
                 markdown: md
             }))
             .then(() => dispatch(fetchData()))
-            .catch(() => dispatch(loadMarkdownFromHTML()));
+            .catch(() => {
+                dispatch(loadMarkdownFromHTML());
+                dispatch(fetchData());
+            })
         };
     }
     return loadMarkdownFromHTML();
@@ -91,7 +96,21 @@ export function fetchData() {
                 }
             }
         );
-        return Promise.all(proms);
+        // When all data fetched, run all the auto-running code blocks.
+        return Promise.all(proms).then(() => dispatch(
+            executeAuto(
+                getState().notebook.get('blocks'),
+                getState().notebook.get('content')
+            )
+        ));
+    };
+}
+
+function executeAuto(blocks, content) {
+    return {
+        type: EXECUTE_AUTO,
+        blocks,
+        content
     };
 }
 
@@ -223,5 +242,12 @@ export function saveGist (title, markdown) {
 export function undo() {
     return {
         type: UNDO
+    };
+}
+
+export function changeCodeBlockOption(id) {
+    return {
+        type: CHANGE_CODE_BLOCK_OPTION,
+        id
     };
 }

@@ -1,14 +1,13 @@
 import hljs from 'highlight.js';
 import config from './config';
 
-export function codeToText(codeBlock) {
+export function codeToText(codeBlock, includeOption) {
     let result = "```";
     result += codeBlock.get('language');
-    const attrs = codeBlock.get('attrs');
-    if (attrs.size > 0) {
+    const option = codeBlock.get('option');
+    if (includeOption && option) {
         const sep = '; ';
-        result += sep;
-        result += attrs.join(sep);
+        result += '; ' + option;
     }
     result += "\n";
     result += codeBlock.get('content');

@@ -11,15 +11,26 @@ describe('util', () => {
 
     describe('codeToText', () => {
 
-        it('correctly transforms a code block to text', () => {
+        it('should correctly transform a code block to text', () => {
             const codeBlock = Immutable.fromJS({
                 type: 'code',
                 language: 'javascript',
-                attrs: ['hidden'],
+                option: 'hidden',
+                content: 'return 1 + 2;'
+            });
+            const expected = '```javascript\nreturn 1 + 2;\n```';
+            expect(util.codeToText(codeBlock)).to.equal(expected);
+        });
+
+        it('should include option if includeOption is true ', () => {
+            const codeBlock = Immutable.fromJS({
+                type: 'code',
+                language: 'javascript',
+                option: 'hidden',
                 content: 'return 1 + 2;'
             });
             const expected = '```javascript; hidden\nreturn 1 + 2;\n```';
-            expect(util.codeToText(codeBlock)).to.equal(expected);
+            expect(util.codeToText(codeBlock, true)).to.equal(expected);
         });
 
     });

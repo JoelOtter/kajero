@@ -29,7 +29,7 @@ describe('actions', () => {
 
         afterEach(fetchMock.restore);
 
-        it('should create RECEIVED_DATA when data is received', () => {
+        it('should create RECEIVED_DATA, EXECUTE_AUTO when data is received', () => {
             fetchMock
                 .mock('http://example.com/data1', {body: {thing: 'data1'}})
                 .mock('http://example.com/data2', {body: {thing: 'data2'}});
@@ -41,7 +41,9 @@ describe('actions', () => {
                             one: 'http://example.com/data1',
                             two: 'http://example.com/data2'
                         }
-                    }
+                    },
+                    blocks: 'stubBlocks',
+                    content: 'stubContent'
                 }),
                 execution: Immutable.fromJS({
                     data: {}
@@ -50,7 +52,8 @@ describe('actions', () => {
 
             const expecteds = [
                 {type: actions.RECEIVED_DATA, name: 'one', data: {thing: 'data1'}},
-                {type: actions.RECEIVED_DATA, name: 'two', data: {thing: 'data2'}}
+                {type: actions.RECEIVED_DATA, name: 'two', data: {thing: 'data2'}},
+                {type: actions.EXECUTE_AUTO, blocks: 'stubBlocks', content: 'stubContent'}
             ];
 
             return store.dispatch(actions.fetchData())
@@ -71,7 +74,9 @@ describe('actions', () => {
                             one: 'http://example.com/data1',
                             two: 'http://example.com/data2'
                         }
-                    }
+                    },
+                    blocks: 'stubBlocks',
+                    content: 'stubContent'
                 }),
                 execution: Immutable.fromJS({
                     data: {one: 'hooray'}
@@ -79,7 +84,8 @@ describe('actions', () => {
             });
 
             const expected = [
-                {type: actions.RECEIVED_DATA, name: 'two', data: {thing: 'data2'}}
+                {type: actions.RECEIVED_DATA, name: 'two', data: {thing: 'data2'}},
+                {type: actions.EXECUTE_AUTO, blocks: 'stubBlocks', content: 'stubContent'}
             ];
 
             return store.dispatch(actions.fetchData())
@@ -97,13 +103,18 @@ describe('actions', () => {
                 notebook: Immutable.fromJS({
                     metadata: {
                         datasources: {}
-                    }
+                    },
+                    blocks: 'stubBlocks',
+                    content: 'stubContent'
                 }),
                 execution: Immutable.fromJS({
                     data: {}
                 })
             });
-            const expected = [{type: actions.LOAD_MARKDOWN, markdown: md}];
+            const expected = [
+                {type: actions.LOAD_MARKDOWN, markdown: md},
+                {type: actions.EXECUTE_AUTO, content: 'stubContent', blocks: 'stubBlocks'}
+            ];
 
             return store.dispatch(actions.loadMarkdown())
                 .then(() => {
@@ -115,8 +126,22 @@ describe('actions', () => {
             fetchMock
                 .mock(gistUrl + '123/raw', 404);
 
-            const store = mockStore({});
-            const expected = [{type: actions.LOAD_MARKDOWN, markdown: testMd}];
+            const store = mockStore({
+                notebook: Immutable.fromJS({
+                    metadata: {
+                        datasources: {}
+                    },
+                    blocks: 'stubBlocks',
+                    content: 'stubContent'
+                }),
+                execution: Immutable.fromJS({
+                    data: {}
+                })
+            });
+            const expected = [
+                {type: actions.LOAD_MARKDOWN, markdown: testMd},
+                {type: actions.EXECUTE_AUTO, content: 'stubContent', blocks: 'stubBlocks'}
+            ];
 
             return store.dispatch(actions.loadMarkdown())
                 .then(() => {
@@ -297,6 +322,14 @@ describe('actions', () => {
                 type: actions.UNDO
             };
             expect(actions.undo()).to.eql(expected);
+        });
+
+        it('should create an action for changing code block option', () => {
+             const expected = {
+                 type: actions.CHANGE_CODE_BLOCK_OPTION,
+                 id: 'testId'
+            };
+            expect(actions.changeCodeBlockOption('testId')).to.eql(expected);
         });
 
     });
