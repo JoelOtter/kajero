@@ -36,7 +36,7 @@ print "You can have code, with syntax highlighting."
 print "This is Python - it can't be run in the browser."
 ```
 
-```javascript
+```javascript; runnable
 return "Javascript can be, though. Click play!";
 ```
 
@@ -54,7 +54,7 @@ This is all very well, but the notebooks are supposed to be _interactive_.
 
 Authors need to be able to put code samples in their documents. If these samples are in JavaScript, they can be run by the users. Here's a very simple example, which squares and sums the numbers up to 10.
 
-```javascript
+```javascript; runnable
 var result = 0;
 for (var i = 1; i <= 10; i++) {
     result += i * i;
@@ -66,14 +66,14 @@ Code samples are written (and run) as functions, and the function's returned val
 
 In Kajero, the keyword **this** refers to the global context, which is passed around between samples. We can assign something onto the context, and then access it in another sample.
 
-```javascript
+```javascript; runnable
 this.number = 100;
 return this.number;
 ```
 
 We can now sum the squares of numbers up to the number we defined in the previous code block.
 
-```javascript
+```javascript; runnable
 var result = 0;
 for (var i = 10; i <= this.number; i++) {
     result += i * i;
@@ -81,7 +81,7 @@ for (var i = 10; i <= this.number; i++) {
 return result;
 ```
 
-```javascript
+```javascript; runnable
 this.number *= 2;
 return this.number;
 ```
@@ -94,7 +94,7 @@ If you had a look in the editor, you'll have noticed that users can define _data
 
 The **joelotter** data source is my GitHub repository information. Let's get the names of my repositories.
 
-```javascript
+```javascript; runnable
 return data.joelotter.map(function(repo) {
     return repo.name;
 });
@@ -102,7 +102,7 @@ return data.joelotter.map(function(repo) {
 
 You'll notice that Kajero can visualise whatever data you throw at it - it's not just strings and numbers! Here's the whole of my repository data to demonstrate.
 
-```javascript
+```javascript; runnable
 return data.joelotter;
 ```
 
@@ -112,7 +112,7 @@ This isn't necessarily the most attractive or user-friendly way to look at data,
 
 Kajero gives users access to [d3](https://d3js.org/), the web's favourite graphing library.
 
-```javascript
+```javascript; runnable
 // Remove any old SVGs for re-running
 d3.select(graphElement).selectAll('*').remove();
 
@@ -154,7 +154,7 @@ Users get access to **d3**, which is the library itself, and **graphElement**, w
 
 d3 is incredibly powerful, but may be too complex for many users. To help out with this, Kajero also includes [NVD3](http://nvd3.org/), which provides some nice pre-built graphs for d3. The code below generates a random scatter graph - try it!
 
-```javascript
+```javascript; runnable
 d3.select(graphElement).selectAll('*').remove();
 d3.select(graphElement).append('svg').attr("width", "100%");
 
@@ -197,12 +197,12 @@ Smolder is a 'type system' (not really, but I'm not sure what to call it) for Ja
 
 From a user's perspective, the details don't really matter. Let's use Jutsu (available in Kajero code samples as **graphs**) to create a pie chart, based on the most popular GitHub repositories of 2016.
 
-```javascript
+```javascript; runnable
 // Here's what the 'popular' data looks like before it's reshaped.
 return data.popular;
 ```
 
-```javascript
+```javascript; runnable
 // The graph functions return the reshaped data, so we can see
 // what's going on.
 return graphs.pieChart(data.popular);
@@ -212,13 +212,13 @@ It's worked! Smolder knows that a pie chart needs labels and numerical values, s
 
 However, it's picked the first number it could find for the value, which in this case looks to be the repo IDs. This isn't really useful for a pie chart! We'd rather look at something like the number of stargazers. We can pass in a 'hint', to tell Jutsu which value we care about.
 
-```javascript
+```javascript; runnable
 return graphs.pieChart(data.popular, 'stargazers_count');
 ```
 
 We can give multiple hints. Let's say we want to use the name of the repository.
 
-```javascript
+```javascript; runnable
 return graphs.pieChart(data.popular, ['name', 'stargazers_count']);
 ```
 
@@ -226,7 +226,7 @@ Good, that's a bit more readable.
 
 It's kind of hard to compare the stargazers counts in a pie chart - they're all relatively similar. Let's try a bar chart instead.
 
-```javascript
+```javascript; runnable
 return graphs.barChart(data.popular, 'Repo', 'Stargazers', ['name', 'stargazers_count']);
 ```
 
@@ -236,7 +236,7 @@ The idea is that it should be possible to use Kajero to investigate and write ab
 
 Let's try a line graph.
 
-```javascript
+```javascript; runnable
 return graphs.lineChart(
     data.popular.items, 'Open Issues', 'Stargazers',
     ['open_issues', 'stargazers_count', 'name']
@@ -249,7 +249,7 @@ It's pretty easy to see which repository has the most open issues (for me it's c
 
 A much better graph for investigating correlation is a scatter plot.
 
-```javascript
+```javascript; runnable
 return graphs.scatterPlot(
     data.popular.items, 'Open Issues', 'Stargazers',
     ['open_issues', 'stargazers_count', 'name']
@@ -260,7 +260,7 @@ There might be a trend there, but it's hard to see. Maybe we need more data.
 
 The GitHub API lets us request up to 100 results per page, with a default of 30. While the **popular** data source just uses the default, I've also included **extra**, which has 100. Let's try our scatter plot with 100 data points!
 
-```javascript
+```javascript; runnable
 return graphs.scatterPlot(
     data.extra.items, 'Open Issues', 'Stargazers',
     ['open_issues', 'stargazers_count', 'name']
