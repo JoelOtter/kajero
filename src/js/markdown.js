@@ -84,12 +84,12 @@ export function extractCodeBlocks (body) {
         if (block.type === 'fence') {
             const info = block.info.split(';').map(s => s.trim());
             const language = info[0] || undefined;
-            const attrs = info.splice(1);
+            const option = info[1] || undefined;
             codeBlocks.push(Immutable.fromJS({
                 type: 'code',
                 content: block.content.trim(),
                 language,
-                attrs
+                option
             }));
         }
     }
@@ -224,7 +224,7 @@ function renderMetadata(metadata) {
 
 function renderBlock(block) {
     if (block.get('type') === 'code') {
-        return codeToText(block);
+        return codeToText(block, true);
     }
     return block.get('content');
 }

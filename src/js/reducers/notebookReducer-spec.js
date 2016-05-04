@@ -144,6 +144,21 @@ describe('notebook reducer', () => {
             };
             expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
         });
+
+        it('should clear the gist url on any change', () => {
+            const beforeState = initialState.setIn(
+                ['metadata', 'gistUrl'],
+                'http://testgisturl.com'
+            );
+            const afterState = handleFirstChange(beforeState).setIn(
+                ['metadata', 'showFooter'], true
+            ).removeIn(['metadata', 'gistUrl']);
+            const action = {
+                type: actions.TOGGLE_META,
+                field: 'showFooter'
+            };
+            expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
+        });
     });
 
     describe('blocks', () => {
@@ -159,7 +174,7 @@ describe('notebook reducer', () => {
             type: 'code',
             content: 'return "Hello, world!";',
             language: 'javascript',
-            attrs: []
+            option: 'runnable'
         });
 
         it('should move a block up on MOVE_BLOCK_UP', () => {
@@ -283,17 +298,66 @@ describe('notebook reducer', () => {
             expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
         });
 
-        it('should clear the gist url on any change', () => {
+        it('should change a runnable block to auto on option change', () => {
             const beforeState = initialState.setIn(
-                ['metadata', 'gistUrl'],
-                'http://testgisturl.com'
+                ['blocks', '12'], Immutable.Map({
+                    option: 'runnable'
+                })
             );
             const afterState = handleFirstChange(beforeState).setIn(
-                ['metadata', 'showFooter'], true
-            ).removeIn(['metadata', 'gistUrl']);
+                ['blocks', '12', 'option'], 'auto'
+            );
             const action = {
-                type: actions.TOGGLE_META,
-                field: 'showFooter'
+                type: actions.CHANGE_CODE_BLOCK_OPTION,
+                id: '12'
+            };
+            expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
+        });
+
+        it('should change an auto block to hidden on option change', () => {
+            const beforeState = initialState.setIn(
+                ['blocks', '12'], Immutable.Map({
+                    option: 'auto'
+                })
+            );
+            const afterState = handleFirstChange(beforeState).setIn(
+                ['blocks', '12', 'option'], 'hidden'
+            );
+            const action = {
+                type: actions.CHANGE_CODE_BLOCK_OPTION,
+                id: '12'
+            };
+            expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
+        });
+
+        it('should change a hidden block to runnable on option change', () => {
+            const beforeState = initialState.setIn(
+                ['blocks', '12'], Immutable.Map({
+                    option: 'hidden'
+                })
+            );
+            const afterState = handleFirstChange(beforeState).setIn(
+                ['blocks', '12', 'option'], 'runnable'
+            );
+            const action = {
+                type: actions.CHANGE_CODE_BLOCK_OPTION,
+                id: '12'
+            };
+            expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
+        });
+
+        it('should change an optionless block to runnable on option change', () => {
+            const beforeState = initialState.setIn(
+                ['blocks', '12'], Immutable.Map({
+                    option: undefined
+                })
+            );
+            const afterState = handleFirstChange(beforeState).setIn(
+                ['blocks', '12', 'option'], 'runnable'
+            );
+            const action = {
+                type: actions.CHANGE_CODE_BLOCK_OPTION,
+                id: '12'
             };
             expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
         });

@@ -86,7 +86,47 @@ describe('execution reducer', () => {
             .setIn(['results', id], result)
             .set('blocksExecuted', initialState.get('blocksExecuted').add(id));
         expect(reducer(initialState, action).toJS()).to.eql(expectedState.toJS());
+    });
 
+    it('should run auto and hidden code blocks, in order, on EXECUTE_AUTO', () => {
+        const blocks = Immutable.fromJS({
+            '0': {
+                id: '0',
+                type: 'code',
+                content: 'this.number = 500; return this.number;',
+                option: 'runnable'
+            },
+            '1': {
+                id: '1',
+                type: 'code',
+                content: 'this.number = 100; return this.number;',
+                option: 'auto'
+            },
+            '2': {
+                id: '2',
+                type: 'code',
+                content: 'return this.number * 2;',
+                option: 'hidden'
+            }
+        });
+        const content = Immutable.List(['1', '0', '2']);
+        const expectedState = initialState.set(
+            'results',
+            Immutable.fromJS({
+                '1': 100,
+                '2': 200
+            })
+        ).set('blocksExecuted', Immutable.Set(['1', '2'])).set(
+            'executionContext', Immutable.Map({
+                number: 100
+            })
+        );
+        const action = {
+            type: actions.EXECUTE_AUTO,
+            blocks,
+            content
+        };
+        expect(reducer(initialState, action).toJS()).to.eql(expectedState.toJS());
     });
 
 });

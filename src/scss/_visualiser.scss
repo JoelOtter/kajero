@@ -2,6 +2,7 @@
     font-family: 'Source Code Pro', monospace;
     font-size: .8em;
     white-space: pre;
+    overflow: auto;
 
     .visualiser-spacing {
         cursor: default;
@@ -12,7 +13,6 @@
     }
 
     .visualiser-row {
-        width: 100%;
         display: inline-block;
     }
 }
