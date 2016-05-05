@@ -24,9 +24,20 @@ describe('execution reducer', () => {
         expect(reducer(initialState, action).toJS()).to.eql(newState.toJS());
     });
 
-    it('should clear block data and set execution state on update', () => {
+    it('should clear block results and executed state on update', () => {
         const action = {
             type: actions.UPDATE_BLOCK,
+            id: '12'
+        };
+        const beforeState = initialState
+            .setIn(['results', '12'], 120)
+            .set('blocksExecuted', initialState.get('blocksExecuted').add('12'));
+        expect(reducer(beforeState, action).toJS()).to.eql(initialState.toJS());
+    });
+
+    it('should clear block results and executed state on update', () => {
+        const action = {
+            type: actions.DELETE_BLOCK,
             id: '12'
         };
         const beforeState = initialState
