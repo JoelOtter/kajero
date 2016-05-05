@@ -72,7 +72,7 @@ describe('util', () => {
 
         it('should correctly render the index.html from its markdown', () => {
             const indexMd = fs.readFileSync('./test/index.md').toString();
-            const indexHTML = fs.readFileSync('./src/index.html').toString();
+            const indexHTML = fs.readFileSync('./test/index.html').toString();
             expect(util.renderHTML(indexMd)).to.equal(indexHTML);
         });
 
