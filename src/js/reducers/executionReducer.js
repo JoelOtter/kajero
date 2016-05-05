@@ -6,6 +6,7 @@ import {
     RECEIVED_DATA,
     EXECUTE,
     UPDATE_BLOCK,
+    DELETE_BLOCK,
     DELETE_DATASOURCE,
     UPDATE_DATASOURCE,
     EXECUTE_AUTO
@@ -33,6 +34,7 @@ export default function execution(state = initialState, action) {
         case RECEIVED_DATA:
             return state.setIn(['data', name], Immutable.fromJS(data));
         case UPDATE_BLOCK:
+        case DELETE_BLOCK:
             return state
                 .set('blocksExecuted', state.get('blocksExecuted').remove(id))
                 .removeIn(['results', id]);
