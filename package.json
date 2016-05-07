@@ -1,6 +1,6 @@
 {
   "name": "kajero",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Interactive JavaScript notebooks with clever graphing",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   ],
   "preferGlobal": true,
   "bin": {
-    "html": "bin/html-compiled.js"
+    "kajero": "bin/cmd.js"
   },
   "author": "Joel Auterson <joel.auterson@gmail.com>",
   "license": "MIT",

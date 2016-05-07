@@ -1,9 +1,6 @@
 #! /usr/bin/env node
 
-/*
- * Converts a Markdown file to a Kajero notebook as an HTML file.
- */
-
+var request = require('request');
 var fs = require('fs');
 
 if (process.argv.length < 3) {
@@ -11,11 +8,18 @@ if (process.argv.length < 3) {
     return;
 }
 
-var md = fs.readFileSync(process.argv[2]).toString();
+if (process.argv[2] !== 'html' && process.argv[2] !== 'publish') {
+    console.error("Unrecognised command. Available commands:\nhtml\npublish");
+    return
+}
 
-console.log(renderHTML(md));
+var command = process.argv[2];
+var md = fs.readFileSync(process.argv[3]).toString();
 
-function renderHTML(markdown) {
+var f = (command === 'html') ? saveHTML : saveGist;
+f(md);
+
+function saveHTML(markdown) {
     var result = "<html>\n    <head>\n";
     result += '        <meta name="viewport" content="width=device-width, initial-scale=1">\n';
     result += '        <meta http-equiv="content-type" content="text/html; charset=UTF8">\n';
@@ -31,5 +35,28 @@ function renderHTML(markdown) {
     result += '        <div id="kajero"></div>\n';
     result += '        <script type="text/javascript" src="http://www.joelotter.com/kajero/dist/bundle.js"></script>\n';
     result += '    </body>\n</html>\n';
-    return result;
+    console.log(result);
+}
+
+function saveGist(markdown) {
+    var options = {
+        uri: 'https://api.github.com/gists',
+        method: 'POST',
+        headers: {
+            'User-Agent': 'Kajero'
+        },
+        json: {
+            description: 'Kajero notebook',
+            public: true,
+            files: {
+                'notebook.md': {
+                    content: md
+                }
+            }
+        }
+    };
+
+    request(options, function(err, response, body) {
+        console.log('http://www.joelotter.com/kajero/?id=' + body.id);
+    });
 }
