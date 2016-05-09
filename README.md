@@ -1,4 +1,7 @@
 # Kajero
+
+[![Build Status](https://travis-ci.org/JoelOtter/kajero.svg?branch=master)](https://travis-ci.org/JoelOtter/kajero) [![Coverage Status](https://coveralls.io/repos/github/JoelOtter/kajero/badge.svg?branch=master)](https://coveralls.io/github/JoelOtter/kajero?branch=master)
+
 Interactive JavaScript notebooks with clever graphing.
 
 You can view a sample notebook [here](http://www.joelotter.com/kajero).
