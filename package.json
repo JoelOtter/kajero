@@ -1,6 +1,6 @@
 {
   "name": "kajero",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Interactive JavaScript notebooks with clever graphing",
   "repository": {
     "type": "git",
@@ -43,7 +43,7 @@
     "highlight.js": "^9.2.0",
     "immutable": "^3.7.6",
     "jsdom": "^8.4.0",
-    "jutsu": "file:../jutsu",
+    "jutsu": "git://github.com/JoelOtter/jutsu.git#master",
     "markdown-it": "^6.0.1",
     "mocha": "^2.4.5",
     "mocha-jsdom": "^1.1.0",
