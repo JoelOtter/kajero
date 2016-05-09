@@ -12,7 +12,6 @@ import {
     EXECUTE_AUTO
 } from '../actions';
 
-
 /*
  * This reducer handles the state of execution of code blocks -
  * retaining results, carrying context around, and making note

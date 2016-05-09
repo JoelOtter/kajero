@@ -1,0 +1,29 @@
+/*
+    Made with colours from Highlight.js.
+    Who in turn got them from Base16.
+    https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow.css
+*/
+
+.cm-s-base16-tomorrow-light.CodeMirror {background: #ffffff; color: #444;}
+.cm-s-base16-tomorrow-light div.CodeMirror-selected {background: #e0e0e0 !important;}
+.cm-s-base16-tomorrow-light .CodeMirror-gutters {background: #ffffff; border-right: 0px;}
+.cm-s-base16-tomorrow-light .CodeMirror-linenumber {color: #b4b7b4;}
+.cm-s-base16-tomorrow-light .CodeMirror-cursor {border-left: 1px solid #969896 !important;}
+
+.cm-s-base16-tomorrow-light span.cm-comment {color: #8e908c;}
+.cm-s-base16-tomorrow-light span.cm-atom {color: #b294bb;}
+.cm-s-base16-tomorrow-light span.cm-number {color: #f5871f;}
+
+.cm-s-base16-tomorrow-light span.cm-property, .cm-s-base16-tomorrow-light span.cm-attribute {color: #444;}
+.cm-s-base16-tomorrow-light span.cm-keyword {color: #8959a8;}
+.cm-s-base16-tomorrow-light span.cm-string {color: #718c00;}
+
+.cm-s-base16-tomorrow-light span.cm-variable {color: #444;}
+.cm-s-base16-tomorrow-light span.cm-variable-2 {color: #444;}
+.cm-s-base16-tomorrow-light span.cm-def {color: #4271ae;}
+.cm-s-base16-tomorrow-light span.cm-error {background: #cc6666; color: #969896;}
+.cm-s-base16-tomorrow-light span.cm-bracket {color: #282a2e;}
+.cm-s-base16-tomorrow-light span.cm-tag {color: #cc6666;}
+.cm-s-base16-tomorrow-light span.cm-link {color: #b294bb;}
+
+.cm-s-base16-tomorrow-light .CodeMirror-matchingbracket { text-decoration: underline; color: white !important;}

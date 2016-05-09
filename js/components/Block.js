@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import Codemirror from 'react-codemirror';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/markdown/markdown';
 import { updateBlock, deleteBlock, moveBlockUp, moveBlockDown } from '../actions';
 
 export default class Block extends Component {
@@ -8,6 +11,7 @@ export default class Block extends Component {
         this.state = {editing: false};
         this.enterEdit = this.enterEdit.bind(this);
         this.exitEdit = this.exitEdit.bind(this);
+        this.textChanged = this.textChanged.bind(this);
         this.getButtons = this.getButtons.bind(this);
         this.deleteBlock = this.deleteBlock.bind(this);
         this.moveBlockUp = this.moveBlockUp.bind(this);
@@ -16,15 +20,25 @@ export default class Block extends Component {
 
     enterEdit() {
         if (this.props.editable) {
-            this.setState({editing: true});
+            this.setState({
+                editing: true,
+                text: this.props.block.get('content')
+            });
         }
     }
 
-    exitEdit() {
-        this.setState({editing: false});
-        this.props.dispatch(
-            updateBlock(this.props.block.get('id'), this.refs.editarea.value)
-        );
+    exitEdit(focusOn) {
+        if (!focusOn) {
+            this.setState({editing: false});
+            this.props.dispatch(
+                updateBlock(this.props.block.get('id'), this.state.text)
+            );
+        }
+    }
+
+    textChanged(text) {
+        this.setState({text});
+        console.log(this.state);
     }
 
     componentDidUpdate() {
@@ -78,11 +92,22 @@ export default class Block extends Component {
             return this.renderViewerMode();
         }
         const spellcheck = (block.get('type') !== 'code');
-        const content = block.get('content');
+        const options = {
+            mode: block.get('type') === 'code' ? 'javascript' : 'markdown',
+            theme: 'base16-tomorrow-light',
+            lineNumbers: true,
+            indentUnit: 4,
+            extraKeys: {
+                Tab: (cm) => {
+                    var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                    cm.replaceSelection(spaces);
+                }
+            }
+        };
         return (
-            <textarea className="text-edit" defaultValue={content}
-                onBlur={this.exitEdit} ref="editarea"
-                spellCheck={spellcheck} />
+            <Codemirror value={this.state.text} options={options}
+                onFocusChange={this.exitEdit} onChange={this.textChanged}
+                ref="editarea" />
         );
     }
 
