@@ -48,6 +48,7 @@
     "mocha-jsdom": "^1.1.0",
     "query-string": "^4.1.0",
     "react": "^0.14.8",
+    "react-codemirror": "^0.2.6",
     "react-dom": "^0.14.8",
     "react-redux": "^4.4.1",
     "redux": "^3.3.1",
