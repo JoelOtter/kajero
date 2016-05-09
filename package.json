@@ -31,6 +31,7 @@
     "browserify": "^13.0.0",
     "chai": "^3.5.0",
     "clipboard": "^1.5.10",
+    "coveralls": "^2.11.9",
     "envify": "^3.4.0",
     "fetch-mock": "^4.4.0",
     "font-awesome": "^4.5.0",
