@@ -259,12 +259,12 @@
 
             ```javascript; runnable
             return graphs.lineChart(
-                data.popular.items, 'Open Issues', 'Stargazers',
-                ['open_issues', 'stargazers_count', 'name']
+                data.popular, 'Open Issues', 'Stargazers',
+                {x: 'open_issues', y: 'stargazers_count', label: 'name'}
             );
             ```
 
-            The extra hint, _name_, is used to provide labels for the data points. All the graphs are interactive - try mousing over them.
+            The extra hint, _name_, is used to provide labels for the data points. We can give hints in this object structure too.
 
             It's pretty easy to see which repository has the most open issues (for me it's chakra-core; it might have changed by the time you read this!) and which has the most stargazers. However, it's hard to see a trend here.
 
@@ -272,8 +272,8 @@
 
             ```javascript; runnable
             return graphs.scatterPlot(
-                data.popular.items, 'Open Issues', 'Stargazers',
-                ['open_issues', 'stargazers_count', 'name']
+                data.popular, 'Open Issues', 'Stargazers',
+                {x: 'open_issues', y: 'stargazers_count', label: 'name'}
             );
             ```
 
@@ -284,7 +284,7 @@
             ```javascript; runnable
             return graphs.scatterPlot(
                 data.extra.items, 'Open Issues', 'Stargazers',
-                ['open_issues', 'stargazers_count', 'name']
+                {x: 'open_issues', y: 'stargazers_count', label: 'name'}
             );
             ```
 
