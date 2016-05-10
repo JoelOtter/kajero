@@ -38,7 +38,6 @@ export default class Block extends Component {
 
     textChanged(text) {
         this.setState({text});
-        console.log(this.state);
     }
 
     componentDidUpdate() {
