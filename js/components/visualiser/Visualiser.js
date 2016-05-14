@@ -39,16 +39,17 @@ export function getSpacing (indent) {
 export default class Visualiser extends Component {
 
     render() {
-        const { data, leftClick, rightClick, useHljs } = this.props;
+        const { data, useHljs, click, path, name } = this.props;
         const VisualiserComponent = selectComponent(data);
         return (
             <div className="visualiser">
                 <VisualiserComponent
                     data={data}
-                    leftClick={leftClick}
-                    rightClick={rightClick}
                     indent={0}
                     useHljs={useHljs}
+                    click={click}
+                    name={name}
+                    path={path}
                 />
             </div>
         );

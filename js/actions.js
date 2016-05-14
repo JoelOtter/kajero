@@ -23,6 +23,10 @@ export const GIST_CREATED = 'GIST_CREATED';
 export const UNDO = 'UNDO';
 export const EXECUTE_AUTO = 'EXECUTE_AUTO';
 export const CHANGE_CODE_BLOCK_OPTION = 'CHANGE_CODE_BLOCK_OPTION';
+export const UPDATE_GRAPH_BLOCK_PROPERTY = 'UPDATE_GRAPH_BLOCK_PROPERTY';
+export const UPDATE_GRAPH_BLOCK_HINT = 'UPDATE_GRAPH_BLOCK_HINT';
+export const UPDATE_GRAPH_BLOCK_LABEL = 'UPDATE_GRAPH_BLOCK_LABEL';
+export const CLEAR_GRAPH_BLOCK_DATA = 'CLEAR_GRAPH_BLOCK_DATA';
 
 function checkStatus (response) {
     if (response.status >= 200 && response.status < 300) {
@@ -167,6 +171,15 @@ export function addTextBlock(id) {
     };
 };
 
+export function addGraphBlock(id) {
+    return {
+        type: ADD_BLOCK,
+        blockType: 'graph',
+        id
+    };
+};
+
+
 export function deleteBlock(id) {
     return {
         type: DELETE_BLOCK,
@@ -248,6 +261,58 @@ export function undo() {
 export function changeCodeBlockOption(id) {
     return {
         type: CHANGE_CODE_BLOCK_OPTION,
+        id
+    };
+}
+
+export function updateGraphType(id, graph) {
+    return {
+        type: UPDATE_GRAPH_BLOCK_PROPERTY,
+        id: id,
+        property: 'graphType',
+        value: graph
+    };
+}
+
+export function updateGraphDataPath(id, path) {
+    return {
+        type: UPDATE_GRAPH_BLOCK_PROPERTY,
+        id: id,
+        property: 'dataPath',
+        value: path
+    };
+}
+
+export function updateGraphHint(id, hint, value) {
+    return {
+        type: UPDATE_GRAPH_BLOCK_HINT,
+        id: id,
+        hint: hint,
+        value: value
+    };
+}
+
+export function updateGraphLabel(id, label, value) {
+    return {
+        type: UPDATE_GRAPH_BLOCK_LABEL,
+        id,
+        label,
+        value
+    };
+}
+
+export function compileGraphBlock(id) {
+    return {
+        type: UPDATE_GRAPH_BLOCK_PROPERTY,
+        id: id,
+        property: 'type',
+        value: 'code'
+    };
+}
+
+export function clearGraphData(id) {
+    return {
+        type: CLEAR_GRAPH_BLOCK_DATA,
         id
     };
 }

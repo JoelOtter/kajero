@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { addCodeBlock, addTextBlock } from '../actions';
+import { addCodeBlock, addTextBlock, addGraphBlock } from '../actions';
 
 export default class AddControls extends Component {
 
@@ -7,6 +7,7 @@ export default class AddControls extends Component {
         super(props);
         this.addCodeBlock = this.addCodeBlock.bind(this);
         this.addTextBlock = this.addTextBlock.bind(this);
+        this.addGraphBlock = this.addGraphBlock.bind(this);
     }
 
     addCodeBlock() {
@@ -15,6 +16,10 @@ export default class AddControls extends Component {
 
     addTextBlock() {
         this.props.dispatch(addTextBlock(this.props.id));
+    }
+
+    addGraphBlock() {
+        this.props.dispatch(addGraphBlock(this.props.id));
     }
 
     render() {
@@ -29,6 +34,9 @@ export default class AddControls extends Component {
                 </i>
                 <i className="fa fa-file-code-o clickable" onClick={this.addCodeBlock}
                     title="New code block">
+                </i>
+                <i className="fa fa-bar-chart clickable" onClick={this.addGraphBlock}
+                    title="New graph">
                 </i>
             </div>
         );

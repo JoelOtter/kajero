@@ -14,7 +14,11 @@ export default class ArrayVisualiser extends Component {
     }
 
     render() {
-        const { data, indent, useHljs, name } = this.props;
+        const { data, indent, useHljs, name, path } = this.props;
+        let click = this.props.click;
+        if (click === undefined) {
+            click = () => {};
+        }
         let items = [];
         for (let i = 0; this.state.open && i < data.length; i++) {
             var item = data[i];
@@ -26,6 +30,8 @@ export default class ArrayVisualiser extends Component {
                     name={String(i)}
                     indent={indent == 0 ? indent + 2 : indent + 1}
                     useHljs={useHljs}
+                    click={click}
+                    path={path + '[' + i + ']'}
                 />
             );
         }
@@ -39,14 +45,25 @@ export default class ArrayVisualiser extends Component {
                 spaces = spaces.slice(2);
             }
         }
-        const key = '\u00a0' + (name ?  name + ':\u00a0' : '');
+        let key = <span className="visualiser-spacing">{'\u00a0'}</span>;
+        if (name) {
+            key = (
+                <span className="visualiser-spacing">
+                    {'\u00a0'}
+                    <span className="visualiser-key" onClick={() => click(name, path)}>
+                        {name}
+                    </span>
+                    {':\u00a0'}
+                </span>
+            );
+        }
 
         return (
             <div className="array-visualiser">
                 <span className="visualiser-row">
                     <span className="visualiser-spacing">{spaces}</span>
                     <span className="visualiser-arrow" onClick={this.collapse}>{arrow}</span>
-                    <span>{key}</span>
+                    {key}
                     <span className={useHljs ? "hljs-keyword" : ""}>Array</span>
                     <span>{'[' + data.length + ']'}</span>
                 </span>

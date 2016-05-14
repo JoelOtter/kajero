@@ -223,10 +223,10 @@ function renderMetadata(metadata) {
 }
 
 function renderBlock(block) {
-    if (block.get('type') === 'code') {
-        return codeToText(block, true);
+    if (block.get('type') === 'text') {
+        return block.get('content');
     }
-    return block.get('content');
+    return codeToText(block, true);
 }
 
 function renderBody(blocks, blockOrder) {

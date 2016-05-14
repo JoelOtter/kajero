@@ -22,3 +22,7 @@ export const editorSelector = state => {
 export const saveSelector = state => {
     return {notebook: state.notebook};
 };
+
+export const dataSelector = state => {
+    return {data: state.execution.get('data').toJS()};
+};
