@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { contentSelector } from '../selectors';
 import TextBlock from './TextBlock';
 import CodeBlock from './CodeBlock';
+import GraphBlock from './GraphBlock';
 import AddControls from './AddControls';
 
 class Content extends Component {
@@ -27,18 +28,19 @@ class Content extends Component {
                         />
                     );
                     break;
-                case 'code':
+                default:
                     const id = block.get('id');
                     const hasBeenRun = blocksExecuted.includes(id);
                     const result = results.get(id);
+                    const BlockClass = block.get('type') === 'code' ?
+                        CodeBlock : GraphBlock;
                     blocks.push(
-                        <CodeBlock
+                        <BlockClass
                             block={block} result={result} editable={editable}
                             key={String(i)} hasBeenRun={hasBeenRun} dispatch={dispatch}
                             isFirst={isFirst} isLast={isLast}
                         />
                     );
-                    break;
             }
         }
         blocks.push(

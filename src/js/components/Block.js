@@ -90,9 +90,9 @@ export default class Block extends Component {
         if (!editable || !this.state.editing) {
             return this.renderViewerMode();
         }
-        const spellcheck = (block.get('type') !== 'code');
+        const isCodeBlock = block.get('type') === 'code';
         const options = {
-            mode: block.get('type') === 'code' ? 'javascript' : 'markdown',
+            mode: isCodeBlock ? 'javascript' : 'markdown',
             theme: 'base16-tomorrow-light',
             lineNumbers: true,
             indentUnit: 4,
@@ -104,9 +104,11 @@ export default class Block extends Component {
             }
         };
         return (
-            <Codemirror value={this.state.text} options={options}
-                onFocusChange={this.exitEdit} onChange={this.textChanged}
-                ref="editarea" />
+            <div className="edit-box">
+                <Codemirror value={this.state.text} options={options}
+                    onFocusChange={this.exitEdit} onChange={this.textChanged}
+                    ref="editarea" />
+            </div>
         );
     }
 

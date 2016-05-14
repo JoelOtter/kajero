@@ -14,7 +14,11 @@ export default class ObjectVisualiser extends Component {
     }
 
     render() {
-        const { data, name, indent, useHljs } = this.props;
+        const { data, name, indent, useHljs, path } = this.props;
+        let click = this.props.click;
+        if (click === undefined) {
+            click = () => {};
+        }
         const keys = Object.getOwnPropertyNames(data);
         let items = [];
         for (let i = 0; this.state.open && i < keys.length; i++) {
@@ -27,6 +31,8 @@ export default class ObjectVisualiser extends Component {
                     name={keys[i]}
                     indent={indent == 0 ? indent + 2 : indent + 1}
                     useHljs={useHljs}
+                    click={click}
+                    path={path + '.' + keys[i]}
                 />
             );
         }
@@ -39,14 +45,25 @@ export default class ObjectVisualiser extends Component {
                 spaces = spaces.slice(2);
             }
         }
-        const key = '\u00a0' + (name ?  name + ':\u00a0' : '');
+        let key = <span className="visualiser-spacing">{'\u00a0'}</span>;
+        if (name) {
+            key = (
+                <span className="visualiser-spacing">
+                    {'\u00a0'}
+                    <span className="visualiser-key" onClick={() => click(name, path)}>
+                        {name}
+                    </span>
+                    {':\u00a0'}
+                </span>
+            );
+        }
 
         return (
             <div className="object-visualiser">
                 <span className="visualiser-row">
                     <span className="visualiser-spacing">{spaces}</span>
                     <span className="visualiser-arrow" onClick={this.collapse}>{arrow}</span>
-                    <span>{key}</span>
+                    {key}
                     <span className={useHljs ? "hljs-keyword" : ""}>Object</span>
                     <span>{'{}'}</span>
                 </span>

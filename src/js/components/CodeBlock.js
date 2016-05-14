@@ -3,7 +3,9 @@ import MarkdownIt from 'markdown-it';
 import Block from './Block';
 import Visualiser from './visualiser/Visualiser';
 import { codeToText, highlight } from '../util';
-import { executeCodeBlock, changeCodeBlockOption } from '../actions';
+import {
+    executeCodeBlock, changeCodeBlockOption, clearGraphData
+} from '../actions';
 
 const md = new MarkdownIt({highlight});
 
@@ -72,6 +74,14 @@ class CodeBlock extends Block {
                     title={this.props.hasBeenRun ? "Re-run code" : "Run code"}>
                 </i>
             );
+        }
+    }
+
+    componentDidMount() {
+        const { dispatch, block } = this.props;
+        if (block.get('graphType')) {
+            dispatch(clearGraphData(block.get('id')));
+            dispatch(executeCodeBlock(block));
         }
     }
 

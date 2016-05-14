@@ -16,6 +16,17 @@
         cursor: pointer;
     }
 
+    .edit-box {
+        @include block-border;
+        margin: 1em 0;
+        padding: 0.5em 0.5em 0.5em 0;
+
+        .CodeMirror {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.8em;
+        }
+    }
+
     .text-block {
         padding: .5em;
         @include block-border;
@@ -84,14 +95,6 @@
             margin-left: .5em;
             float: right;
         }
-    }
-
-    .CodeMirror {
-        @include block-border;
-        font-family: 'Source Code Pro', monospace;
-        font-size: 0.8em;
-        margin: 1em 0;
-        padding: 0.5em 0;
     }
 
 }

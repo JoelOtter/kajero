@@ -1,0 +1,85 @@
+@import 'base';
+
+.graph-creator {
+
+    @include block-border;
+    padding: .5em;
+    margin: 1em 0;
+    font-family: 'Amaranth', sans-serif;
+
+    .graph-type {
+        @include block-border;
+        padding: .25em;
+        cursor: pointer;
+        display: inline-block;
+        margin-bottom: .5em;
+        margin-right: .5em;
+        color: $text-light;
+
+        &.selected {
+            font-weight: bold;
+            color: $text-black;
+            @include block-border;
+            border: 1px dashed $text-black;
+            cursor: default;
+        }
+    }
+
+    p {
+        margin:  .5em .25em;
+        @include respond-to($size-md) {
+            margin: .25em;
+        }
+    }
+
+    .hint {
+        margin: .5em 0;
+
+        .fa {
+            text-align: center;
+            margin-top: 0.5em;
+            @include respond-to($size-md) {
+                margin-top: .25em;
+            }
+        }
+
+        input {
+            width: 100%;
+            padding: .25em;
+            margin: .25em 0;
+            @include respond-to($size-md) {
+                margin: 0;
+            }
+        }
+
+        .visualiser {
+            margin-top: .5em;
+        }
+    }
+
+    .visualiser {
+        background-color: $background-grey;
+        padding: .5em;
+        margin-bottom: .5em;
+
+        .visualiser-key {
+            cursor: pointer;
+        }
+    }
+
+    pre {
+        font-family: 'Source Code Pro', monospace;
+        font-size: .8em;
+    }
+
+    .graph-preview svg {
+        width: 100%;
+        &.nvd3-svg {
+            height: inherit;
+        }
+        text {
+            fill: $text-black;
+        }
+    }
+
+}

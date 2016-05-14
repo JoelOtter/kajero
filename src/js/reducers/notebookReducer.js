@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import Jutsu from 'jutsu';
 import { parse } from '../markdown';
 import { kajeroHomepage } from '../config';
 import {
@@ -14,7 +15,11 @@ import {
     UPDATE_DATASOURCE,
     GIST_CREATED,
     UNDO,
-    CHANGE_CODE_BLOCK_OPTION
+    CHANGE_CODE_BLOCK_OPTION,
+    UPDATE_GRAPH_BLOCK_PROPERTY,
+    UPDATE_GRAPH_BLOCK_HINT,
+    UPDATE_GRAPH_BLOCK_LABEL,
+    CLEAR_GRAPH_BLOCK_DATA
 } from '../actions';
 
 /*
@@ -34,6 +39,7 @@ export const initialState = Immutable.Map({
 export default function notebook(state = initialState, action) {
     const { id, text, field, blockType } = action;
     const content = state.get('content');
+    let newState;
     switch (action.type) {
         case LOAD_MARKDOWN:
             return parse(action.markdown).mergeDeep(state);
@@ -56,10 +62,26 @@ export default function notebook(state = initialState, action) {
                 newBlock.content = '// New code block';
                 newBlock.language = 'javascript';
                 newBlock.option = 'runnable';
+            } else if (blockType === 'graph') {
+                newBlock.language = 'javascript';
+                newBlock.option = 'runnable';
+                newBlock.content = 'return graphs.pieChart(data);';
+                newBlock.graphType = 'pieChart';
+                newBlock.dataPath = 'data';
+                newBlock.hints = Immutable.fromJS({
+                    label: '',
+                    value: '',
+                    x: '',
+                    y: ''
+                });
+                newBlock.labels = Immutable.fromJS({
+                    x: '',
+                    y: ''
+                });
             } else {
                 newBlock.content = 'New text block';
             }
-            const newState = handleChange(
+            newState = handleChange(
                 state, state.setIn(['blocks', newId], Immutable.fromJS(newBlock))
             );
             if (id === undefined) {
@@ -98,9 +120,73 @@ export default function notebook(state = initialState, action) {
                 ['blocks', id, 'option'],
                 getNewOption(state.getIn(['blocks', id, 'option']))
             ));
+        case UPDATE_GRAPH_BLOCK_PROPERTY:
+            newState = state.setIn(
+                ['blocks', id, action.property], action.value
+            );
+            return handleChange(state, newState.setIn(
+                ['blocks', id, 'content'],
+                generateCode(newState.getIn(['blocks', id]))
+            ));
+        case UPDATE_GRAPH_BLOCK_HINT:
+            newState = state.setIn(
+                ['blocks', id, 'hints', action.hint], action.value
+            );
+            return handleChange(state, newState.setIn(
+                ['blocks', id, 'content'],
+                generateCode(newState.getIn(['blocks', id]))
+            ));
+        case UPDATE_GRAPH_BLOCK_LABEL:
+            newState = state.setIn(
+                ['blocks', id, 'labels', action.label], action.value
+            );
+            return handleChange(state, newState.setIn(
+                ['blocks', id, 'content'],
+                generateCode(newState.getIn(['blocks', id]))
+            ));
+        case CLEAR_GRAPH_BLOCK_DATA:
+            return state.setIn(
+                ['blocks', id],
+                state.getIn(['blocks', id]).remove('hints')
+                    .remove('graphType').remove('labels')
+                    .remove('dataPath')
+            );
         default:
             return state;
     }
+}
+
+function generateCode(block) {
+    return 'return graphs.' + block.get('graphType') +
+        '(' + block.get('dataPath') + getLabels(block) +
+        getHints(block) + ');';
+}
+
+function getHints(block) {
+    const hints = block.get('hints');
+    const schema = Jutsu().__SMOLDER_SCHEMA[block.get('graphType')].data[0];
+    const result = [];
+    for (let hint of Object.keys(schema).sort()) {
+        const value = hints.get(hint);
+        if (value) {
+            result.push(hint + ": '" + value + "'");
+        }
+    }
+    if (result.length === 0) {
+        return '';
+    }
+    return ', {' + result.join(', ') + '}';
+}
+
+function getLabels(block) {
+    if (block.get('graphType') === 'pieChart') {
+        return '';
+    }
+    const labels = block.get('labels');
+    return ', ' +
+        [labels.get('x'), labels.get('y')].map(
+            (label) => "'" + label + "'"
+        ).join(', ');
 }
 
 function getNewId(content) {
