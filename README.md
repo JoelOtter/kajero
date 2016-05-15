@@ -4,7 +4,7 @@ Interactive JavaScript notebooks with clever graphing.
 
 You can view a sample notebook [here](http://www.joelotter.com/kajero).
 
-![](https://github.com/JoelOtter/kajero/blob/master/doc/screenshot.png)
+![](https://raw.githubusercontent.com/JoelOtter/kajero/master/doc/screenshot.png)
 
 ## Features
 
