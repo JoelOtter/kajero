@@ -1,5 +1,7 @@
 # Kajero
 
+[![npm](https://img.shields.io/npm/v/kajero.svg?maxAge=2592000)](https://www.npmjs.com/package/kajero)
+
 Interactive JavaScript notebooks with clever graphing.
 
 You can view a sample notebook [here](http://www.joelotter.com/kajero).
