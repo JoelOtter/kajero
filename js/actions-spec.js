@@ -332,6 +332,73 @@ describe('actions', () => {
             expect(actions.changeCodeBlockOption('testId')).to.eql(expected);
         });
 
+        it('should create an action for creating a graph block', () => {
+            const expd = {
+                type: actions.ADD_BLOCK,
+                blockType: 'graph',
+                id: '12'
+            };
+            expect(actions.addGraphBlock('12')).to.eql(expd);
+        });
+
+        it('should create an action for changing graph type', () => {
+            const expd = {
+                type: actions.UPDATE_GRAPH_BLOCK_PROPERTY,
+                property: 'graphType',
+                value: 'pieChart',
+                id: '12'
+            };
+            expect(actions.updateGraphType('12', 'pieChart')).to.eql(expd);
+        });
+
+        it('should create an action for updating graph block data path', () => {
+            const expd = {
+                type: actions.UPDATE_GRAPH_BLOCK_PROPERTY,
+                property: 'dataPath',
+                value: 'data.popular',
+                id: '12'
+            };
+            expect(actions.updateGraphDataPath('12', 'data.popular')).to.eql(expd);
+        });
+
+        it('should create an action for updating graph block hint', () => {
+            const expd = {
+                type: actions.UPDATE_GRAPH_BLOCK_HINT,
+                hint: 'label',
+                value: 'name',
+                id: '12'
+            };
+            expect(actions.updateGraphHint('12', 'label', 'name')).to.eql(expd);
+        });
+
+        it('should create an action for updating graph block label', () => {
+            const expd = {
+                type: actions.UPDATE_GRAPH_BLOCK_LABEL,
+                label: 'x',
+                value: 'Repos',
+                id: '12'
+            };
+            expect(actions.updateGraphLabel('12', 'x', 'Repos')).to.eql(expd);
+        });
+
+        it('should create an action for saving graph block to code', () => {
+            const expd = {
+                type: actions.UPDATE_GRAPH_BLOCK_PROPERTY,
+                property: 'type',
+                value: 'code',
+                id: '12'
+            };
+            expect(actions.compileGraphBlock('12')).to.eql(expd);
+        });
+
+        it('should create an action for clearing graph data', () => {
+            const expd = {
+                type: actions.CLEAR_GRAPH_BLOCK_DATA,
+                id: '12'
+            };
+            expect(actions.clearGraphData('12')).to.eql(expd);
+        });
+
     });
 
 });

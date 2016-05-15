@@ -166,7 +166,9 @@ function getHints(block) {
     const hints = block.get('hints');
     const schema = Jutsu().__SMOLDER_SCHEMA[block.get('graphType')].data[0];
     const result = [];
-    for (let hint of Object.keys(schema).sort()) {
+    const keys = Object.keys(schema).sort();
+    for (let i = 0; i < keys.length; i++) {
+        const hint = keys[i];
         const value = hints.get(hint);
         if (value) {
             result.push(hint + ": '" + value + "'");
