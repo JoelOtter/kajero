@@ -34,11 +34,10 @@ export default class DefaultVisualiser extends Component {
         const repr = (type === 'String') ? "'" + String(data) + "'" :
             (type === 'Function') ? 'function()' : String(data);
             const cssClass = buildCssClass(type, useHljs);
-        let key = <span className="visualiser-spacing">{'\u00a0'}</span>;
+        let key = <span className="visualiser-spacing"></span>;
         if (name) {
             key = (
                 <span className="visualiser-spacing">
-                    {'\u00a0'}
                     <span className="visualiser-key" onClick={() => click(name, path)}>
                         {name}
                     </span>
