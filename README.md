@@ -39,12 +39,12 @@ Kajero includes a couple of simple command-line tools for users who don't want t
 
 You can generate new notebooks directly from Markdown files without using the web editor.
 
-- #### `kajero html [file.md]`
+- `kajero html [file.md]`
 
 Will output generated HTML of a new notebook. You can pipe it to a file like this:
 
 `kajero html [file.md] > output.html`
 
-- #### `kajero publish [file.md]`
+- `kajero publish [file.md]`
 
 Will publish your notebook as a gist, and return a unique URL to your new notebook.
