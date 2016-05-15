@@ -362,6 +362,152 @@ describe('notebook reducer', () => {
             expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
         });
 
+        it('should correctly create a graph block', () => {
+            const action = {
+                type: actions.ADD_BLOCK,
+                id: undefined,
+                blockType: 'graph'
+            };
+            const expected = handleFirstChange(initialState).setIn(
+                ['blocks', '0'], Immutable.fromJS({
+                    id: '0',
+                    type: 'graph',
+                    language: 'javascript',
+                    option: 'runnable',
+                    graphType: 'pieChart',
+                    dataPath: 'data',
+                    content: 'return graphs.pieChart(data);',
+                    hints: {
+                        x: '', y: '', label: '', value: ''
+                    },
+                    labels: {x: '', y: ''}
+                })
+            ).set('content', Immutable.List(['0']));
+            expect(reducer(initialState, action).toJS()).to.eql(expected.toJS());
+        });
+
+        it('should clear a graph block on CLEAR_GRAPH_BLOCK_DATA', () => {
+            const beforeState = initialState.setIn(
+                ['blocks', '0'], Immutable.fromJS({
+                    id: '0',
+                    type: 'code',
+                    language: 'javascript',
+                    option: 'runnable',
+                    graphType: 'pieChart',
+                    dataPath: 'data',
+                    content: 'return graphs.pieChart(data);',
+                    hints: {
+                        x: '', y: '', label: '', value: ''
+                    },
+                    labels: {x: '', y: ''}
+                })
+            ).set('content', Immutable.List(['0']));
+            const afterState = beforeState.setIn(
+                ['blocks', '0'], Immutable.fromJS({
+                    id: '0',
+                    type: 'code',
+                    content: 'return graphs.pieChart(data);',
+                    language: 'javascript',
+                    option: 'runnable'
+                })
+            );
+            const action = {
+                type: actions.CLEAR_GRAPH_BLOCK_DATA,
+                id: '0'
+            };
+            expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
+        });
+
+        it('should regenerate code on graph type change', () => {
+            const beforeState = initialState.setIn(
+                ['blocks', '0'], Immutable.fromJS({
+                    id: '0',
+                    type: 'graph',
+                    language: 'javascript',
+                    option: 'runnable',
+                    graphType: 'pieChart',
+                    dataPath: 'data',
+                    content: 'return graphs.pieChart(data);',
+                    hints: {
+                        x: '', y: '', label: '', value: ''
+                    },
+                    labels: {x: '', y: ''}
+                })
+            ).set('content', Immutable.List(['0']));
+            const afterState = handleFirstChange(beforeState).setIn(
+                ['blocks', '0', 'graphType'], 'barChart'
+            ).setIn(['blocks', '0', 'content'], "return graphs.barChart(data, '', '');");
+            const action = {
+                type: actions.UPDATE_GRAPH_BLOCK_PROPERTY,
+                id: '0',
+                property: 'graphType',
+                value: 'barChart'
+            };
+            expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
+        });
+
+        it('should include hints in generated code, if present', () => {
+            const beforeState = initialState.setIn(
+                ['blocks', '0'], Immutable.fromJS({
+                    id: '0',
+                    type: 'graph',
+                    language: 'javascript',
+                    option: 'runnable',
+                    graphType: 'pieChart',
+                    dataPath: 'data',
+                    content: 'return graphs.pieChart(data);',
+                    hints: {
+                        x: 'stargazers', y: '', label: '', value: ''
+                    },
+                    labels: {x: '', y: ''}
+                })
+            ).set('content', Immutable.List(['0']));
+            const afterState = handleFirstChange(beforeState).setIn(
+                ['blocks', '0', 'hints', 'label'], 'name'
+            ).setIn(
+                ['blocks', '0', 'content'],
+                "return graphs.pieChart(data, {label: 'name'});"
+            );
+            const action = {
+                type: actions.UPDATE_GRAPH_BLOCK_HINT,
+                id: '0',
+                hint: 'label',
+                value: 'name'
+            };
+            expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
+        });
+
+        it('should include labels in generated code', () => {
+            const beforeState = initialState.setIn(
+                ['blocks', '0'], Immutable.fromJS({
+                    id: '0',
+                    type: 'graph',
+                    language: 'javascript',
+                    option: 'runnable',
+                    graphType: 'barChart',
+                    dataPath: 'data',
+                    content: 'return graphs.barChart(data);',
+                    hints: {
+                        x: '', y: '', label: '', value: ''
+                    },
+                    labels: {x: '', y: ''}
+                })
+            ).set('content', Immutable.List(['0']));
+            const afterState = handleFirstChange(beforeState).setIn(
+                ['blocks', '0', 'labels', 'x'], 'name'
+            ).setIn(
+                ['blocks', '0', 'content'],
+                "return graphs.barChart(data, 'name', '');"
+            );
+            const action = {
+                type: actions.UPDATE_GRAPH_BLOCK_LABEL,
+                id: '0',
+                label: 'x',
+                value: 'name'
+            };
+            expect(reducer(beforeState, action).toJS()).to.eql(afterState.toJS());
+        });
+
     });
 
     describe('markdown loading', () => {
