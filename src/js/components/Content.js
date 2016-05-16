@@ -9,10 +9,13 @@ import AddControls from './AddControls';
 class Content extends Component {
 
     render() {
-        const { dispatch, content, results, blocksExecuted, editable } = this.props;
+        const {
+            dispatch, content, results, blocksExecuted, editable, activeBlock
+        } = this.props;
         let blocks = [];
         for (let i = 0; i < content.size; i++) {
             const block = content.get(i);
+            const id = block.get('id');
             const isFirst = (i === 0);
             const isLast = (i === content.size - 1);
             blocks.push(
@@ -24,12 +27,11 @@ class Content extends Component {
                     blocks.push(
                         <TextBlock editable={editable} dispatch={dispatch}
                             block={block} key={String(i)} isFirst={isFirst}
-                            isLast={isLast}
+                            isLast={isLast} editing={id === activeBlock}
                         />
                     );
                     break;
                 default:
-                    const id = block.get('id');
                     const hasBeenRun = blocksExecuted.includes(id);
                     const result = results.get(id);
                     const BlockClass = block.get('type') === 'code' ?
@@ -39,6 +41,7 @@ class Content extends Component {
                             block={block} result={result} editable={editable}
                             key={String(i)} hasBeenRun={hasBeenRun} dispatch={dispatch}
                             isFirst={isFirst} isLast={isLast}
+                            editing={id === activeBlock}
                         />
                     );
             }
