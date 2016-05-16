@@ -1,0 +1,122 @@
+[
+    {
+        "Country": "United States",
+        "Sessions": 166,
+        "% New Sessions": "99.40%",
+        "New Users": 165,
+        "Bounce Rate": "89.16%",
+        "Pages / Session": 1.16,
+        "Avg. Session Duration": "00:00:17",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    },
+    {
+        "Country": "United Kingdom",
+        "Sessions": 88,
+        "% New Sessions": "88.64%",
+        "New Users": 78,
+        "Bounce Rate": "69.32%",
+        "Pages / Session": 1.82,
+        "Avg. Session Duration": "00:04:02",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    },
+    {
+        "Country": "Germany",
+        "Sessions": 16,
+        "% New Sessions": "100.00%",
+        "New Users": 16,
+        "Bounce Rate": "93.75%",
+        "Pages / Session": 1.06,
+        "Avg. Session Duration": "00:00:17",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    },
+    {
+        "Country": "Poland",
+        "Sessions": 10,
+        "% New Sessions": "100.00%",
+        "New Users": 10,
+        "Bounce Rate": "80.00%",
+        "Pages / Session": 1.40,
+        "Avg. Session Duration": "00:01:32",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    },
+    {
+        "Country": "Australia",
+        "Sessions": 9,
+        "% New Sessions": "100.00%",
+        "New Users": 9,
+        "Bounce Rate": "77.78%",
+        "Pages / Session": 1.22,
+        "Avg. Session Duration": "00:02:29",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    },
+    {
+        "Country": "Canada",
+        "Sessions": 9,
+        "% New Sessions": "88.89%",
+        "New Users": 8,
+        "Bounce Rate": "88.89%",
+        "Pages / Session": 1.11,
+        "Avg. Session Duration": "00:00:01",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    },
+    {
+        "Country": "Netherlands",
+        "Sessions": 9,
+        "% New Sessions": "100.00%",
+        "New Users": 9,
+        "Bounce Rate": "100.00%",
+        "Pages / Session": 1.00,
+        "Avg. Session Duration": "00:00:00",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    },
+    {
+        "Country": "Spain",
+        "Sessions": 7,
+        "% New Sessions": "100.00%",
+        "New Users": 7,
+        "Bounce Rate": "100.00%",
+        "Pages / Session": 1.00,
+        "Avg. Session Duration": "00:00:00",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    },
+    {
+        "Country": "Sweden",
+        "Sessions": 7,
+        "% New Sessions": "100.00%",
+        "New Users": 7,
+        "Bounce Rate": "100.00%",
+        "Pages / Session": 1.00,
+        "Avg. Session Duration": "00:00:00",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    },
+    {
+        "Country": "Finland",
+        "Sessions": 6,
+        "% New Sessions": "100.00%",
+        "New Users": 6,
+        "Bounce Rate": "83.33%",
+        "Pages / Session": 1.17,
+        "Avg. Session Duration": "00:00:15",
+        "Goal Conversion Rate": "0.00%",
+        "Goal Completions": 0,
+        "Goal Value": "$0.00"
+    }
+]
