@@ -10,6 +10,7 @@ export const EXECUTE = 'EXECUTE';
 export const RECEIVED_DATA = 'RECEIVED_DATA';
 export const TOGGLE_EDIT = 'TOGGLE_EDIT';
 export const UPDATE_BLOCK = 'UPDATE_BLOCK';
+export const EDIT_BLOCK = 'EDIT_BLOCK';
 export const UPDATE_META = 'UPDATE_META';
 export const TOGGLE_META = 'TOGGLE_META';
 export const ADD_BLOCK = 'ADD_BLOCK';
@@ -313,6 +314,13 @@ export function compileGraphBlock(id) {
 export function clearGraphData(id) {
     return {
         type: CLEAR_GRAPH_BLOCK_DATA,
+        id
+    };
+}
+
+export function editBlock(id) {
+    return {
+        type: EDIT_BLOCK,
         id
     };
 }

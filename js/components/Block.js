@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
 import Codemirror from 'react-codemirror';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/markdown/markdown';
-import { updateBlock, deleteBlock, moveBlockUp, moveBlockDown } from '../actions';
+import {
+    updateBlock, deleteBlock, moveBlockUp, moveBlockDown, editBlock
+} from '../actions';
 
 export default class Block extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {editing: false};
         this.enterEdit = this.enterEdit.bind(this);
-        this.exitEdit = this.exitEdit.bind(this);
         this.textChanged = this.textChanged.bind(this);
         this.getButtons = this.getButtons.bind(this);
         this.deleteBlock = this.deleteBlock.bind(this);
@@ -18,21 +19,14 @@ export default class Block extends Component {
         this.moveBlockDown = this.moveBlockDown.bind(this);
     }
 
-    enterEdit() {
+    enterEdit(e) {
         if (this.props.editable) {
+            e.stopPropagation();
+            const { dispatch, block } = this.props;
             this.setState({
-                editing: true,
-                text: this.props.block.get('content')
+                text: block.get('content')
             });
-        }
-    }
-
-    exitEdit(focusOn) {
-        if (!focusOn) {
-            this.setState({editing: false});
-            this.props.dispatch(
-                updateBlock(this.props.block.get('id'), this.state.text)
-            );
+            dispatch(editBlock(block.get('id')));
         }
     }
 
@@ -43,6 +37,20 @@ export default class Block extends Component {
     componentDidUpdate() {
         if (this.refs.editarea) {
             this.refs.editarea.focus();
+            const domNode = findDOMNode(this.refs.editarea);
+            if (domNode.scrollIntoViewIfNeeded) {
+                findDOMNode(this.refs.editarea).scrollIntoViewIfNeeded(false);
+            }
+        }
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (this.props.editing && !newProps.editing &&
+            this.props.block.get('content') === newProps.block.get('content')) {
+            // If exiting edit mode, save text (unless it's an undo))
+            this.props.dispatch(
+                updateBlock(this.props.block.get('id'), this.state.text)
+            );
         }
     }
 
@@ -86,8 +94,8 @@ export default class Block extends Component {
     }
 
     render() {
-        const { block, editable } = this.props;
-        if (!editable || !this.state.editing) {
+        const { block, editable, editing } = this.props;
+        if (!(editable && editing)) {
             return this.renderViewerMode();
         }
         const isCodeBlock = block.get('type') === 'code';
@@ -104,10 +112,9 @@ export default class Block extends Component {
             }
         };
         return (
-            <div className="edit-box">
+            <div className="edit-box" onClick={(e) => {e.stopPropagation()}}>
                 <Codemirror value={this.state.text} options={options}
-                    onFocusChange={this.exitEdit} onChange={this.textChanged}
-                    ref="editarea" />
+                    onChange={this.textChanged} ref="editarea" />
             </div>
         );
     }

@@ -399,6 +399,14 @@ describe('actions', () => {
             expect(actions.clearGraphData('12')).to.eql(expd);
         });
 
+        it('should create an action for editing a block', () => {
+            const expd = {
+                type: actions.EDIT_BLOCK,
+                id: '12'
+            };
+            expect(actions.editBlock('12')).to.eql(expd);
+        });
+
     });
 
 });
