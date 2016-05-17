@@ -131,6 +131,10 @@ export function extractBlocks (body, codeBlocks) {
                     currentString += item.content;
                     break;
                 case 'code_inline':
+                    if (item.markup === '`') {
+                        currentString += '`' + item.content + '`';
+                        break;
+                    }
                     const res = handleCodeInline(
                         blockOrder, blocks, currentString, blockCounter, codeBlocks
                     );

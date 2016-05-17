@@ -31,6 +31,8 @@ Go ahead and take a look at the [page source](view-source:http://www.joelotter.c
 - make
 - lists!
 
+There is also inline code, like `console.log('thing')`.
+
 ```python
 print "You can have code, with syntax highlighting."
 print "This is Python - it can't be run in the browser."
