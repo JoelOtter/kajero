@@ -35,7 +35,9 @@ Kajero includes a couple of simple command-line tools for users who don't want t
 
 ### Installation
 
-`npm install -g kajero`
+`npm install -g kajero`, or clone this repository.
+
+You can build the JS library by running `npm install`, followed by `gulp`. For a production build, `NODE_ENV=production gulp`.
 
 ### Commands
 
@@ -49,4 +51,10 @@ Will output generated HTML of a new notebook. You can pipe it to a file like thi
 
 - `kajero publish [file.md]`
 
-Will publish your notebook as a gist, and return a unique URL to your new notebook.
+Will publish your notebook as a gist, and return a unique URL to your new notebook. You don't need to build the JS library for these scripts to work.
+
+### Running tests
+
+Run the unit tests with `npm test`.
+
+For coverage reporting, run with `npm run test-cov`. Note that the coverage percentages may not be exactly correct - this is because Istanbul runs over the compiled ES5 code, rather than the ES6 source.
