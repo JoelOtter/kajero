@@ -3,7 +3,7 @@ import MarkdownIt from 'markdown-it';
 import Block from './Block';
 import { highlight } from '../util';
 
-const md = new MarkdownIt({highlight});
+const md = new MarkdownIt({highlight, html: true});
 
 class TextBlock extends Block {
 
