@@ -1,11 +1,9 @@
 import React from 'react';
 import MarkdownIt from 'markdown-it';
-import MarkdownKatex from 'markdown-it-katex';
 import Block from './Block';
 import { highlight } from '../util';
 
 const md = new MarkdownIt({highlight, html: true});
-md.use(MarkdownKatex);
 
 class TextBlock extends Block {
 
