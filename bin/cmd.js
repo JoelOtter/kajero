@@ -20,7 +20,7 @@ var f = (command === 'html') ? saveHTML : saveGist;
 f(md);
 
 function saveHTML(markdown) {
-    var result = "<html>\n    <head>\n";
+    var result = "<!DOCTYPE html>\n<html>\n    <head>\n";
     result += '        <meta name="viewport" content="width=device-width, initial-scale=1">\n';
     result += '        <meta http-equiv="content-type" content="text/html; charset=UTF8">\n';
     result += '        <link rel="stylesheet" href="http://www.joelotter.com/kajero/dist/main.css">\n';

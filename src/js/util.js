@@ -3,7 +3,9 @@ import config from './config';
 
 export function codeToText(codeBlock, includeOption) {
     let result = "```";
-    result += codeBlock.get('language');
+    if (codeBlock.get('language')) {
+        result += codeBlock.get('language');
+    }
     const option = codeBlock.get('option');
     if (includeOption && option) {
         const sep = '; ';
@@ -42,7 +44,7 @@ export function extractMarkdownFromHTML() {
 }
 
 export function renderHTML(markdown) {
-    let result = "<html>\n    <head>\n";
+    let result = "<!DOCTYPE html>\n<html>\n    <head>\n";
     result += '        <meta name="viewport" content="width=device-width, initial-scale=1">\n';
     result += '        <meta http-equiv="content-type" content="text/html; charset=UTF8">\n';
     result += '        <link rel="stylesheet" href="' + config.cssUrl + '">\n';

@@ -37,6 +37,14 @@ There is also inline code, like `console.log('thing')`.
 
 <pre style="width: 50%;"><code>print "You can use inline HTML to get styling, which is neat.</code></pre>
 
+Maths rendering is OK too.
+
+$1 + 1 = 2$
+
+$$
+1 + 1 = 2
+$$
+
 ```python
 print "You can have code, with syntax highlighting."
 print "This is Python - it can't be run in the browser."

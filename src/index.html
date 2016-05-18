@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Kajero</title>
@@ -73,6 +74,30 @@
                 fmt.Println("This is some Go.")
             }
             ```
+
+            ### KaTex
+
+            Kajero also includes [KaTeX](https://khan.github.io/KaTeX/), a fast maths typesetting library.
+
+            Using single dollar signs inline will render your mathematical notation inline.
+
+            ```
+            Some maths: $f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$
+            ```
+
+            Some maths: $f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi$
+
+            Using two dollar signs like so will render it as a block, centered and slightly larger.
+
+            ```
+            $$
+            f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi
+            $$
+            ```
+
+            $$
+            f(x) = \int_{-\infty}^\infty\hat f(\xi)\,e^{2 \pi i \xi x}\,d\xi
+            $$
 
             The Kajero package on [npm](https://www.npmjs.com/package/kajero) contains some command-line tools to create notebooks out of Markdown files. However, you might not want to create a notebook from scratch, so...
 
