@@ -6,149 +6,73 @@ import { codeToText } from './util';
 
 const markdownIt = new MarkdownIt();
 
-function extractImage (item) {
-    const src = item.attrs[0][1];
-    let alt = '';
-    let title = '';
-    if (item.children.length > 0 && item.children[0].type === 'text') {
-        alt = item.children[0].content;
-    }
-    if (item.attrs.length > 2 && item.attrs[2][0] === 'title') {
-        title = ' "' + item.attrs[2][1] + '"';
-    }
-    return '![' + alt + '](' + src + title +  ')';
-}
-
 /*
- * A helper function to add a new text block to both the blocks
- * map and ordering array.
- */
-function addTextBlock(id, blocks, blockOrder, content) {
-    blocks[id] = {
-        type: 'text',
-        id,
-        content
-    };
-    blockOrder.push(id);
-}
-
-/*
- * If the current string isn't blank or whitespace, this flushes it
- * into a text block.
- */
-function flushCurrentString(currentString, counter, blocks, blockOrder) {
-    if (currentString.match(/\S+/gm)) {
-        const id = String(counter);
-        addTextBlock(id, blocks, blockOrder, currentString.trim());
-        return counter + 1;
-    }
-    return counter;
-}
-
-/*
- * Flushes out current text if necessary, and adds new code block.
- */
-function handleCodeInline(
-    blockOrder, blocks, currentString, blockCounter, codeBlocks
-) {
-    let codeBlock = codeBlocks[0];
-    // If not JavaScript, just add it into the text,
-    // as it won't be interactive.
-    if (codeBlock.get('language') !== 'javascript') {
-        currentString += codeToText(codeBlock);
-        return [currentString, blockCounter];
-    }
-    // If the current string is more than just whitespace,
-    // flush it as a text block before proceeding.
-    blockCounter = flushCurrentString(
-        currentString, blockCounter, blocks, blockOrder
-    );
-    // Reset currentString, whether it's whitespace or pushed.
-    currentString = "";
-    // Add the code block
-    const id = String(blockCounter);
-    blocks[id] = codeBlock.set('id', id);
-    blockOrder.push(id);
-    return [currentString, blockCounter + 1];
-}
-
-/*
- * Extracts an array of code blocks (Immutable Maps) from the
+ * Extracts a code block (Immutable Map) from the
  * block-parsed Markdown.
  */
-export function extractCodeBlocks (body) {
-    const parsedMarkdown = markdownIt.parse(body);
-    let codeBlocks = [];
-    for (let i = 0; i < parsedMarkdown.length; i++) {
-        let block = parsedMarkdown[i];
-        if (block.type === 'fence') {
-            const info = block.info.split(';').map(s => s.trim());
-            const language = info[0] || undefined;
-            const option = info[1] || undefined;
-            codeBlocks.push(Immutable.fromJS({
-                type: 'code',
-                content: block.content.trim(),
-                language,
-                option
-            }));
-        }
+function extractCodeBlock (token) {
+    const info = token.info.split(';').map(s => s.trim());
+    const language = info[0] || undefined;
+    const option = info[1] || undefined;
+    if (['runnable', 'auto', 'hidden'].indexOf(option) < 0) {
+        // If not an executable block, we just want to represent as Markdown.
+        return null;
     }
-    return codeBlocks;
+    return Immutable.fromJS({
+        type: 'code',
+        content: token.content.trim(),
+        language,
+        option
+    });
 }
 
-/*
- * Extracts all blocks, after first pass which gets code blocks.
- */
-export function extractBlocks (body, codeBlocks) {
-    const parsedMarkdown = markdownIt.parseInline(body);
+function flushTextBlock(counter, blocks, blockOrder, text) {
+    if (!text.match(/\S+/)) {
+        return;
+    }
+    const id = String(counter);
+    blockOrder.push(id);
+    blocks[id] = Immutable.fromJS({
+        type: 'text',
+        id: id,
+        content: text.trim()
+    });
+}
+
+function extractBlocks(md) {
+    const rgx = /(```\w+;\s*?(?:runnable|auto|hidden)\s*?[\n\r]+[\s\S]*?^\s*?```\s*?$)/gm;
+    const parts = md.split(rgx);
+
+    let blockCounter = 0;
+    let currentString = "";
     const blockOrder = [];
     const blocks = {};
 
-    let currentString = "";
-    let linkStack = [];
-    let blockCounter = 0;
-    for (let n = 0; n < parsedMarkdown.length; n++) {
-        const node = parsedMarkdown[n];
-        for (let i = 0; i < node.children.length; i++) {
-            const item = node.children[i];
-            switch(item.type) {
-                case 'softbreak':
-                case 'hardbreak':
-                    currentString += "\n";
-                    break;
-                case 'image':
-                    currentString += extractImage(item);
-                    break;
-                // Links come as three components for some reason...
-                case 'link_open':
-                    linkStack.push(item.attrs[0][1]);
-                    currentString += '[';
-                    break;
-                case 'link_close':
-                    currentString += '](' + linkStack.pop() + ')';
-                    break;
-                case 'text':
-                    currentString += item.content;
-                    break;
-                case 'code_inline':
-                    if (item.markup === '`') {
-                        currentString += '`' + item.content + '`';
-                        break;
-                    }
-                    const res = handleCodeInline(
-                        blockOrder, blocks, currentString, blockCounter, codeBlocks
-                    );
-                    currentString = res[0];
-                    blockCounter = res[1];
-                    codeBlocks = codeBlocks.slice(1);
-                    break;
-                default:
-                    currentString += item.markup;
+    for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        const tokens = markdownIt.parse(parts[i]);
+        if (tokens.length === 1 && tokens[0].type === 'fence') {
+            const block = extractCodeBlock(tokens[0]);
+            // If it's an executable block
+            if (block) {
+                // Flush the current text to a text block
+                flushTextBlock(blockCounter, blocks, blockOrder, currentString);
+                currentString = "";
+                blockCounter++;
+
+                // Then add the code block
+                const id = String(blockCounter);
+                blockOrder.push(id);
+                blocks[id] = block.set('id', id);
+                blockCounter++;
+                continue;
             }
         }
-        // Flush remaining string into text block
-        flushCurrentString(currentString, blockCounter, blocks, blockOrder);
+        // If it isn't an executable code block, just add
+        // to the current text block;
+        currentString += part;
     }
+    flushTextBlock(blockCounter, blocks, blockOrder, currentString);
 
     return {
         content: blockOrder,
@@ -166,12 +90,7 @@ function getDate(attributes) {
 export function parse(md) {
     // Separate front-matter and body
     const doc = fm(md);
-
-    // Extract code blocks first
-    const codeBlocks = extractCodeBlocks(doc.body);
-
-    // Then extract whole thing, using codeBlocks for reference
-    const {content, blocks} = extractBlocks(doc.body, codeBlocks);
+    const {content, blocks} = extractBlocks(doc.body);
 
     return Immutable.fromJS({
         metadata: {
