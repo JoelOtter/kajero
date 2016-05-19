@@ -20,6 +20,10 @@ print "Non-runnable code sample"
 
 And finally a runnable one...
 
-```javascript
+```javascript; runnable
 console.log("Runnable");
+```
+
+```
+Isolated non-runnable
 ```

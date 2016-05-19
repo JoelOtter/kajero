@@ -31,6 +31,8 @@ Go ahead and take a look at the [page source](view-source:http://www.joelotter.c
 - make
 - lists!
 
+\[ Escapes work \]
+
 There is also inline code, like `console.log('thing')`.
 
 <i>HTML is allowed, as per the Markdown spec.</i>

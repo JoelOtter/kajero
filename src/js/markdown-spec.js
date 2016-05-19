@@ -18,7 +18,7 @@ describe('markdown', () => {
             original: undefined,
             datasources: {}
         },
-        content: ['0', '1'],
+        content: ['0', '1', '2'],
         blocks: {
             '0': {
                 type: 'text',
@@ -35,41 +35,15 @@ describe('markdown', () => {
                 type: 'code',
                 id: '1',
                 language: 'javascript',
-                option: undefined,
+                option: 'runnable',
                 content: 'console.log("Runnable");'
+            },
+            '2': {
+                type: 'text',
+                id: '2',
+                content: '```\nIsolated non-runnable\n```'
             }
         }
-    });
-
-    describe('extractCodeBlocks', () => {
-
-        it('correctly extracts all code blocks', () => {
-            const expected = Immutable.List([
-                Immutable.fromJS({
-                    type: 'code',
-                    language: 'javascript',
-                    option: 'hidden',
-                    content: 'console.log("Hello!");'
-                }),
-                Immutable.fromJS({
-                    type: 'code',
-                    language: undefined,
-                    option: undefined,
-                    content: 'print "Non-js block"'
-                }),
-                Immutable.fromJS({
-                    type: 'code',
-                    language: 'javascript',
-                    content: 'return 1 + 1;',
-                    option: undefined
-                })
-            ]);
-            const sampleMd = loadMarkdown('extractCodeBlocks');
-
-            expect(Immutable.List(extractCodeBlocks(sampleMd)).toJS())
-                .to.eql(expected.toJS());
-        });
-
     });
 
     describe('parse', () => {
