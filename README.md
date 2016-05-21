@@ -1,5 +1,7 @@
 # Kajero
 
+[![Join the chat at https://gitter.im/JoelOtter/kajero](https://badges.gitter.im/JoelOtter/kajero.svg)](https://gitter.im/JoelOtter/kajero?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![npm](https://img.shields.io/npm/v/kajero.svg?maxAge=2592000)](https://www.npmjs.com/package/kajero)
 
 Interactive JavaScript notebooks with clever graphing.
