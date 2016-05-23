@@ -6,10 +6,6 @@ import * as actions from '../actions';
 
 describe('execution reducer', () => {
 
-    // Mock stuff for execution
-    jsdom();
-    global.nv = {};
-
     it('should return the initial state', () => {
         expect(reducer(undefined, {})).to.eql(initialState);
     });
@@ -64,80 +60,35 @@ describe('execution reducer', () => {
         expect(reducer(beforeState, action).toJS()).to.eql(initialState.toJS());
     });
 
-
-    it('should save results and mark execution on EXECUTE action', () => {
-        const id = '1';
-        const code = 'return 12 + 5;';
+    it('should update result, executed and context on CODE_EXECUTED', () => {
         const action = {
-            type: actions.EXECUTE,
-            id,
-            code
+            type: actions.CODE_EXECUTED,
+            id: '99',
+            data: 3,
+            context: Immutable.Map({number: 10})
         };
-        const expectedState = initialState
-            .setIn(['results', id], 17)
-            .set('blocksExecuted', initialState.get('blocksExecuted').add(id));
-        expect(reducer(initialState, action).toJS()).to.eql(expectedState.toJS());
-    });
-
-    it('should save errors as the result', () => {
-        const id = '1';
-        const code = 'return 5 ++ 3;';
-        let result;
-        try {
-            eval(code);
-        } catch (err) {
-            result = err;
-        }
-        const action = {
-            type: actions.EXECUTE,
-            id,
-            code
-        };
-        const expectedState = initialState
-            .setIn(['results', id], result)
-            .set('blocksExecuted', initialState.get('blocksExecuted').add(id));
-        expect(reducer(initialState, action).toJS()).to.eql(expectedState.toJS());
-    });
-
-    it('should run auto and hidden code blocks, in order, on EXECUTE_AUTO', () => {
-        const blocks = Immutable.fromJS({
-            '0': {
-                id: '0',
-                type: 'code',
-                content: 'this.number = 500; return this.number;',
-                option: 'runnable'
-            },
-            '1': {
-                id: '1',
-                type: 'code',
-                content: 'this.number = 100; return this.number;',
-                option: 'auto'
-            },
-            '2': {
-                id: '2',
-                type: 'code',
-                content: 'return this.number * 2;',
-                option: 'hidden'
-            }
-        });
-        const content = Immutable.List(['1', '0', '2']);
-        const expectedState = initialState.set(
-            'results',
-            Immutable.fromJS({
-                '1': 100,
-                '2': 200
-            })
-        ).set('blocksExecuted', Immutable.Set(['1', '2'])).set(
-            'executionContext', Immutable.Map({
-                number: 100
-            })
+        const expected = initialState.setIn(
+            ['results', '99'], 3
+        ).set(
+            'blocksExecuted', initialState.get('blocksExecuted').add('99')
+        ).set(
+            'executionContext', Immutable.Map({number: 10})
         );
+        expect(reducer(initialState, action).toJS()).to.eql(expected.toJS());
+    });
+
+    it('should update result and executed on CODE_ERROR', () => {
         const action = {
-            type: actions.EXECUTE_AUTO,
-            blocks,
-            content
+            type: actions.CODE_ERROR,
+            id: '99',
+            data: 'Some error'
         };
-        expect(reducer(initialState, action).toJS()).to.eql(expectedState.toJS());
+        const expected = initialState.setIn(
+            ['results', '99'], 'Some error'
+        ).set(
+            'blocksExecuted', initialState.get('blocksExecuted').add('99')
+        );
+        expect(reducer(initialState, action).toJS()).to.eql(expected.toJS());
     });
 
 });

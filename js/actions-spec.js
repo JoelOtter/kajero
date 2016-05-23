@@ -4,6 +4,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import fetchMock from 'fetch-mock';
 import sinon from 'sinon';
+import jsdom from 'mocha-jsdom';
 import { gistUrl, gistApi } from './config';
 import * as actions from './actions';
 import * as util from './util';
@@ -11,9 +12,13 @@ import * as util from './util';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
+// Mock stuff for execution
+jsdom();
+global.nv = {};
+
 describe('actions', () => {
 
-    const testMd = '## Test';
+    const testMd = '## Test HTML md';
 
     describe('async actions', () => {
 
@@ -29,7 +34,7 @@ describe('actions', () => {
 
         afterEach(fetchMock.restore);
 
-        it('should create RECEIVED_DATA, EXECUTE_AUTO when data is received', () => {
+        it('should create RECEIVED_DATA, trigger auto exec when data is received', () => {
             fetchMock
                 .mock('http://example.com/data1', {body: {thing: 'data1'}})
                 .mock('http://example.com/data2', {body: {thing: 'data2'}});
@@ -42,23 +47,29 @@ describe('actions', () => {
                             two: 'http://example.com/data2'
                         }
                     },
-                    blocks: 'stubBlocks',
-                    content: 'stubContent'
+                    blocks: {
+                        '12': {
+                            option: 'auto'
+                        }
+                    },
+                    content: ['12']
                 }),
                 execution: Immutable.fromJS({
-                    data: {}
+                    data: {},
+                    executionContext: {}
                 })
             });
 
             const expecteds = [
                 {type: actions.RECEIVED_DATA, name: 'one', data: {thing: 'data1'}},
-                {type: actions.RECEIVED_DATA, name: 'two', data: {thing: 'data2'}},
-                {type: actions.EXECUTE_AUTO, blocks: 'stubBlocks', content: 'stubContent'}
+                {type: actions.RECEIVED_DATA, name: 'two', data: {thing: 'data2'}}
             ];
 
             return store.dispatch(actions.fetchData())
                 .then(() => {
-                    expect(store.getActions()).to.eql(expecteds);
+                    expect(store.getActions().slice(0, 2)).to.eql(expecteds);
+                    expect(store.getActions()).to.have.length.of(3);
+                    expect(store.getActions()[2].type).to.equal(actions.CODE_EXECUTED);
                 });
         });
 
@@ -75,8 +86,8 @@ describe('actions', () => {
                             two: 'http://example.com/data2'
                         }
                     },
-                    blocks: 'stubBlocks',
-                    content: 'stubContent'
+                    blocks: {},
+                    content: []
                 }),
                 execution: Immutable.fromJS({
                     data: {one: 'hooray'}
@@ -84,8 +95,7 @@ describe('actions', () => {
             });
 
             const expected = [
-                {type: actions.RECEIVED_DATA, name: 'two', data: {thing: 'data2'}},
-                {type: actions.EXECUTE_AUTO, blocks: 'stubBlocks', content: 'stubContent'}
+                {type: actions.RECEIVED_DATA, name: 'two', data: {thing: 'data2'}}
             ];
 
             return store.dispatch(actions.fetchData())
@@ -104,16 +114,15 @@ describe('actions', () => {
                     metadata: {
                         datasources: {}
                     },
-                    blocks: 'stubBlocks',
-                    content: 'stubContent'
+                    content: [],
+                    blocks: {}
                 }),
                 execution: Immutable.fromJS({
                     data: {}
                 })
             });
             const expected = [
-                {type: actions.LOAD_MARKDOWN, markdown: md},
-                {type: actions.EXECUTE_AUTO, content: 'stubContent', blocks: 'stubBlocks'}
+                {type: actions.LOAD_MARKDOWN, markdown: md}
             ];
 
             return store.dispatch(actions.loadMarkdown())
@@ -140,7 +149,6 @@ describe('actions', () => {
             });
             const expected = [
                 {type: actions.LOAD_MARKDOWN, markdown: testMd},
-                {type: actions.EXECUTE_AUTO, content: 'stubContent', blocks: 'stubBlocks'}
             ];
 
             return store.dispatch(actions.loadMarkdown())
@@ -158,8 +166,224 @@ describe('actions', () => {
             const store = mockStore({});
             const expected = [{type: actions.GIST_CREATED, id: 'test_gist_id'}]
 
-            return store.dispatch(actions.saveGist('title', '## markdown'));
-        })
+            return store.dispatch(actions.saveGist('title', '## markdown'))
+                .then(() => {
+                    expect(store.getActions()).to.eql(expected)
+                });
+        });
+
+        it('should create CODE_EXECUTED on successful block execution', () => {
+            const store = mockStore({
+                notebook: Immutable.fromJS({
+                    blocks: {
+                        '0': {
+                            type: 'code',
+                            language: 'javascript',
+                            option: 'runnable',
+                            content: 'return 1 + 2;'
+                        }
+                    }
+                }),
+                execution: Immutable.fromJS({
+                    data: {},
+                    executionContext: {}
+                })
+            });
+
+            const expected = [{
+                type: actions.CODE_EXECUTED,
+                id: '0',
+                data: 3,
+                context: Immutable.fromJS({})
+            }];
+
+            return store.dispatch(actions.executeCodeBlock('0'))
+                .then(() => {
+                    expect(store.getActions()).to.eql(expected)
+                });
+        });
+
+        it('should create CODE_ERROR on error in block execution', () => {
+            const store = mockStore({
+                notebook: Immutable.fromJS({
+                    blocks: {
+                        '0': {
+                            type: 'code',
+                            language: 'javascript',
+                            option: 'runnable',
+                            content: 'some bullshit;'
+                        }
+                    }
+                }),
+                execution: Immutable.fromJS({
+                    data: {},
+                    executionContext: {}
+                })
+            });
+
+            const expected = [{
+                type: actions.CODE_ERROR,
+                id: '0',
+                data: Error("SyntaxError: Unexpected identifier")
+            }];
+
+            return store.dispatch(actions.executeCodeBlock('0'))
+                .then(() => {
+                    expect(store.getActions()).to.eql(expected)
+                });
+        });
+
+        it('should pass context along for use with "this"', () => {
+            const store = mockStore({
+                notebook: Immutable.fromJS({
+                    blocks: {
+                        '0': {
+                            type: 'code',
+                            language: 'javascript',
+                            option: 'runnable',
+                            content: 'this.number = 100; return 5;'
+                        }
+                    }
+                }),
+                execution: Immutable.fromJS({
+                    data: {},
+                    executionContext: {}
+                })
+            });
+
+            const expected = [
+                {
+                    type: actions.CODE_EXECUTED,
+                    id: '0',
+                    context: Immutable.Map({number: 100}),
+                    data: 5
+                }
+            ];
+
+            return store.dispatch(actions.executeCodeBlock('0'))
+                .then(() => {
+                    expect(store.getActions()).to.eql(expected)
+                })
+        });
+
+        it('should make context contents available in code blocks', () => {
+            const store = mockStore({
+                notebook: Immutable.fromJS({
+                    blocks: {
+                        '0': {
+                            type: 'code',
+                            language: 'javascript',
+                            option: 'runnable',
+                            content: 'return this.number;'
+                        }
+                    }
+                }),
+                execution: Immutable.fromJS({
+                    data: {},
+                    executionContext: {number: 100}
+                })
+            });
+
+            const expected = [
+                {
+                    type: actions.CODE_EXECUTED,
+                    id: '0',
+                    context: Immutable.Map({number: 100}),
+                    data: 100
+                }
+            ];
+
+            return store.dispatch(actions.executeCodeBlock('0'))
+                .then(() => {
+                    expect(store.getActions()).to.eql(expected)
+                })
+        });
+
+        it('should resolve returned promises', () => {
+            const store = mockStore({
+                notebook: Immutable.fromJS({
+                    blocks: {
+                        '0': {
+                            type: 'code',
+                            language: 'javascript',
+                            option: 'runnable',
+                            content: 'return Promise.resolve(5);'
+                        }
+                    }
+                }),
+                execution: Immutable.fromJS({
+                    data: {},
+                    executionContext: {}
+                })
+            });
+
+            const expected = [
+                {
+                    type: actions.CODE_EXECUTED,
+                    id: '0',
+                    context: Immutable.Map(),
+                    data: 5
+                }
+            ];
+
+            return store.dispatch(actions.executeCodeBlock('0'))
+                .then(() => {
+                    expect(store.getActions()).to.eql(expected)
+                })
+        });
+
+        it('should auto execute auto and hidden code blocks', () => {
+            const store = mockStore({
+                notebook: Immutable.fromJS({
+                    blocks: {
+                        '0': {
+                            type: 'code',
+                            language: 'javascript',
+                            option: 'auto',
+                            content: 'return Promise.resolve(5);'
+                        },
+                        '1': {
+                            type: 'code',
+                            language: 'javascript',
+                            option: 'runnable',
+                            content: 'return 10;'
+                        },
+                        '2': {
+                            type: 'code',
+                            language: 'javascript',
+                            option: 'hidden',
+                            content: 'return 15;'
+                        }
+                    },
+                    content: ['0', '1', '2']
+                }),
+                execution: Immutable.fromJS({
+                    data: {},
+                    executionContext: {}
+                })
+            });
+
+            const expected = [
+                {
+                    type: actions.CODE_EXECUTED,
+                    id: '0',
+                    context: Immutable.Map(),
+                    data: 5
+                },
+                {
+                    type: actions.CODE_EXECUTED,
+                    id: '2',
+                    context: Immutable.Map(),
+                    data: 15
+                }
+            ];
+
+            return store.dispatch(actions.executeAuto())
+                .then(() => {
+                    expect(store.getActions()).to.eql(expected)
+                })
+
+        });
 
     });
 
@@ -181,20 +405,6 @@ describe('actions', () => {
                 markdown: testMd
             };
             expect(actions.loadMarkdown()).to.eql(expected);
-        });
-
-        it('should create an action to execute code', () => {
-            const id = '12';
-            const content = 'console.log("Hello");';
-            const codeBlock = Immutable.Map({
-                id, content
-            });
-            const expected = {
-                type: actions.EXECUTE,
-                code: content,
-                id: id
-            };
-            expect(actions.executeCodeBlock(codeBlock)).to.eql(expected);
         });
 
         it('should create an action for toggling the editor', () => {

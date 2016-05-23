@@ -27,7 +27,7 @@ class CodeBlock extends Block {
 
     clickPlay() {
         const { dispatch, block } = this.props;
-        dispatch(executeCodeBlock(block));
+        dispatch(executeCodeBlock(block.get('id')));
     }
 
     clickOption() {
@@ -81,7 +81,7 @@ class CodeBlock extends Block {
         const { dispatch, block } = this.props;
         if (block.get('graphType')) {
             dispatch(clearGraphData(block.get('id')));
-            dispatch(executeCodeBlock(block));
+            dispatch(executeCodeBlock(block.get('id')));
         }
     }
 

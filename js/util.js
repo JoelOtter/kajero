@@ -3,9 +3,7 @@ import config from './config';
 
 export function codeToText(codeBlock, includeOption) {
     let result = "```";
-    if (codeBlock.get('language')) {
-        result += codeBlock.get('language');
-    }
+    result += codeBlock.get('language');
     const option = codeBlock.get('option');
     if (includeOption && option) {
         const sep = '; ';

@@ -53,7 +53,7 @@ class GraphBlock extends CodeBlock {
     }
 
     componentDidMount() {
-        this.props.dispatch(executeCodeBlock(this.props.block));
+        this.props.dispatch(executeCodeBlock(this.props.block.get('id')));
         this.selectedData = this.props.data;
     }
 
@@ -75,7 +75,7 @@ class GraphBlock extends CodeBlock {
     componentDidUpdate() {
         if (this.needsRerun) {
             this.needsRerun = false;
-            this.props.dispatch(executeCodeBlock(this.props.block));
+            this.props.dispatch(executeCodeBlock(this.props.block.get('id')));
         }
     }
 
