@@ -7,8 +7,6 @@ import * as util from './util';
 
 describe('util', () => {
 
-    jsdom();
-
     describe('codeToText', () => {
 
         it('should correctly transform a code block to text', () => {

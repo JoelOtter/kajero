@@ -1,12 +1,18 @@
+import { parse } from 'query-string';
+import Immutable from 'immutable';
+import reshaper from 'reshaper';
+import Smolder from 'smolder';
+import Jutsu from 'jutsu'; // Imports d3 and nv as globals
+
 import { extractMarkdownFromHTML } from './util';
 import { gistUrl, gistApi } from './config';
-import { parse } from 'query-string';
 
 /*
  * Action types
  */
 export const LOAD_MARKDOWN = 'LOAD_MARKDOWN';
-export const EXECUTE = 'EXECUTE';
+export const CODE_EXECUTED = 'CODE_EXECUTED';
+export const CODE_ERROR = 'CODE_ERROR';
 export const RECEIVED_DATA = 'RECEIVED_DATA';
 export const TOGGLE_EDIT = 'TOGGLE_EDIT';
 export const UPDATE_BLOCK = 'UPDATE_BLOCK';
@@ -22,7 +28,6 @@ export const UPDATE_DATASOURCE = 'UPDATE_DATASOURCE';
 export const TOGGLE_SAVE = 'TOGGLE_SAVE';
 export const GIST_CREATED = 'GIST_CREATED';
 export const UNDO = 'UNDO';
-export const EXECUTE_AUTO = 'EXECUTE_AUTO';
 export const CHANGE_CODE_BLOCK_OPTION = 'CHANGE_CODE_BLOCK_OPTION';
 export const UPDATE_GRAPH_BLOCK_PROPERTY = 'UPDATE_GRAPH_BLOCK_PROPERTY';
 export const UPDATE_GRAPH_BLOCK_HINT = 'UPDATE_GRAPH_BLOCK_HINT';
@@ -68,12 +73,69 @@ function loadMarkdownFromHTML() {
     };
 }
 
-export function executeCodeBlock (codeBlock) {
-    return {
-        type: EXECUTE,
-        id: codeBlock.get('id'),
-        code: codeBlock.get('content')
+export function executeCodeBlock (id) {
+    return (dispatch, getState) => {
+        const code = getState().notebook.getIn(['blocks', id, 'content']);
+        const graphElement = document.getElementById("kajero-graph-" + id);
+
+        const executionState = getState().execution;
+        const context = executionState.get('executionContext').toJS();
+        const data = executionState.get('data').toJS();
+        const jutsu = Smolder(Jutsu(graphElement));
+
+        return new Promise((resolve, reject) => {
+            try {
+                const result = new Function(
+                    ['d3', 'nv', 'graphs', 'data', 'reshaper', 'graphElement'], code
+                ).call(
+                    context, d3, nv, jutsu, data, reshaper, graphElement
+                );
+                resolve(result);
+            } catch(err) {
+                reject(err);
+            }
+        })
+        .then((result) => dispatch(
+              codeExecuted(id, result, Immutable.fromJS(context))
+        ))
+        .catch((err) => dispatch(codeError(id, err)));
     };
+}
+
+function codeExecuted(id, result, context) {
+    return {
+        type: CODE_EXECUTED,
+        id,
+        data: result,
+        context
+    };
+}
+
+function codeError(id, err) {
+    return {
+        type: CODE_ERROR,
+        id,
+        data: err
+    };
+}
+
+export function executeAuto() {
+    return (dispatch, getState) => {
+        const notebook = getState().notebook;
+        const blocks = notebook.get('blocks');
+        const order = notebook.get('content');
+        // This slightly scary Promise chaining ensures that code blocks
+        // are executed in order, even if they return Promises.
+        return order.reduce((p, id) => {
+            return p.then(() => {
+                const option = blocks.getIn([id, 'option']);
+                if (option === 'auto' || option === 'hidden') {
+                    return dispatch(executeCodeBlock(id));
+                }
+                return Promise.resolve();
+            });
+        }, Promise.resolve());
+    }
 }
 
 function receivedData (name, data) {
@@ -102,20 +164,7 @@ export function fetchData() {
             }
         );
         // When all data fetched, run all the auto-running code blocks.
-        return Promise.all(proms).then(() => dispatch(
-            executeAuto(
-                getState().notebook.get('blocks'),
-                getState().notebook.get('content')
-            )
-        ));
-    };
-}
-
-function executeAuto(blocks, content) {
-    return {
-        type: EXECUTE_AUTO,
-        blocks,
-        content
+        return Promise.all(proms).then(() => dispatch(executeAuto()));
     };
 }
 
@@ -232,7 +281,7 @@ function gistCreated(id) {
 
 export function saveGist (title, markdown) {
     return (dispatch, getState) => {
-        fetch(gistApi, {
+        return fetch(gistApi, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

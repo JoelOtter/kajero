@@ -118,6 +118,16 @@
             return this.number + 100;
             ```
 
+            Want to run something asynchronous? No problem - return a Promise and it'll be resolved.
+
+            ```javascript; runnable
+            return new Promise(function (resolve) {
+                setTimeout(function() {
+                    resolve("This took three seconds.");
+                }, 3000);
+            });
+            ```
+
             Kajero includes a built-in data visualiser, similar to Chrome's object inspector. This means your code blocks can return whatever data you need, not just primitives.
 
             For example, here's an array:
