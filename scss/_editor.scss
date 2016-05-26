@@ -30,11 +30,13 @@
     .text-block {
         padding: .5em;
         @include block-border;
-        *:first-child {
-            margin-top: 0;
-        }
-        *:last-child {
-            margin-bottom: 0;
+        .text-block-content {
+            *:first-child {
+                margin-top: 0;
+            }
+            *:last-child {
+                margin-bottom: 0;
+            }
         }
         margin: 1em 0;
     }
@@ -51,6 +53,7 @@
                 margin-left: 15px;
                 display: inline;
                 padding: .25em;
+                box-sizing: border-box;
                 @include respond-to($size-md) {
                     width: 400px;
                 }
@@ -71,6 +74,7 @@
                 width: 100%;
                 padding: .25em;
                 margin: .25em 0;
+                box-sizing: border-box;
                 @include respond-to($size-md) {
                     margin: 0;
                 }
