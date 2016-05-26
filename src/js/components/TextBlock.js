@@ -23,7 +23,7 @@ class TextBlock extends Block {
                 <div className="editor-buttons">
                     {buttons}
                 </div>
-                <div
+                <div className="text-block-content"
                     dangerouslySetInnerHTML={this.rawMarkup(block.get('content'))}
                     onClick={this.enterEdit}>
                 </div>

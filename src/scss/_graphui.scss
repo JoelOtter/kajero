@@ -7,6 +7,10 @@
     margin: 1em 0;
     font-family: 'Amaranth', sans-serif;
 
+    .editor-buttons {
+        margin-top: 0;
+    }
+
     .graph-type {
         @include block-border;
         padding: .25em;
@@ -47,6 +51,7 @@
             width: 100%;
             padding: .25em;
             margin: .25em 0;
+            box-sizing: border-box;
             @include respond-to($size-md) {
                 margin: 0;
             }
