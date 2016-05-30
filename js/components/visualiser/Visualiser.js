@@ -15,6 +15,9 @@ export function typeString (item) {
 }
 
 export function selectComponent (data) {
+    if (data instanceof Error) {
+        return DefaultVisualiser;
+    }
     switch (typeString(data)) {
         case 'Object':
             return ObjectVisualiser;

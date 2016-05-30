@@ -178,7 +178,7 @@
 
             ```javascript; runnable
             var schema = ['String'];
-            return reshaper.findShape(data.joelotter, schema);
+            return reshaper(data.joelotter, schema);
             ```
 
             Reshaper has correctly produced an array of strings, which is what we asked for. However, we didn't tell it exactly what data we're interested in, so it's used the first string it could find.
@@ -187,7 +187,7 @@
 
             ```javascript; runnable
             var schema = ['String'];
-            return reshaper.findShape(data.joelotter, schema, 'name');
+            return reshaper(data.joelotter, schema, 'name');
             ```
 
             We can provide a more complex schema for a more useful resulting data structure. Let's get the name and number of stargazers for each repo.
@@ -199,7 +199,7 @@
                 stargazers_count: 'Number'
             }];
 
-            return reshaper.findShape(data.joelotter, schema);
+            return reshaper(data.joelotter, schema);
             ```
 
             Check the [Reshaper documentation](http://www.joelotter.com/reshaper) for more examples.
