@@ -1,7 +1,7 @@
 ---
-title: A sample notebook
-author: Joel Auterson
-created: Mon Apr 18 2016 21:48:01 GMT+0100 (BST)
+title: "A sample notebook"
+author: "Joel Auterson"
+created: "Mon Apr 18 2016 21:48:01 GMT+0100 (BST)"
 show_footer: true
 ---
 

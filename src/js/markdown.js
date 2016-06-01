@@ -113,7 +113,7 @@ export function parse(md) {
 function renderDatasources(datasources) {
     let rendered = "datasources:\n";
     datasources.map((url, name) => {
-        rendered += '    ' + name + ': ' + url + '\n';
+        rendered += '    ' + name + ': "' + url + '"\n';
     });
     return rendered;
 }
@@ -121,13 +121,13 @@ function renderDatasources(datasources) {
 function renderMetadata(metadata) {
     let rendered = '---\n';
     if (metadata.get('title') !== undefined) {
-        rendered += 'title: ' + metadata.get('title') + '\n';
+        rendered += 'title: "' + metadata.get('title') + '"\n';
     }
     if (metadata.get('author') !== undefined) {
-        rendered += 'author: ' + metadata.get('author') + '\n';
+        rendered += 'author: "' + metadata.get('author') + '"\n';
     }
     if (metadata.get('created') !== undefined) {
-        rendered += 'created: ' + metadata.get('created').toString() + '\n';
+        rendered += 'created: "' + metadata.get('created').toString() + '"\n';
     }
     const datasources = metadata.get('datasources');
     if (datasources && datasources.size > 0) {
@@ -136,8 +136,8 @@ function renderMetadata(metadata) {
     const original = metadata.get('original');
     if (original && original.get('title') && original.get('url')) {
         rendered += 'original:\n';
-        rendered += '    title: ' + original.get('title') + '\n';
-        rendered += '    url: ' + original.get('url') + '\n';
+        rendered += '    title: "' + original.get('title') + '"\n';
+        rendered += '    url: "' + original.get('url') + '"\n';
     }
     if (metadata.get('showFooter') !== undefined) {
         rendered += 'show_footer: ' + metadata.get('showFooter') + '\n';
