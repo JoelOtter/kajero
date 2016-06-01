@@ -1,0 +1,1353 @@
+{
+  "countries": [
+   {
+     "Country": "United States",
+     "Sessions": 6866,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:32",
+     "% New Sessions": 92.16,
+     "Bounce Rate": 87.11
+  },
+   {
+     "Country": "United Kingdom",
+     "Sessions": 1387,
+     "Pages ": {
+        " Session": 1.63
+     },
+     "Avg. Session Duration": "00:01:50",
+     "% New Sessions": 81.33,
+     "Bounce Rate": 81.47
+  },
+   {
+     "Country": "Germany",
+     "Sessions": 814,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:31",
+     "% New Sessions": 92.26,
+     "Bounce Rate": 84.77
+  },
+   {
+     "Country": "France",
+     "Sessions": 697,
+     "Pages ": {
+        " Session": 1.19
+     },
+     "Avg. Session Duration": "00:00:39",
+     "% New Sessions": 91.82,
+     "Bounce Rate": 87.95
+  },
+   {
+     "Country": "Canada",
+     "Sessions": 678,
+     "Pages ": {
+        " Session": 1.19
+     },
+     "Avg. Session Duration": "00:00:31",
+     "% New Sessions": 92.04,
+     "Bounce Rate": 87.02
+  },
+   {
+     "Country": "India",
+     "Sessions": 655,
+     "Pages ": {
+        " Session": 1.14
+     },
+     "Avg. Session Duration": "00:00:33",
+     "% New Sessions": 92.82,
+     "Bounce Rate": 88.40
+  },
+   {
+     "Country": "Australia",
+     "Sessions": 498,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:45",
+     "% New Sessions": 89.56,
+     "Bounce Rate": 85.34
+  },
+   {
+     "Country": "China",
+     "Sessions": 410,
+     "Pages ": {
+        " Session": 1.25
+     },
+     "Avg. Session Duration": "00:00:50",
+     "% New Sessions": 93.41,
+     "Bounce Rate": 83.90
+  },
+   {
+     "Country": "Russia",
+     "Sessions": 375,
+     "Pages ": {
+        " Session": 1.15
+     },
+     "Avg. Session Duration": "00:00:31",
+     "% New Sessions": 84.80,
+     "Bounce Rate": 88.53
+  },
+   {
+     "Country": "Netherlands",
+     "Sessions": 346,
+     "Pages ": {
+        " Session": 1.18
+     },
+     "Avg. Session Duration": "00:00:20",
+     "% New Sessions": 96.24,
+     "Bounce Rate": 88.73
+  },
+   {
+     "Country": "Japan",
+     "Sessions": 339,
+     "Pages ": {
+        " Session": 1.22
+     },
+     "Avg. Session Duration": "00:00:33",
+     "% New Sessions": 92.92,
+     "Bounce Rate": 84.07
+  },
+   {
+     "Country": "Brazil",
+     "Sessions": 333,
+     "Pages ": {
+        " Session": 1.16
+     },
+     "Avg. Session Duration": "00:00:38",
+     "% New Sessions": 92.49,
+     "Bounce Rate": 87.69
+  },
+   {
+     "Country": "Italy",
+     "Sessions": 320,
+     "Pages ": {
+        " Session": 1.19
+     },
+     "Avg. Session Duration": "00:00:37",
+     "% New Sessions": 92.19,
+     "Bounce Rate": 84.38
+  },
+   {
+     "Country": "Spain",
+     "Sessions": 314,
+     "Pages ": {
+        " Session": 1.16
+     },
+     "Avg. Session Duration": "00:00:26",
+     "% New Sessions": 92.04,
+     "Bounce Rate": 90.13
+  },
+   {
+     "Country": "South Korea",
+     "Sessions": 309,
+     "Pages ": {
+        " Session": 1.21
+     },
+     "Avg. Session Duration": "00:00:22",
+     "% New Sessions": 89.64,
+     "Bounce Rate": 87.06
+  },
+   {
+     "Country": "Poland",
+     "Sessions": 240,
+     "Pages ": {
+        " Session": 1.13
+     },
+     "Avg. Session Duration": "00:00:20",
+     "% New Sessions": 96.67,
+     "Bounce Rate": 90.00
+  },
+   {
+     "Country": "Taiwan",
+     "Sessions": 204,
+     "Pages ": {
+        " Session": 1.29
+     },
+     "Avg. Session Duration": "00:01:02",
+     "% New Sessions": 85.29,
+     "Bounce Rate": 81.37
+  },
+   {
+     "Country": "Sweden",
+     "Sessions": 200,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:34",
+     "% New Sessions": 95.00,
+     "Bounce Rate": 87.50
+  },
+   {
+     "Country": "Switzerland",
+     "Sessions": 198,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:42",
+     "% New Sessions": 91.92,
+     "Bounce Rate": 86.36
+  },
+   {
+     "Country": "Israel",
+     "Sessions": 160,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:44",
+     "% New Sessions": 88.12,
+     "Bounce Rate": 86.88
+  },
+   {
+     "Country": "Vietnam",
+     "Sessions": 145,
+     "Pages ": {
+        " Session": 1.21
+     },
+     "Avg. Session Duration": "00:00:42",
+     "% New Sessions": 97.93,
+     "Bounce Rate": 80.69
+  },
+   {
+     "Country": "Belgium",
+     "Sessions": 141,
+     "Pages ": {
+        " Session": 1.18
+     },
+     "Avg. Session Duration": "00:00:45",
+     "% New Sessions": 87.94,
+     "Bounce Rate": 85.82
+  },
+   {
+     "Country": "Ukraine",
+     "Sessions": 135,
+     "Pages ": {
+        " Session": 1.18
+     },
+     "Avg. Session Duration": "00:00:22",
+     "% New Sessions": 90.37,
+     "Bounce Rate": 86.67
+  },
+   {
+     "Country": "Singapore",
+     "Sessions": 133,
+     "Pages ": {
+        " Session": 1.24
+     },
+     "Avg. Session Duration": "00:00:47",
+     "% New Sessions": 95.49,
+     "Bounce Rate": 80.45
+  },
+   {
+     "Country": "Turkey",
+     "Sessions": 133,
+     "Pages ": {
+        " Session": 1.13
+     },
+     "Avg. Session Duration": "00:00:13",
+     "% New Sessions": 94.74,
+     "Bounce Rate": 89.47
+  },
+   {
+     "Country": "Czech Republic",
+     "Sessions": 132,
+     "Pages ": {
+        " Session": 1.37
+     },
+     "Avg. Session Duration": "00:01:29",
+     "% New Sessions": 88.64,
+     "Bounce Rate": 80.30
+  },
+   {
+     "Country": "Finland",
+     "Sessions": 131,
+     "Pages ": {
+        " Session": 1.21
+     },
+     "Avg. Session Duration": "00:00:21",
+     "% New Sessions": 86.26,
+     "Bounce Rate": 84.73
+  },
+   {
+     "Country": "Denmark",
+     "Sessions": 125,
+     "Pages ": {
+        " Session": 1.26
+     },
+     "Avg. Session Duration": "00:00:35",
+     "% New Sessions": 90.40,
+     "Bounce Rate": 84.00
+  },
+   {
+     "Country": "Portugal",
+     "Sessions": 125,
+     "Pages ": {
+        " Session": 1.18
+     },
+     "Avg. Session Duration": "00:00:31",
+     "% New Sessions": 83.20,
+     "Bounce Rate": 85.60
+  },
+   {
+     "Country": "Argentina",
+     "Sessions": 116,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:54",
+     "% New Sessions": 93.10,
+     "Bounce Rate": 84.48
+  },
+   {
+     "Country": "Romania",
+     "Sessions": 105,
+     "Pages ": {
+        " Session": 1.06
+     },
+     "Avg. Session Duration": "00:00:05",
+     "% New Sessions": 92.38,
+     "Bounce Rate": 94.29
+  },
+   {
+     "Country": "Indonesia",
+     "Sessions": 98,
+     "Pages ": {
+        " Session": 1.08
+     },
+     "Avg. Session Duration": "00:00:17",
+     "% New Sessions": 93.88,
+     "Bounce Rate": 91.84
+  },
+   {
+     "Country": "Hong Kong",
+     "Sessions": 97,
+     "Pages ": {
+        " Session": 1.15
+     },
+     "Avg. Session Duration": "00:00:22",
+     "% New Sessions": 89.69,
+     "Bounce Rate": 88.66
+  },
+   {
+     "Country": "Mexico",
+     "Sessions": 97,
+     "Pages ": {
+        " Session": 1.1
+     },
+     "Avg. Session Duration": "00:00:25",
+     "% New Sessions": 94.85,
+     "Bounce Rate": 91.75
+  },
+   {
+     "Country": "South Africa",
+     "Sessions": 97,
+     "Pages ": {
+        " Session": 1.15
+     },
+     "Avg. Session Duration": "00:00:25",
+     "% New Sessions": 87.63,
+     "Bounce Rate": 86.60
+  },
+   {
+     "Country": "Norway",
+     "Sessions": 96,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:28",
+     "% New Sessions": 82.29,
+     "Bounce Rate": 87.50
+  },
+   {
+     "Country": "Austria",
+     "Sessions": 94,
+     "Pages ": {
+        " Session": 1.18
+     },
+     "Avg. Session Duration": "00:00:21",
+     "% New Sessions": 95.74,
+     "Bounce Rate": 85.11
+  },
+   {
+     "Country": "New Zealand",
+     "Sessions": 92,
+     "Pages ": {
+        " Session": 1.16
+     },
+     "Avg. Session Duration": "00:00:13",
+     "% New Sessions": 94.57,
+     "Bounce Rate": 86.96
+  },
+   {
+     "Country": "Thailand",
+     "Sessions": 70,
+     "Pages ": {
+        " Session": 1.04
+     },
+     "Avg. Session Duration": "00:00:05",
+     "% New Sessions": 85.71,
+     "Bounce Rate": 95.71
+  },
+   {
+     "Country": "Philippines",
+     "Sessions": 65,
+     "Pages ": {
+        " Session": 1.17
+     },
+     "Avg. Session Duration": "00:00:35",
+     "% New Sessions": 90.77,
+     "Bounce Rate": 84.62
+  },
+   {
+     "Country": "Bulgaria",
+     "Sessions": 63,
+     "Pages ": {
+        " Session": 1.17
+     },
+     "Avg. Session Duration": "00:00:31",
+     "% New Sessions": 84.13,
+     "Bounce Rate": 84.13
+  },
+   {
+     "Country": "Chile",
+     "Sessions": 63,
+     "Pages ": {
+        " Session": 1.24
+     },
+     "Avg. Session Duration": "00:00:37",
+     "% New Sessions": 92.06,
+     "Bounce Rate": 82.54
+  },
+   {
+     "Country": "Ireland",
+     "Sessions": 63,
+     "Pages ": {
+        " Session": 1.13
+     },
+     "Avg. Session Duration": "00:00:13",
+     "% New Sessions": 96.83,
+     "Bounce Rate": 88.89
+  },
+   {
+     "Country": "Croatia",
+     "Sessions": 60,
+     "Pages ": {
+        " Session": 1.15
+     },
+     "Avg. Session Duration": "00:00:18",
+     "% New Sessions": 78.33,
+     "Bounce Rate": 88.33
+  },
+   {
+     "Country": "Greece",
+     "Sessions": 58,
+     "Pages ": {
+        " Session": 1.28
+     },
+     "Avg. Session Duration": "00:00:44",
+     "% New Sessions": 91.38,
+     "Bounce Rate": 84.48
+  },
+   {
+     "Country": "Hungary",
+     "Sessions": 57,
+     "Pages ": {
+        " Session": 1.09
+     },
+     "Avg. Session Duration": "00:00:10",
+     "% New Sessions": 92.98,
+     "Bounce Rate": 91.23
+  },
+   {
+     "Country": "Malaysia",
+     "Sessions": 57,
+     "Pages ": {
+        " Session": 1.37
+     },
+     "Avg. Session Duration": "00:00:45",
+     "% New Sessions": 96.49,
+     "Bounce Rate": 80.70
+  },
+   {
+     "Country": "Colombia",
+     "Sessions": 55,
+     "Pages ": {
+        " Session": 1.18
+     },
+     "Avg. Session Duration": "00:00:44",
+     "% New Sessions": 94.55,
+     "Bounce Rate": 83.64
+  },
+   {
+     "Country": "Moldova",
+     "Sessions": 54,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:15",
+     "% New Sessions": 87.04,
+     "Bounce Rate": 85.19
+  },
+   {
+     "Country": "Serbia",
+     "Sessions": 51,
+     "Pages ": {
+        " Session": 1.16
+     },
+     "Avg. Session Duration": "00:00:19",
+     "% New Sessions": 90.20,
+     "Bounce Rate": 84.31
+  },
+   {
+     "Country": "(not set)",
+     "Sessions": 46,
+     "Pages ": {
+        " Session": 1.11
+     },
+     "Avg. Session Duration": "00:00:12",
+     "% New Sessions": 91.30,
+     "Bounce Rate": 91.30
+  },
+   {
+     "Country": "Slovenia",
+     "Sessions": 40,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:38",
+     "% New Sessions": 95.00,
+     "Bounce Rate": 87.50
+  },
+   {
+     "Country": "Lithuania",
+     "Sessions": 37,
+     "Pages ": {
+        " Session": 1.14
+     },
+     "Avg. Session Duration": "00:00:20",
+     "% New Sessions": 91.89,
+     "Bounce Rate": 86.49
+  },
+   {
+     "Country": "Slovakia",
+     "Sessions": 34,
+     "Pages ": {
+        " Session": 1.26
+     },
+     "Avg. Session Duration": "00:00:56",
+     "% New Sessions": 88.24,
+     "Bounce Rate": 85.29
+  },
+   {
+     "Country": "United Arab Emirates",
+     "Sessions": 32,
+     "Pages ": {
+        " Session": 1.28
+     },
+     "Avg. Session Duration": "00:01:02",
+     "% New Sessions": 84.38,
+     "Bounce Rate": 84.38
+  },
+   {
+     "Country": "Iran",
+     "Sessions": 32,
+     "Pages ": {
+        " Session": 1.22
+     },
+     "Avg. Session Duration": "00:01:18",
+     "% New Sessions": 96.88,
+     "Bounce Rate": 78.12
+  },
+   {
+     "Country": "Pakistan",
+     "Sessions": 27,
+     "Pages ": {
+        " Session": 1.15
+     },
+     "Avg. Session Duration": "00:00:19",
+     "% New Sessions": 96.30,
+     "Bounce Rate": 88.89
+  },
+   {
+     "Country": "Belarus",
+     "Sessions": 26,
+     "Pages ": {
+        " Session": 1.19
+     },
+     "Avg. Session Duration": "00:00:25",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 84.62
+  },
+   {
+     "Country": "Estonia",
+     "Sessions": 26,
+     "Pages ": {
+        " Session": 1.15
+     },
+     "Avg. Session Duration": "00:00:26",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 92.31
+  },
+   {
+     "Country": "Bangladesh",
+     "Sessions": 24,
+     "Pages ": {
+        " Session": 1.17
+     },
+     "Avg. Session Duration": "00:00:10",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 83.33
+  },
+   {
+     "Country": "Egypt",
+     "Sessions": 21,
+     "Pages ": {
+        " Session": 1.48
+     },
+     "Avg. Session Duration": "00:01:25",
+     "% New Sessions": 90.48,
+     "Bounce Rate": 85.71
+  },
+   {
+     "Country": "Morocco",
+     "Sessions": 19,
+     "Pages ": {
+        " Session": 1.05
+     },
+     "Avg. Session Duration": "00:00:04",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 94.74
+  },
+   {
+     "Country": "Uruguay",
+     "Sessions": 19,
+     "Pages ": {
+        " Session": 1.16
+     },
+     "Avg. Session Duration": "00:01:10",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 94.74
+  },
+   {
+     "Country": "Kenya",
+     "Sessions": 18,
+     "Pages ": {
+        " Session": 1.17
+     },
+     "Avg. Session Duration": "00:00:20",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 83.33
+  },
+   {
+     "Country": "Sri Lanka",
+     "Sessions": 18,
+     "Pages ": {
+        " Session": 1.11
+     },
+     "Avg. Session Duration": "00:00:05",
+     "% New Sessions": 88.89,
+     "Bounce Rate": 88.89
+  },
+   {
+     "Country": "Bosnia & Herzegovina",
+     "Sessions": 17,
+     "Pages ": {
+        " Session": 1.12
+     },
+     "Avg. Session Duration": "00:00:06",
+     "% New Sessions": 94.12,
+     "Bounce Rate": 88.24
+  },
+   {
+     "Country": "Latvia",
+     "Sessions": 17,
+     "Pages ": {
+        " Session": 1.06
+     },
+     "Avg. Session Duration": "00:00:06",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 94.12
+  },
+   {
+     "Country": "Macedonia (FYROM)",
+     "Sessions": 17,
+     "Pages ": {
+        " Session": 1.06
+     },
+     "Avg. Session Duration": "00:00:04",
+     "% New Sessions": 88.24,
+     "Bounce Rate": 94.12
+  },
+   {
+     "Country": "Peru",
+     "Sessions": 15,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 93.33,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Ecuador",
+     "Sessions": 14,
+     "Pages ": {
+        " Session": 1.43
+     },
+     "Avg. Session Duration": "00:00:54",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 78.57
+  },
+   {
+     "Country": "Iceland",
+     "Sessions": 13,
+     "Pages ": {
+        " Session": 1.08
+     },
+     "Avg. Session Duration": "00:00:12",
+     "% New Sessions": 92.31,
+     "Bounce Rate": 92.31
+  },
+   {
+     "Country": "Saudi Arabia",
+     "Sessions": 13,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 92.31,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Dominican Republic",
+     "Sessions": 12,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 83.33,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Nepal",
+     "Sessions": 12,
+     "Pages ": {
+        " Session": 1.17
+     },
+     "Avg. Session Duration": "00:00:11",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 91.67
+  },
+   {
+     "Country": "Armenia",
+     "Sessions": 11,
+     "Pages ": {
+        " Session": 1.36
+     },
+     "Avg. Session Duration": "00:02:34",
+     "% New Sessions": 72.73,
+     "Bounce Rate": 63.64
+  },
+   {
+     "Country": "Nigeria",
+     "Sessions": 11,
+     "Pages ": {
+        " Session": 1.45
+     },
+     "Avg. Session Duration": "00:02:54",
+     "% New Sessions": 90.91,
+     "Bounce Rate": 72.73
+  },
+   {
+     "Country": "Algeria",
+     "Sessions": 10,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 90.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Tunisia",
+     "Sessions": 10,
+     "Pages ": {
+        " Session": 1.3
+     },
+     "Avg. Session Duration": "00:00:01",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 90.00
+  },
+   {
+     "Country": "Costa Rica",
+     "Sessions": 9,
+     "Pages ": {
+        " Session": 1.44
+     },
+     "Avg. Session Duration": "00:00:38",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 88.89
+  },
+   {
+     "Country": "Luxembourg",
+     "Sessions": 9,
+     "Pages ": {
+        " Session": 1.22
+     },
+     "Avg. Session Duration": "00:00:17",
+     "% New Sessions": 88.89,
+     "Bounce Rate": 88.89
+  },
+   {
+     "Country": "Venezuela",
+     "Sessions": 9,
+     "Pages ": {
+        " Session": 1.22
+     },
+     "Avg. Session Duration": "00:00:13",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 77.78
+  },
+   {
+     "Country": "Cyprus",
+     "Sessions": 8,
+     "Pages ": {
+        " Session": 1.38
+     },
+     "Avg. Session Duration": "00:00:27",
+     "% New Sessions": 87.50,
+     "Bounce Rate": 62.50
+  },
+   {
+     "Country": "Guatemala",
+     "Sessions": 7,
+     "Pages ": {
+        " Session": 1.43
+     },
+     "Avg. Session Duration": "00:00:35",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 85.71
+  },
+   {
+     "Country": "Jordan",
+     "Sessions": 7,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Kazakhstan",
+     "Sessions": 7,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 71.43,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Myanmar (Burma)",
+     "Sessions": 7,
+     "Pages ": {
+        " Session": 1.43
+     },
+     "Avg. Session Duration": "00:05:25",
+     "% New Sessions": 85.71,
+     "Bounce Rate": 71.43
+  },
+   {
+     "Country": "Mongolia",
+     "Sessions": 7,
+     "Pages ": {
+        " Session": 1.14
+     },
+     "Avg. Session Duration": "00:00:29",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 85.71
+  },
+   {
+     "Country": "Bolivia",
+     "Sessions": 6,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Ethiopia",
+     "Sessions": 6,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Georgia",
+     "Sessions": 6,
+     "Pages ": {
+        " Session": 1.17
+     },
+     "Avg. Session Duration": "00:00:05",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 83.33
+  },
+   {
+     "Country": "Lebanon",
+     "Sessions": 6,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Malta",
+     "Sessions": 6,
+     "Pages ": {
+        " Session": 1.17
+     },
+     "Avg. Session Duration": "00:00:04",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 83.33
+  },
+   {
+     "Country": "Puerto Rico",
+     "Sessions": 5,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Qatar",
+     "Sessions": 5,
+     "Pages ": {
+        " Session": 1.2
+     },
+     "Avg. Session Duration": "00:00:08",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 80.00
+  },
+   {
+     "Country": "El Salvador",
+     "Sessions": 5,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 80.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Azerbaijan",
+     "Sessions": 4,
+     "Pages ": {
+        " Session": 1.25
+     },
+     "Avg. Session Duration": "00:00:47",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 75.00
+  },
+   {
+     "Country": "Ghana",
+     "Sessions": 4,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 50.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Cambodia",
+     "Sessions": 4,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 75.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Macau",
+     "Sessions": 4,
+     "Pages ": {
+        " Session": 1.25
+     },
+     "Avg. Session Duration": "00:00:29",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 75.00
+  },
+   {
+     "Country": "Mauritius",
+     "Sessions": 4,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Paraguay",
+     "Sessions": 4,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Albania",
+     "Sessions": 3,
+     "Pages ": {
+        " Session": 1.33
+     },
+     "Avg. Session Duration": "00:00:45",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 66.67
+  },
+   {
+     "Country": "Bahrain",
+     "Sessions": 3,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Montenegro",
+     "Sessions": 3,
+     "Pages ": {
+        " Session": 1.33
+     },
+     "Avg. Session Duration": "00:00:13",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 66.67
+  },
+   {
+     "Country": "Nicaragua",
+     "Sessions": 3,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Panama",
+     "Sessions": 3,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Palestine",
+     "Sessions": 3,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Uganda",
+     "Sessions": 3,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Curaçao",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1.5
+     },
+     "Avg. Session Duration": "00:00:04",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 50.00
+  },
+   {
+     "Country": "Gibraltar",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1.5
+     },
+     "Avg. Session Duration": "00:00:20",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 50.00
+  },
+   {
+     "Country": "Honduras",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Jamaica",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Kyrgyzstan",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Maldives",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Réunion",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Swaziland",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1.5
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 50.00
+  },
+   {
+     "Country": "Trinidad & Tobago",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1.5
+     },
+     "Avg. Session Duration": "00:00:43",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 50.00
+  },
+   {
+     "Country": "Uzbekistan",
+     "Sessions": 2,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Brunei",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Congo (DRC)",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Cameroon",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Cuba",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Cape Verde",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Faroe Islands",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Guadeloupe",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Guam",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 2
+     },
+     "Avg. Session Duration": "00:01:19",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 0.00
+  },
+   {
+     "Country": "Kuwait",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 2
+     },
+     "Avg. Session Duration": "00:00:26",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 0.00
+  },
+   {
+     "Country": "New Caledonia",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Senegal",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Tanzania",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "St. Vincent & Grenadines",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 2
+     },
+     "Avg. Session Duration": "00:09:24",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 0.00
+  },
+   {
+     "Country": "U.S. Virgin Islands",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Mayotte",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  },
+   {
+     "Country": "Zimbabwe",
+     "Sessions": 1,
+     "Pages ": {
+        " Session": 1
+     },
+     "Avg. Session Duration": "00:00:00",
+     "% New Sessions": 100.00,
+     "Bounce Rate": 100.00
+  }
+  ],
+  "total": {
+     "Sessions": 18938,
+     "Pages ": {
+        " Session": 1.22
+     },
+     "Avg. Session Duration": "00:00:39",
+     "% New Sessions": 91.10,
+     "Bounce Rate": 86.42
+  }
+}
