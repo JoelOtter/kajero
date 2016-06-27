@@ -25,9 +25,9 @@ You can view a sample notebook [here](http://www.joelotter.com/kajero).
 - [Smolder](https://github.com/JoelOtter/smolder) - a library wrapper that attempts to reshape data going into your functions, using Reshaper
 - [Jutsu](https://github.com/JoelOtter/jutsu) - a simple graphing library, with support for Smolder
 
-## Note on contributions
+## Contributing
 
-Kajero is part of my master's project at Imperial College London. Please do file issues if you have feedback or find bugs. However, as it needs to be my own work, I won't be able to merge any pull requests until the end of June. Apologies for the inconvenience!
+Issues and Pull Requests are both extremely welcome!
 
 ## Command-line tools
 
